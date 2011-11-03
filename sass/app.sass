@@ -9,6 +9,7 @@
 body, input, textarea 
   margin: 40px
   color: $color
+  background: $bgColor
   font:  16px/1.625em 'Varela Round',"lucida grande",tahoma,sans-serif
   font-weight: 400
   -webkit-font-smoothing: antialiased
@@ -18,18 +19,52 @@ h1,h2,h3,h4,h5,h6
   font-family: 'Terminal Dosis', 'lucida grande', tahoma, sans-serif
   line-height: 1em
   font-weight: 600
-
+  margin-bottom: .5em
 
 h1
-  font-size:  60px
+  font-size:  72px
+  line-height: .5em
+  margin-bottom: .3em
+  small
+    font-size: 20px
+  &:hover
+    .char1
+      color: greenyellow
+    .char2
+      color: indianred
+    .char3
+      color: khaki
+    .char4
+      color: lightsteelblue
+    .char5
+      color: violet
+    .char6
+      color: skyblue
+    .char7
+      color: lightseagreen
+    .char8
+      color: tan
+    .char9
+      color: darkmagenta
+    .char10
+      color: tomato
+    .char11
+      color: goldenrod
+
 
 h2
-  font-size:  24px
+  font-size:  40px
   line-height:  1.2em
+  text-align: center
 
 h3
-  font-size:  18px	
+  font-size:  16px	
   letter-spacing: 0.1em
+  text-transform: uppercase
+
+h4
+  font-size: 20px
+  margin-bottom: 1.25em
 
 p 
   margin-bottom: 1.25em
@@ -65,106 +100,55 @@ input[type=text]
 
 /* Links */
 a
-  color: $color
+  color: $blue
   text-decoration: none
   &:hover
-    color: $blue
+    color: scale-color($blue, $lightness: 50%)
 
 
-
-.button
-  text-transform: uppercase
-  font-family: 'Terminal Dosis', 'lucida grande', tahoma, sans-serif
-  font-weight:  700
-  letter-spacing:  0.1em
-  olor: #555
-  display: block
-  float:  left
-  position:  relative
-  line-height: 1
-  padding: .6em 1.5em .5em 1.5em
-  border:  1px solid transparent
-  +box-shadow( inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0,0,0, .25))
-  background-color:  $lightGray
-  +border-radius($radius)
-  border:  1px solid scale-color($lightGray, $lightness: -10%)
-  margin-bottom:  6px
-  &:hover
-    background-color: scale-color($lightGray, $lightness: 20%)
-  &:active
-    +box-shadow( inset 0 2px 0 rgba(0, 0, 0, 0.1))
-    top:  2px
-    margin-bottom: 4px
-    border-bottom-width: 0
-
-
-
-/* Buttons with dark backgrounds */
-.button.nav,
-.button.warn,
-.button.primary,
-.nav-previous .button,
-.nav-next .button
-  color: #fff
-  @include text-shadow(rgba(0,0,0, 0.2) 1px 1px 0)
-
-
-.button.nav,
-.nav-previous .button,
-.nav-next .button
-  background-color: $blue
-  border-color: scale-color($blue, $lightness: -10%)
-  &:hover
-    background-color: scale-color($blue, $lightness: 20%)
-
-
-
-
-.button.warn
-  background-color: $orange
-  border-color: scale-color($orange, $lightness: -10%)
-  &:hover
-    background-color: scale-color($orange, $lightness: 20%)
-
-
-
-.button.primary
-  background-color: $green
-  border-color: $green
-  &:hover
-    background-color: scale-color($green, $lightness: 20%)
-
-
-
-
-
-
-
-h1
-  font-size: 36px
-  margin-bottom: .5em
-
-h3
-
+header
+  padding-bottom: 40px
+  text-align: center
   
 .imageSection
   +clearfix
-  margin-bottom: 40px
-  img
+  margin-bottom: 80px
+  .imageWrap
+    width: 400px
+    height: 300px
     float: left
+    position: relative
     margin-right: 20px
+    border: 1px solid #444
+    background: url(../img/dark_checkered_bg.png)
+    .targetImage
+      position: absolute
+      top: 50%
+      left: 50%
+      margin-left: -200px
+      margin-top: -150px
+      
   .colors
     width: 400px
     float: left
     .function
-      +clearfix
+      clear: left
       margin-bottom: 10px
-      .swatch
-        width: 40px
-        height: 20px
-        margin: 0 4px 4px 0
-        background: #ddd
-        float: left
+      .swatches
+        .swatch
+          width: 40px
+          height: 20px
+          margin: 0 4px 4px 0
+          background: #ddd
+          float: left
+          +transition(all .2s)
+          &:hover
+            +scale(1.2, 1.2)
+            +box-shadow(0 1px 10px rgba(0,0,0,1))
+          &:first-child
+            +border-left-radius($radius)
+          &:last-child
+            +border-right-radius($radius)
   
 canvas
   display: none

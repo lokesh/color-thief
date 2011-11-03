@@ -45,7 +45,6 @@ CanvasImage.prototype.clear = function() {
 }
 
 CanvasImage.prototype.update = function(imageData) {
-	console.log('worked');
 	this.context.putImageData(imageData, 0, 0);
 }
 
@@ -55,6 +54,10 @@ CanvasImage.prototype.getPixelCount = function() {
 
 CanvasImage.prototype.getImageData = function() {
 	return this.context.getImageData(0, 0, this.width, this.height);
+}
+
+CanvasImage.prototype.removeCanvas = function() {
+	$(this.canvas).remove();
 }
 
 
@@ -89,6 +92,9 @@ function getDominantColor(sourceImage){
 	var cmap = MMCQ.quantize(pixelArray, 5);
 	var newPalette = cmap.palette();
 
+	// Clean up
+	image.removeCanvas();
+	
 	return {r: newPalette[0][0], g: newPalette[0][1], b: newPalette[0][2]};
 }
 
@@ -126,6 +132,9 @@ function createPalette(sourceImage, colorCount){
 	// using median cut algorithm
 	var cmap = MMCQ.quantize(pixelArray, colorCount);
 	var newPalette = cmap.palette();
+
+	// Clean up
+	image.removeCanvas();
 
 	return newPalette;
 }

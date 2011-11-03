@@ -67,48 +67,108 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /* line 9, ../sass/app.sass */
 body, input, textarea {
   margin: 40px;
-  color: #555555;
+  color: #aaaaaa;
+  background: #222222;
   font: 16px/1.625em "Varela Round", "lucida grande", tahoma, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
 }
 
-/* line 17, ../sass/app.sass */
+/* line 18, ../sass/app.sass */
 h1, h2, h3, h4, h5, h6 {
   font-family: "Terminal Dosis", "lucida grande", tahoma, sans-serif;
   line-height: 1em;
   font-weight: 600;
+  margin-bottom: 0.5em;
 }
 
-/* line 23, ../sass/app.sass */
+/* line 24, ../sass/app.sass */
 h1 {
-  font-size: 60px;
+  font-size: 72px;
+  line-height: 0.5em;
+  margin-bottom: 0.3em;
+}
+/* line 28, ../sass/app.sass */
+h1 small {
+  font-size: 20px;
+}
+/* line 31, ../sass/app.sass */
+h1:hover .char1 {
+  color: greenyellow;
+}
+/* line 33, ../sass/app.sass */
+h1:hover .char2 {
+  color: indianred;
+}
+/* line 35, ../sass/app.sass */
+h1:hover .char3 {
+  color: khaki;
+}
+/* line 37, ../sass/app.sass */
+h1:hover .char4 {
+  color: lightsteelblue;
+}
+/* line 39, ../sass/app.sass */
+h1:hover .char5 {
+  color: violet;
+}
+/* line 41, ../sass/app.sass */
+h1:hover .char6 {
+  color: skyblue;
+}
+/* line 43, ../sass/app.sass */
+h1:hover .char7 {
+  color: lightseagreen;
+}
+/* line 45, ../sass/app.sass */
+h1:hover .char8 {
+  color: tan;
+}
+/* line 47, ../sass/app.sass */
+h1:hover .char9 {
+  color: darkmagenta;
+}
+/* line 49, ../sass/app.sass */
+h1:hover .char10 {
+  color: tomato;
+}
+/* line 51, ../sass/app.sass */
+h1:hover .char11 {
+  color: goldenrod;
 }
 
-/* line 26, ../sass/app.sass */
+/* line 55, ../sass/app.sass */
 h2 {
-  font-size: 24px;
+  font-size: 40px;
   line-height: 1.2em;
+  text-align: center;
 }
 
-/* line 30, ../sass/app.sass */
+/* line 60, ../sass/app.sass */
 h3 {
-  font-size: 18px;
+  font-size: 16px;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-/* line 34, ../sass/app.sass */
+/* line 65, ../sass/app.sass */
+h4 {
+  font-size: 20px;
+  margin-bottom: 1.25em;
+}
+
+/* line 69, ../sass/app.sass */
 p {
   margin-bottom: 1.25em;
 }
 
-/* line 38, ../sass/app.sass */
+/* line 73, ../sass/app.sass */
 strong {
   font-weight: bold;
 }
 
 /* Forms */
-/* line 44, ../sass/app.sass */
+/* line 79, ../sass/app.sass */
 input[type=text],
 input[type=password],
 textarea {
@@ -127,159 +187,130 @@ textarea {
   border-radius: 4px;
 }
 
-/* line 55, ../sass/app.sass */
+/* line 90, ../sass/app.sass */
 input[type=text]:focus,
 textarea:focus {
   color: #373737;
 }
 
-/* line 59, ../sass/app.sass */
+/* line 94, ../sass/app.sass */
 textarea {
   padding-left: 3px;
   width: 98%;
 }
 
-/* line 63, ../sass/app.sass */
+/* line 98, ../sass/app.sass */
 input[type=text] {
   padding: 3px;
 }
 
 /* Links */
-/* line 67, ../sass/app.sass */
+/* line 102, ../sass/app.sass */
 a {
-  color: #555555;
+  color: #5f92aa;
   text-decoration: none;
 }
-/* line 70, ../sass/app.sass */
+/* line 105, ../sass/app.sass */
 a:hover {
-  color: #09a1ec;
+  color: #afc8d4;
 }
 
-/* line 75, ../sass/app.sass */
-.button {
-  text-transform: uppercase;
-  font-family: "Terminal Dosis", "lucida grande", tahoma, sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  olor: #555555;
-  display: block;
-  float: left;
-  position: relative;
-  line-height: 1;
-  padding: 0.6em 1.5em 0.5em 1.5em;
-  border: 1px solid transparent;
-  -moz-box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.25);
-  -webkit-box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.25);
-  -o-box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.25);
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.25);
-  background-color: #eeeeee;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  -o-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -khtml-border-radius: 4px;
-  border-radius: 4px;
-  border: 1px solid #d6d6d6;
-  margin-bottom: 6px;
-}
-/* line 92, ../sass/app.sass */
-.button:hover {
-  background-color: #f1f1f1;
-}
-/* line 94, ../sass/app.sass */
-.button:active {
-  -moz-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.1);
-  -o-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.1);
-  top: 2px;
-  margin-bottom: 4px;
-  border-bottom-width: 0;
+/* line 109, ../sass/app.sass */
+header {
+  padding-bottom: 40px;
+  text-align: center;
 }
 
-/* Buttons with dark backgrounds */
-/* line 103, ../sass/app.sass */
-.button.nav,
-.button.warn,
-.button.primary,
-.nav-previous .button,
-.nav-next .button {
-  color: white;
-  text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 0;
-}
-
-/* line 112, ../sass/app.sass */
-.button.nav,
-.nav-previous .button,
-.nav-next .button {
-  background-color: #09a1ec;
-  border-color: #0891d4;
-}
-/* line 117, ../sass/app.sass */
-.button.nav:hover,
-.nav-previous .button:hover,
-.nav-next .button:hover {
-  background-color: #33b6f7;
-}
-
-/* line 123, ../sass/app.sass */
-.button.warn {
-  background-color: #ee8833;
-  border-color: #ec7818;
-}
-/* line 126, ../sass/app.sass */
-.button.warn:hover {
-  background-color: #f1a05c;
-}
-
-/* line 131, ../sass/app.sass */
-.button.primary {
-  background-color: #6bb445;
-  border-color: #6bb445;
-}
-/* line 134, ../sass/app.sass */
-.button.primary:hover {
-  background-color: #88c568;
-}
-
-/* line 143, ../sass/app.sass */
-h1 {
-  font-size: 36px;
-  margin-bottom: 0.5em;
-}
-
-/* line 150, ../sass/app.sass */
+/* line 113, ../sass/app.sass */
 .imageSection {
   overflow: hidden;
   *zoom: 1;
-  margin-bottom: 40px;
+  margin-bottom: 80px;
 }
-/* line 153, ../sass/app.sass */
-.imageSection img {
+/* line 116, ../sass/app.sass */
+.imageSection .imageWrap {
+  width: 400px;
+  height: 300px;
   float: left;
+  position: relative;
   margin-right: 20px;
+  border: 1px solid #444444;
+  background: url(../img/dark_checkered_bg.png);
 }
-/* line 156, ../sass/app.sass */
+/* line 124, ../sass/app.sass */
+.imageSection .imageWrap .targetImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -150px;
+}
+/* line 131, ../sass/app.sass */
 .imageSection .colors {
   width: 400px;
   float: left;
 }
-/* line 159, ../sass/app.sass */
+/* line 134, ../sass/app.sass */
 .imageSection .colors .function {
-  overflow: hidden;
-  *zoom: 1;
+  clear: left;
   margin-bottom: 10px;
 }
-/* line 162, ../sass/app.sass */
-.imageSection .colors .function .swatch {
+/* line 138, ../sass/app.sass */
+.imageSection .colors .function .swatches .swatch {
   width: 40px;
   height: 20px;
   margin: 0 4px 4px 0;
   background: #dddddd;
   float: left;
+  -moz-transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+/* line 145, ../sass/app.sass */
+.imageSection .colors .function .swatches .swatch:hover {
+  -moz-transform: scale(1.2, 1.2);
+  -webkit-transform: scale(1.2, 1.2);
+  -o-transform: scale(1.2, 1.2);
+  -ms-transform: scale(1.2, 1.2);
+  transform: scale(1.2, 1.2);
+  -moz-box-shadow: 0 1px 10px black;
+  -webkit-box-shadow: 0 1px 10px black;
+  -o-box-shadow: 0 1px 10px black;
+  box-shadow: 0 1px 10px black;
+}
+/* line 148, ../sass/app.sass */
+.imageSection .colors .function .swatches .swatch:first-child {
+  -moz-border-radius-topleft: 4px;
+  -webkit-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
+  -ms-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
+  border-top-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
+  -ms-border-bottom-left-radius: 4px;
+  -khtml-border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+/* line 150, ../sass/app.sass */
+.imageSection .colors .function .swatches .swatch:last-child {
+  -moz-border-radius-topright: 4px;
+  -webkit-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
+  -ms-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
+  border-top-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
+  -ms-border-bottom-right-radius: 4px;
+  -khtml-border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
-/* line 169, ../sass/app.sass */
+/* line 153, ../sass/app.sass */
 canvas {
   display: none;
 }
