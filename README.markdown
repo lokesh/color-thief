@@ -1,4 +1,4 @@
-## Color Thief
+# Color Thief
 A script for grabbing the dominant color or a representative color palette from an image. Uses javascript and canvas. [**See a Demo**](http://lokeshdhakar.com/projects/color-thief)
 
 ###Usage
