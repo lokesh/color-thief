@@ -1,11 +1,145 @@
 @import "base"
 
-body
-  color: #444
-  font-family: 'lucida grande', sans-serif
-  line-height: 1.625em
-  padding: 40px
-  
+
+
+
+/* =Global */
+
+
+body, input, textarea 
+  margin: 40px
+  color: $color
+  font:  16px/1.625em 'Varela Round',"lucida grande",tahoma,sans-serif
+  font-weight: 400
+  -webkit-font-smoothing: antialiased
+
+
+h1,h2,h3,h4,h5,h6 
+  font-family: 'Terminal Dosis', 'lucida grande', tahoma, sans-serif
+  line-height: 1em
+  font-weight: 600
+
+
+h1
+  font-size:  60px
+
+h2
+  font-size:  24px
+  line-height:  1.2em
+
+h3
+  font-size:  18px	
+  letter-spacing: 0.1em
+
+p 
+  margin-bottom: 1.25em
+
+
+strong 
+  font-weight: bold
+
+
+
+/* Forms */
+input[type=text],
+input[type=password],
+textarea 
+  background: #fafafa
+  +box-shadow(inset 0 1px 1px rgba(0,0,0,0.1))
+  border: 1px solid #ddd
+  color: #888
+  +border-radius($radius)
+
+
+
+input[type=text]:focus,
+textarea:focus 
+  color: #373737
+
+textarea 
+  padding-left: 3px
+  width: 98%
+
+input[type=text] 
+  padding: 3px
+
+/* Links */
+a
+  color: $color
+  text-decoration: none
+  &:hover
+    color: $blue
+
+
+
+.button
+  text-transform: uppercase
+  font-family: 'Terminal Dosis', 'lucida grande', tahoma, sans-serif
+  font-weight:  700
+  letter-spacing:  0.1em
+  olor: #555
+  display: block
+  float:  left
+  position:  relative
+  line-height: 1
+  padding: .6em 1.5em .5em 1.5em
+  border:  1px solid transparent
+  +box-shadow( inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0,0,0, .25))
+  background-color:  $lightGray
+  +border-radius($radius)
+  border:  1px solid scale-color($lightGray, $lightness: -10%)
+  margin-bottom:  6px
+  &:hover
+    background-color: scale-color($lightGray, $lightness: 20%)
+  &:active
+    +box-shadow( inset 0 2px 0 rgba(0, 0, 0, 0.1))
+    top:  2px
+    margin-bottom: 4px
+    border-bottom-width: 0
+
+
+
+/* Buttons with dark backgrounds */
+.button.nav,
+.button.warn,
+.button.primary,
+.nav-previous .button,
+.nav-next .button
+  color: #fff
+  @include text-shadow(rgba(0,0,0, 0.2) 1px 1px 0)
+
+
+.button.nav,
+.nav-previous .button,
+.nav-next .button
+  background-color: $blue
+  border-color: scale-color($blue, $lightness: -10%)
+  &:hover
+    background-color: scale-color($blue, $lightness: 20%)
+
+
+
+
+.button.warn
+  background-color: $orange
+  border-color: scale-color($orange, $lightness: -10%)
+  &:hover
+    background-color: scale-color($orange, $lightness: 20%)
+
+
+
+.button.primary
+  background-color: $green
+  border-color: $green
+  &:hover
+    background-color: scale-color($green, $lightness: 20%)
+
+
+
+
+
+
+
 h1
   font-size: 36px
   margin-bottom: .5em

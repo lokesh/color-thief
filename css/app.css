@@ -63,43 +63,214 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 3, ../sass/app.sass */
-body {
-  color: #444444;
-  font-family: "lucida grande", sans-serif;
-  line-height: 1.625em;
-  padding: 40px;
+/* =Global */
+/* line 9, ../sass/app.sass */
+body, input, textarea {
+  margin: 40px;
+  color: #555555;
+  font: 16px/1.625em "Varela Round", "lucida grande", tahoma, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* line 9, ../sass/app.sass */
+/* line 17, ../sass/app.sass */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Terminal Dosis", "lucida grande", tahoma, sans-serif;
+  line-height: 1em;
+  font-weight: 600;
+}
+
+/* line 23, ../sass/app.sass */
+h1 {
+  font-size: 60px;
+}
+
+/* line 26, ../sass/app.sass */
+h2 {
+  font-size: 24px;
+  line-height: 1.2em;
+}
+
+/* line 30, ../sass/app.sass */
+h3 {
+  font-size: 18px;
+  letter-spacing: 0.1em;
+}
+
+/* line 34, ../sass/app.sass */
+p {
+  margin-bottom: 1.25em;
+}
+
+/* line 38, ../sass/app.sass */
+strong {
+  font-weight: bold;
+}
+
+/* Forms */
+/* line 44, ../sass/app.sass */
+input[type=text],
+input[type=password],
+textarea {
+  background: #fafafa;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dddddd;
+  color: #888888;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  border-radius: 4px;
+}
+
+/* line 55, ../sass/app.sass */
+input[type=text]:focus,
+textarea:focus {
+  color: #373737;
+}
+
+/* line 59, ../sass/app.sass */
+textarea {
+  padding-left: 3px;
+  width: 98%;
+}
+
+/* line 63, ../sass/app.sass */
+input[type=text] {
+  padding: 3px;
+}
+
+/* Links */
+/* line 67, ../sass/app.sass */
+a {
+  color: #555555;
+  text-decoration: none;
+}
+/* line 70, ../sass/app.sass */
+a:hover {
+  color: #09a1ec;
+}
+
+/* line 75, ../sass/app.sass */
+.button {
+  text-transform: uppercase;
+  font-family: "Terminal Dosis", "lucida grande", tahoma, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  olor: #555555;
+  display: block;
+  float: left;
+  position: relative;
+  line-height: 1;
+  padding: 0.6em 1.5em 0.5em 1.5em;
+  border: 1px solid transparent;
+  -moz-box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+  -o-box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+  background-color: #eeeeee;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #d6d6d6;
+  margin-bottom: 6px;
+}
+/* line 92, ../sass/app.sass */
+.button:hover {
+  background-color: #f1f1f1;
+}
+/* line 94, ../sass/app.sass */
+.button:active {
+  -moz-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.1);
+  -o-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.1);
+  top: 2px;
+  margin-bottom: 4px;
+  border-bottom-width: 0;
+}
+
+/* Buttons with dark backgrounds */
+/* line 103, ../sass/app.sass */
+.button.nav,
+.button.warn,
+.button.primary,
+.nav-previous .button,
+.nav-next .button {
+  color: white;
+  text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 0;
+}
+
+/* line 112, ../sass/app.sass */
+.button.nav,
+.nav-previous .button,
+.nav-next .button {
+  background-color: #09a1ec;
+  border-color: #0891d4;
+}
+/* line 117, ../sass/app.sass */
+.button.nav:hover,
+.nav-previous .button:hover,
+.nav-next .button:hover {
+  background-color: #33b6f7;
+}
+
+/* line 123, ../sass/app.sass */
+.button.warn {
+  background-color: #ee8833;
+  border-color: #ec7818;
+}
+/* line 126, ../sass/app.sass */
+.button.warn:hover {
+  background-color: #f1a05c;
+}
+
+/* line 131, ../sass/app.sass */
+.button.primary {
+  background-color: #6bb445;
+  border-color: #6bb445;
+}
+/* line 134, ../sass/app.sass */
+.button.primary:hover {
+  background-color: #88c568;
+}
+
+/* line 143, ../sass/app.sass */
 h1 {
   font-size: 36px;
   margin-bottom: 0.5em;
 }
 
-/* line 16, ../sass/app.sass */
+/* line 150, ../sass/app.sass */
 .imageSection {
   overflow: hidden;
   *zoom: 1;
   margin-bottom: 40px;
 }
-/* line 19, ../sass/app.sass */
+/* line 153, ../sass/app.sass */
 .imageSection img {
   float: left;
   margin-right: 20px;
 }
-/* line 22, ../sass/app.sass */
+/* line 156, ../sass/app.sass */
 .imageSection .colors {
   width: 400px;
   float: left;
 }
-/* line 25, ../sass/app.sass */
+/* line 159, ../sass/app.sass */
 .imageSection .colors .function {
   overflow: hidden;
   *zoom: 1;
   margin-bottom: 10px;
 }
-/* line 28, ../sass/app.sass */
+/* line 162, ../sass/app.sass */
 .imageSection .colors .function .swatch {
   width: 40px;
   height: 20px;
@@ -108,7 +279,7 @@ h1 {
   float: left;
 }
 
-/* line 35, ../sass/app.sass */
+/* line 169, ../sass/app.sass */
 canvas {
   display: none;
 }
