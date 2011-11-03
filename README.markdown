@@ -3,21 +3,21 @@ by Lokesh Dhakar - [Blog](http://lokeshdhakar.com) - [Twitter](http://twitter.co
 
 A script for grabbing the dominant color or a representative color palette from an image. Uses javascript and canvas.
 
-## [Demo](http://lokeshdhakar.com/projects/color-thief)
+### [Demo](http://lokeshdhakar.com/projects/color-thief)
 
-##Requirements
+###Requirements
 * jQuery
 * quantize.js
 
-##Usage
+###Usage
 
-###getDominantColor(sourceImage)
+####getDominantColor(sourceImage)
 returns {r: num, g: num, b: num}
 
 Use the median cut algorithm provided by quantize.js to cluster similar
 colors and return the base color from the largest cluster.
 
-###createPalette(sourceImage, colorCount)
+####createPalette(sourceImage, colorCount)
 returns array[ {r: num, g: num, b: num}, {r: num, g: num, b: num}, ...]
 
 Use the median cut algorithm provided by quantize.js to cluster similar
