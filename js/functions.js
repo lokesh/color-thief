@@ -18,10 +18,13 @@ function getAverageRGB(sourceImage) {
 	// Add all the red values together, repeat for blue and green.
 	// Last step, divide by the number of pixels checked to get average.
     while ( (i += sampleSize * 4) < pixelCount ) {
-        ++count;
-        rgb.r += pixels[i];
-        rgb.g += pixels[i+1];
-        rgb.b += pixels[i+2];
+		// if pixel is mostly opaque
+		if(pixels[i+3] > 125){
+	        ++count;
+			rgb.r += pixels[i];
+	        rgb.g += pixels[i+1];
+	        rgb.b += pixels[i+2];
+		}
     }
 
   	rgb.r = Math.floor(rgb.r/count);
@@ -29,6 +32,33 @@ function getAverageRGB(sourceImage) {
     rgb.b = Math.floor(rgb.b/count);
 
 	return rgb;
+}
+
+
+
+function getDominantColor(sourceImage){
+
+	var palette = [];
+
+	// Create custom CanvasImage object
+	var image = new CanvasImage(sourceImage),
+		imageData = image.getImageData(),
+		pixels = imageData.data,
+		pixelCount = image.getPixelCount();
+		 
+		var pixelArray = [];
+
+		for (var i = 0; i < pixelCount; i++) {  
+			// If pixel is mostly opaque
+			if(pixels[i*4+3] >= 125){
+		   		pixelArray.push( [pixels[i*4], pixels[i*4+1], pixels[i*4+2]]);
+			}
+		};
+		
+		var cmap = MMCQ.quantize(pixelArray, 5);
+		var newPalette = cmap.palette();
+
+		return {r: newPalette[0][0], g: newPalette[0][1], b: newPalette[0][2]};
 }
 
 
@@ -98,7 +128,10 @@ function createMedianCutPalette(sourceImage, colorCount){
 		var pixelArray = [];
 
 		for (var i = 0; i < pixelCount; i++) {  
-		    pixelArray.push( [pixels[i*4], pixels[i*4+1], pixels[i*4+2]]);
+			// If pixel is mostly opaque
+			if(pixels[i*4+3] >= 125){
+		    	pixelArray.push( [pixels[i*4], pixels[i*4+1], pixels[i*4+2]]);
+			}
 		};
 		
 		var cmap = MMCQ.quantize(pixelArray, colorCount);

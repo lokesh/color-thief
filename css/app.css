@@ -65,42 +65,41 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 /* line 3, ../sass/app.sass */
 body {
-  background: #222222;
-  color: white;
+  color: #444444;
   font-family: "lucida grande", sans-serif;
   line-height: 1.625em;
   padding: 40px;
 }
 
-/* line 10, ../sass/app.sass */
+/* line 9, ../sass/app.sass */
 h1 {
   font-size: 36px;
   margin-bottom: 0.5em;
 }
 
-/* line 17, ../sass/app.sass */
+/* line 16, ../sass/app.sass */
 .imageSection {
   overflow: hidden;
   *zoom: 1;
   margin-bottom: 40px;
 }
-/* line 20, ../sass/app.sass */
+/* line 19, ../sass/app.sass */
 .imageSection img {
   float: left;
   margin-right: 20px;
 }
-/* line 23, ../sass/app.sass */
+/* line 22, ../sass/app.sass */
 .imageSection .colors {
   width: 400px;
   float: left;
 }
-/* line 26, ../sass/app.sass */
+/* line 25, ../sass/app.sass */
 .imageSection .colors .function {
   overflow: hidden;
   *zoom: 1;
   margin-bottom: 10px;
 }
-/* line 29, ../sass/app.sass */
+/* line 28, ../sass/app.sass */
 .imageSection .colors .function .swatch {
   width: 40px;
   height: 20px;
@@ -109,7 +108,7 @@ h1 {
   float: left;
 }
 
-/* line 36, ../sass/app.sass */
+/* line 35, ../sass/app.sass */
 canvas {
   display: none;
 }

@@ -3,17 +3,24 @@ $(document).ready(function(){
 	$('img').each(function(index){
 
 		var averageRGB = getAverageRGB(this);
+		var dominantColor = getDominantColor(this);
 		var areaPalette = createAreaBasedPalette(this, 9);
 		var medianPalette = createMedianCutPalette(this, 10);
 
-		var imageSection = $(this).closest('.imageSection'),
-			swatchEl;
+		var imageSection = $(this).closest('.imageSection');
 		
-		swatchEl = $('<div>', {
+		var swatchEl = $('<div>', {
 			'class': 'swatch'
 		}).css('background-color','rgba('+averageRGB.r+','+averageRGB.g+ ','+averageRGB.b+', 1)');
-		
+
 		imageSection.find('.averageRGB').append(swatchEl);
+
+		swatchEl = $('<div>', {
+			'class': 'swatch'
+		}).css('background-color','rgba('+dominantColor.r+','+dominantColor.g+ ','+dominantColor.b+', 1)');
+
+		imageSection.find('.dominantColor').append(swatchEl);
+
 
 		var areaBasedPalette = imageSection.find('.areaBasedPalette');
 
