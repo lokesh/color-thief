@@ -1,0 +1,36 @@
+$bgColor: #222
+$color: #888
+$headingColor: #fff
+$altColor: scale-color($color, $lightness: 50%)
+$lightGray: #eee
+$blue: #09a1ec
+$orange: #e83
+$green: #6bb445
+
+$radius: 4px
+ 
+@import "compass/reset" 
+@import "compass/css3"
+
+
+/* float clearing for IE6 */
+* html .clearfix
+  height: 1%
+  overflow: visible
+
+
+/* float clearing for IE7 */
+*+html .clearfix
+  min-height: 1%
+
+
+/* float clearing for everyone else */
+.clearfix:after
+  clear: both
+  content: "."
+  display: block
+  height: 0
+  visibility: hidden
+  font-size: 0
+
+
