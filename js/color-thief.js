@@ -38,27 +38,27 @@ var CanvasImage = function (image) {
     this.height = this.canvas.height = $(this.imgEl).height();
 
     this.context.drawImage(this.imgEl, 0, 0);
-}
+};
 
 CanvasImage.prototype.clear = function () {
     this.context.clearRect(0, 0, this.width, this.height);
-}
+};
 
 CanvasImage.prototype.update = function (imageData) {
     this.context.putImageData(imageData, 0, 0);
-}
+};
 
 CanvasImage.prototype.getPixelCount = function () {
     return this.width * this.height;
-}
+};
 
 CanvasImage.prototype.getImageData = function () {
     return this.context.getImageData(0, 0, this.width, this.height);
-}
+};
 
 CanvasImage.prototype.removeCanvas = function () {
     $(this.canvas).remove();
-}
+};
 
 
 /*
@@ -74,16 +74,16 @@ function getDominantColor(sourceImage) {
 
     // Create custom CanvasImage object
     var image = new CanvasImage(sourceImage),
-    imageData = image.getImageData(),
-    pixels = imageData.data,
-    pixelCount = image.getPixelCount();
+        imageData = image.getImageData(),
+        pixels = imageData.data,
+        pixelCount = image.getPixelCount();
 
     // Store the RGB values in an array format suitable for quantize function
     var pixelArray = [];
     for (var i = 0; i < pixelCount; i++) {
         // If pixel is mostly opaque and not white
-        if(pixels[i*4+3] >= 125){
-            if(!(pixels[i*4] > 250 && pixels[i*4+1] > 250 && pixels[i*4+2] > 250)){
+        if (pixels[i*4+3] >= 125) {
+            if (!(pixels[i*4] > 250 && pixels[i*4+1] > 250 && pixels[i*4+2] > 250)) {
                 pixelArray.push( [pixels[i*4], pixels[i*4+1], pixels[i*4+2]]);
             }
         }
@@ -101,7 +101,6 @@ function getDominantColor(sourceImage) {
 }
 
 
-
 /*
  * createPalette(sourceImage, colorCount)
  * returns array[ {r: num, g: num, b: num}, {r: num, g: num, b: num}, ...]
@@ -117,17 +116,17 @@ function createPalette(sourceImage, colorCount) {
 
     // Create custom CanvasImage object
     var image = new CanvasImage(sourceImage),
-    imageData = image.getImageData(),
-    pixels = imageData.data,
-    pixelCount = image.getPixelCount();
+        imageData = image.getImageData(),
+        pixels = imageData.data,
+        pixelCount = image.getPixelCount();
 
     // Store the RGB values in an array format suitable for quantize function
     var pixelArray = [];
     for (var i = 0; i < pixelCount; i++) {
         // If pixel is mostly opaque and not white
-        if(pixels[i*4+3] >= 125){
-            if(!(pixels[i*4] > 250 && pixels[i*4+1] > 250 && pixels[i*4+2] > 250)){
-                pixelArray.push( [pixels[i*4], pixels[i*4+1], pixels[i*4+2]]);
+        if (pixels[i*4+3] >= 125) {
+            if (!(pixels[i*4] > 250 && pixels[i*4+1] > 250 && pixels[i*4+2] > 250)) {
+                pixelArray.push([pixels[i*4], pixels[i*4+1], pixels[i*4+2]]);
             }
         }
     };
@@ -158,21 +157,21 @@ function getAverageRGB(sourceImage) {
 
     // Create custom CanvasImage object
     var image = new CanvasImage(sourceImage),
-    imageData = image.getImageData(),
-    pixels = imageData.data,
-    pixelCount = image.getPixelCount();
+        imageData = image.getImageData(),
+        pixels = imageData.data,
+        pixelCount = image.getPixelCount();
 
     // Reset vars
     var i = 0,
-    count = 0,
-    rgb = {r:0,g:0,b:0};
+        count = 0,
+        rgb = {r:0, g:0, b:0};
 
     // Loop through every # pixels. (# is set in Config above via the blockSize var)
     // Add all the red values together, repeat for blue and green.
     // Last step, divide by the number of pixels checked to get average.
     while ( (i += sampleSize * 4) < pixelCount ) {
         // if pixel is mostly opaque
-        if(pixels[i+3] > 125){
+        if (pixels[i+3] > 125) {
             ++count;
             rgb.r += pixels[i];
             rgb.g += pixels[i+1];
@@ -204,31 +203,31 @@ function createAreaBasedPalette(sourceImage, colorCount) {
 
     // Create custom CanvasImage object
     var image = new CanvasImage(sourceImage),
-    imageData = image.getImageData(),
-    pixels = imageData.data,
-    pixelCount = image.getPixelCount();
+        imageData = image.getImageData(),
+        pixels = imageData.data,
+        pixelCount = image.getPixelCount();
 
 
     // How big a pixel area does each palette color get
     var rowCount = colCount = Math.round(Math.sqrt(colorCount)),
-    colWidth = Math.round(image.width / colCount),
-    rowHeight = Math.round(image.height / rowCount);
+        colWidth = Math.round(image.width / colCount),
+        rowHeight = Math.round(image.height / rowCount);
 
     var count = offset = rowOffset = vertOffset = horizOffset = 0,
-    rgb = {r:0, g:0, b:0};
+        rgb = {r:0, g:0, b:0};
 
     // Loop through pixels section by section.
     // At the end of each section, push the average rgb color to palette array.
     for (var i=0; i<rowCount; i++) {
         vertOffset = i * rowHeight * image.width * 4;
 
-        for(var j=0; j<colCount; j++){
+        for (var j=0; j<colCount; j++) {
             horizOffset = j * colWidth * 4;
 
-            for( var k = 0; k < rowHeight; k++){
+            for (var k = 0; k < rowHeight; k++) {
                 rowOffset = k * image.width * 4;
 
-                for( var l = 0; l < colWidth; l++){
+                for (var l = 0; l < colWidth; l++) {
                     offset = vertOffset + horizOffset + rowOffset + (l * 4);
                     rgb.r += pixels[offset];
                     rgb.g += pixels[offset+1];
@@ -243,7 +242,7 @@ function createAreaBasedPalette(sourceImage, colorCount) {
             palette.push(rgb);
 
             // reset before next section
-            rgb = {r:0,g:0,b:0};
+            rgb = {r:0, g:0, b:0};
             count = 0;
         }
     }
