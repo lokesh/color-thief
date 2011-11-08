@@ -25,9 +25,9 @@
   It also simplifies some of the canvas context manipulation
   with a set of helper functions.
 */
-var CanvasImage = function(image){
+var CanvasImage = function (image) {
     // If jquery object is passed in, get html element
-    this.imgEl = (image.jquery)? image[0]: image;
+    this.imgEl = (image.jquery) ? image[0] : image;
 
     this.canvas = document.createElement('canvas'),
     this.context = this.canvas.getContext('2d');
@@ -40,23 +40,23 @@ var CanvasImage = function(image){
     this.context.drawImage(this.imgEl, 0, 0);
 }
 
-CanvasImage.prototype.clear = function() {
+CanvasImage.prototype.clear = function () {
     this.context.clearRect(0, 0, this.width, this.height);
 }
 
-CanvasImage.prototype.update = function(imageData) {
+CanvasImage.prototype.update = function (imageData) {
     this.context.putImageData(imageData, 0, 0);
 }
 
-CanvasImage.prototype.getPixelCount = function() {
+CanvasImage.prototype.getPixelCount = function () {
     return this.width * this.height;
 }
 
-CanvasImage.prototype.getImageData = function() {
+CanvasImage.prototype.getImageData = function () {
     return this.context.getImageData(0, 0, this.width, this.height);
 }
 
-CanvasImage.prototype.removeCanvas = function() {
+CanvasImage.prototype.removeCanvas = function () {
     $(this.canvas).remove();
 }
 
@@ -68,7 +68,7 @@ CanvasImage.prototype.removeCanvas = function() {
  * Use the median cut algorithm provided by quantize.js to cluster similar
  * colors and return the base color from the largest cluster.
  */
-function getDominantColor(sourceImage){
+function getDominantColor(sourceImage) {
 
     var palette = [];
 
@@ -111,7 +111,7 @@ function getDominantColor(sourceImage){
  *
  * BUGGY: Function does not always return the requested amount of colors. It can be +/- 2.
  */
-function createPalette(sourceImage, colorCount){
+function createPalette(sourceImage, colorCount) {
 
     var palette = [];
 
@@ -198,7 +198,7 @@ function getAverageRGB(sourceImage) {
  * BUGGY: Function does not always return the requested amount of colors. It can be +/- 2.
  *
  */
-function createAreaBasedPalette(sourceImage, colorCount){
+function createAreaBasedPalette(sourceImage, colorCount) {
 
     var palette = [];
 
@@ -215,11 +215,11 @@ function createAreaBasedPalette(sourceImage, colorCount){
     rowHeight = Math.round(image.height / rowCount);
 
     var count = offset = rowOffset = vertOffset = horizOffset = 0,
-    rgb = {r:0,g:0,b:0};
+    rgb = {r:0, g:0, b:0};
 
     // Loop through pixels section by section.
     // At the end of each section, push the average rgb color to palette array.
-    for(var i=0; i<rowCount; i++){
+    for (var i=0; i<rowCount; i++) {
         vertOffset = i * rowHeight * image.width * 4;
 
         for(var j=0; j<colCount; j++){
