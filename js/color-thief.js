@@ -80,11 +80,16 @@ function getDominantColor(sourceImage) {
 
     // Store the RGB values in an array format suitable for quantize function
     var pixelArray = [];
-    for (var i = 0; i < pixelCount; i++) {
+    for (var i = 0, offset, r, g, b, a; i < pixelCount; i++) {
+        offset = i * 4;
+        r = pixels[offset + 0];
+        g = pixels[offset + 1];
+        b = pixels[offset + 2];
+        a = pixels[offset + 3];
         // If pixel is mostly opaque and not white
-        if (pixels[i*4+3] >= 125) {
-            if (!(pixels[i*4] > 250 && pixels[i*4+1] > 250 && pixels[i*4+2] > 250)) {
-                pixelArray.push( [pixels[i*4], pixels[i*4+1], pixels[i*4+2]]);
+        if (a >= 125) {
+            if (!(r > 250 && g > 250 && b > 250)) {
+                pixelArray.push([r, g, b]);
             }
         }
     };
@@ -122,11 +127,16 @@ function createPalette(sourceImage, colorCount) {
 
     // Store the RGB values in an array format suitable for quantize function
     var pixelArray = [];
-    for (var i = 0; i < pixelCount; i++) {
+    for (var i = 0, offset, r, g, b, a; i < pixelCount; i++) {
+        offset = i * 4;
+        r = pixels[offset + 0];
+        g = pixels[offset + 1];
+        b = pixels[offset + 2];
+        a = pixels[offset + 3];
         // If pixel is mostly opaque and not white
-        if (pixels[i*4+3] >= 125) {
-            if (!(pixels[i*4] > 250 && pixels[i*4+1] > 250 && pixels[i*4+2] > 250)) {
-                pixelArray.push([pixels[i*4], pixels[i*4+1], pixels[i*4+2]]);
+        if (a >= 125) {
+            if (!(r > 250 && g > 250 && b > 250)) {
+                pixelArray.push([r, g, b]);
             }
         }
     };
