@@ -213,8 +213,9 @@ function createAreaBasedPalette(sourceImage, colorCount) {
         colWidth = Math.round(image.width / colCount),
         rowHeight = Math.round(image.height / rowCount);
 
-    var count = offset = rowOffset = vertOffset = horizOffset = 0,
-        rgb = {r:0, g:0, b:0};
+    var rgb = {r:0, g:0, b:0};
+    var count, offset, rowOffset, vertOffset, horizOffset;
+    count = offset = rowOffset = vertOffset = horizOffset = 0;
 
     // Loop through pixels section by section.
     // At the end of each section, push the average rgb color to palette array.
