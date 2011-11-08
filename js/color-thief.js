@@ -209,7 +209,8 @@ function createAreaBasedPalette(sourceImage, colorCount) {
 
 
     // How big a pixel area does each palette color get
-    var rowCount = colCount = Math.round(Math.sqrt(colorCount)),
+    var rowCount = Math.round(Math.sqrt(colorCount)),
+        colCount = rowCount,
         colWidth = Math.round(image.width / colCount),
         rowHeight = Math.round(image.height / rowCount);
 
