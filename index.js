@@ -19,15 +19,16 @@ $(document).ready(function () {
 
     // Once images are loaded, loop through each one, getting dominant color
     // and palette and displaying them.
-    $('img').imagesLoaded(function () {
+    $('img').imagesLoaded(function (images) {
 
-        $('img').each(function (index) {
+        $(images).each(function (index, image) {
 
-            var imageSection = $(this).closest('.imageSection'),
+            var $image = $(image);
+            var imageSection = $image.closest('.imageSection'),
             swatchEl;
 
             // Dominant Color
-            var dominantColor = getDominantColor(this);
+            var dominantColor = getDominantColor(image);
 
             swatchEl = $('<div>', {
                 'class': 'swatch'
@@ -37,8 +38,8 @@ $(document).ready(function () {
 
 
             // Palette
-            var colorCount = $(this).attr('data-colorcount') ? $(this).data('colorcount') : 10;
-            var medianPalette = createPalette(this, colorCount);
+            var colorCount = $image.attr('data-colorcount') ? $image.data('colorcount') : 10;
+            var medianPalette = createPalette(image, colorCount);
 
             var medianCutPalette = imageSection.find('.medianCutPalette .swatches');
             $.each(medianPalette, function (index, value) {
