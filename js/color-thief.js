@@ -222,16 +222,15 @@ function createAreaBasedPalette(sourceImage, colorCount) {
         colWidth = Math.round(image.width / colCount),
         rowHeight = Math.round(image.height / rowCount);
 
-    var rgb = {r:0, g:0, b:0}, 
-        count = 0;
-
     // Loop through pixels section by section.
     // At the end of each section, push the average rgb color to palette array.
     for (var i = 0, vertOffset; i<rowCount; i++) {
         vertOffset = i * rowHeight * image.width * 4;
 
-        for (var j = 0, horizOffset; j<colCount; j++) {
+        for (var j = 0, horizOffset, rgb, count; j<colCount; j++) {
             horizOffset = j * colWidth * 4;
+            rgb = {r:0, g:0, b:0};
+            count = 0;
 
             for (var k = 0, rowOffset; k < rowHeight; k++) {
                 rowOffset = k * image.width * 4;
@@ -249,10 +248,6 @@ function createAreaBasedPalette(sourceImage, colorCount) {
             rgb.g = Math.floor(rgb.g/count);
             rgb.b = Math.floor(rgb.b/count);
             palette.push(rgb);
-
-            // reset before next section
-            rgb = {r:0, g:0, b:0};
-            count = 0;
         }
     }
 
