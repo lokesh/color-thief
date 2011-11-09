@@ -23,14 +23,13 @@ $(document).ready(function () {
         var image = event.target;
         var $image = $(image);
         var imageSection = $image.closest('.imageSection'),
-        swatchEl;
+            swatchEl;
 
         // Dominant Color
         var dominantColor = getDominantColor(image);
 
-        swatchEl = $('<div>', {
-            'class': 'swatch'
-        }).css('background-color','rgba('+dominantColor.r+','+dominantColor.g+ ','+dominantColor.b+', 1)');
+        swatchEl = $('<div>', {'class': 'swatch' })
+            .css('background-color','rgba('+dominantColor.r+','+dominantColor.g+ ','+dominantColor.b+', 1)');
         imageSection.find('.dominantColor .swatches').append(swatchEl);
 
         // Palette
@@ -39,9 +38,8 @@ $(document).ready(function () {
         var medianCutPalette = imageSection.find('.medianCutPalette .swatches');
 
         $.each(medianPalette, function (index, value) {
-            swatchEl = $('<div>', {
-                'class': 'swatch'
-            }).css('background-color','rgba('+value[0]+','+value[1]+ ','+value[2]+', 1)');
+            swatchEl = $('<div>', {'class': 'swatch'})
+                .css('background-color', 'rgba('+ value +', 1)');
             medianCutPalette.append(swatchEl);
         });
     });
