@@ -70,39 +70,14 @@ CanvasImage.prototype.removeCanvas = function () {
  */
 function getDominantColor(sourceImage) {
 
-    var palette = [];
+    var palette = createPalette(sourceImage, 5);
+    var dominant = palette[0];
 
-    // Create custom CanvasImage object
-    var image = new CanvasImage(sourceImage),
-        imageData = image.getImageData(),
-        pixels = imageData.data,
-        pixelCount = image.getPixelCount();
-
-    // Store the RGB values in an array format suitable for quantize function
-    var pixelArray = [];
-    for (var i = 0, offset, r, g, b, a; i < pixelCount; i++) {
-        offset = i * 4;
-        r = pixels[offset + 0];
-        g = pixels[offset + 1];
-        b = pixels[offset + 2];
-        a = pixels[offset + 3];
-        // If pixel is mostly opaque and not white
-        if (a >= 125) {
-            if (!(r > 250 && g > 250 && b > 250)) {
-                pixelArray.push([r, g, b]);
-            }
-        }
-    }
-
-    // Send array to quantize function which clusters values
-    // using median cut algorithm
-    var cmap = MMCQ.quantize(pixelArray, 5);
-    var newPalette = cmap.palette();
-
-    // Clean up
-    image.removeCanvas();
-
-    return {r: newPalette[0][0], g: newPalette[0][1], b: newPalette[0][2]};
+    return {
+        r: dominant[0], 
+        g: dominant[1], 
+        b: dominant[2]
+    };
 }
 
 
@@ -117,8 +92,6 @@ function getDominantColor(sourceImage) {
  */
 function createPalette(sourceImage, colorCount) {
 
-    var palette = [];
-
     // Create custom CanvasImage object
     var image = new CanvasImage(sourceImage),
         imageData = image.getImageData(),
@@ -143,13 +116,14 @@ function createPalette(sourceImage, colorCount) {
 
     // Send array to quantize function which clusters values
     // using median cut algorithm
+
     var cmap = MMCQ.quantize(pixelArray, colorCount);
-    var newPalette = cmap.palette();
+    var palette = cmap.palette();
 
     // Clean up
     image.removeCanvas();
 
-    return newPalette;
+    return palette;
 }
 
 
