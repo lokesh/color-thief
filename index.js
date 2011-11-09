@@ -17,39 +17,32 @@ $(document).ready(function () {
     $("h1").lettering();
 
 
-    // Once images are loaded, loop through each one, getting dominant color
-    // and palette and displaying them.
-    $('img').imagesLoaded(function (images) {
+    // For each image: 
+    // Once image is loaded, get dominant color and palette and display them.
+    $('img').bind('load', function (event) {
+        var image = event.target;
+        var $image = $(image);
+        var imageSection = $image.closest('.imageSection'),
+        swatchEl;
 
-        $(images).each(function (index, image) {
+        // Dominant Color
+        var dominantColor = getDominantColor(image);
 
-            var $image = $(image);
-            var imageSection = $image.closest('.imageSection'),
-            swatchEl;
+        swatchEl = $('<div>', {
+            'class': 'swatch'
+        }).css('background-color','rgba('+dominantColor.r+','+dominantColor.g+ ','+dominantColor.b+', 1)');
+        imageSection.find('.dominantColor .swatches').append(swatchEl);
 
-            // Dominant Color
-            var dominantColor = getDominantColor(image);
+        // Palette
+        var colorCount = $image.attr('data-colorcount') ? $image.data('colorcount') : 10;
+        var medianPalette = createPalette(image, colorCount);
+        var medianCutPalette = imageSection.find('.medianCutPalette .swatches');
 
+        $.each(medianPalette, function (index, value) {
             swatchEl = $('<div>', {
                 'class': 'swatch'
-            }).css('background-color','rgba('+dominantColor.r+','+dominantColor.g+ ','+dominantColor.b+', 1)');
-            imageSection.find('.dominantColor .swatches').append(swatchEl);
-
-
-
-            // Palette
-            var colorCount = $image.attr('data-colorcount') ? $image.data('colorcount') : 10;
-            var medianPalette = createPalette(image, colorCount);
-
-            var medianCutPalette = imageSection.find('.medianCutPalette .swatches');
-            $.each(medianPalette, function (index, value) {
-                swatchEl = $('<div>', {
-                    'class': 'swatch'
-                }).css('background-color','rgba('+value[0]+','+value[1]+ ','+value[2]+', 1)');
-                medianCutPalette.append(swatchEl);
-            });
-
+            }).css('background-color','rgba('+value[0]+','+value[1]+ ','+value[2]+', 1)');
+            medianCutPalette.append(swatchEl);
         });
-
     });
 });
