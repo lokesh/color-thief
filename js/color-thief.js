@@ -187,9 +187,9 @@ function getAverageRGB(sourceImage) {
         }
     }
 
-    rgb.r = Math.floor(rgb.r/count);
-    rgb.g = Math.floor(rgb.g/count);
-    rgb.b = Math.floor(rgb.b/count);
+    rgb.r = ~~(rgb.r/count);
+    rgb.g = ~~(rgb.g/count);
+    rgb.b = ~~(rgb.b/count);
 
     return rgb;
 }
@@ -244,9 +244,9 @@ function createAreaBasedPalette(sourceImage, colorCount) {
                 }
 
             }
-            rgb.r = Math.floor(rgb.r/count);
-            rgb.g = Math.floor(rgb.g/count);
-            rgb.b = Math.floor(rgb.b/count);
+            rgb.r = ~~(rgb.r/count);
+            rgb.g = ~~(rgb.g/count);
+            rgb.b = ~~(rgb.b/count);
             palette.push(rgb);
         }
     }
