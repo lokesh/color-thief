@@ -91,7 +91,7 @@ function getDominantColor(sourceImage) {
                 pixelArray.push([r, g, b]);
             }
         }
-    };
+    }
 
     // Send array to quantize function which clusters values
     // using median cut algorithm
@@ -137,7 +137,7 @@ function createPalette(sourceImage, colorCount) {
                 pixelArray.push([r, g, b]);
             }
         }
-    };
+    }
 
     // Send array to quantize function which clusters values
     // using median cut algorithm
