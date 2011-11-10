@@ -73,11 +73,7 @@ function getDominantColor(sourceImage) {
     var palette = createPalette(sourceImage, 5);
     var dominant = palette[0];
 
-    return {
-        r: dominant[0], 
-        g: dominant[1], 
-        b: dominant[2]
-    };
+    return dominant;
 }
 
 

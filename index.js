@@ -29,7 +29,7 @@ $(document).ready(function () {
         var dominantColor = getDominantColor(image);
 
         swatchEl = $('<div>', {'class': 'swatch' })
-            .css('background-color','rgba('+dominantColor.r+','+dominantColor.g+ ','+dominantColor.b+', 1)');
+            .css('background-color','rgba('+ dominantColor +', 1)');
         imageSection.find('.dominantColor .swatches').append(swatchEl);
 
         // Palette
