@@ -36,6 +36,6 @@ Thumbs.db
 # App Files #
 #############
 *.tmproj
-*.scssc
-*.sassc
+*.css
+*.sass-cache
 *.sass
