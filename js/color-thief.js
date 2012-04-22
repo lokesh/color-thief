@@ -92,6 +92,14 @@ function getDominantColor(sourceImage){
 	// Send array to quantize function which clusters values
 	// using median cut algorithm
 	var cmap = MMCQ.quantize(pixelArray, 5);
+	
+	if ( cmap === false ) {
+	    // Clean up
+	    image.removeCanvas();
+	
+	    return false;
+	}
+  
 	var newPalette = cmap.palette();
 
 	// Clean up
@@ -135,6 +143,14 @@ function createPalette(sourceImage, colorCount){
 	// Send array to quantize function which clusters values
 	// using median cut algorithm
 	var cmap = MMCQ.quantize(pixelArray, colorCount);
+	
+	if ( cmap === false ) {
+	    // Clean up
+	    image.removeCanvas();
+	
+	    return false;
+	}
+	
 	var newPalette = cmap.palette();
 
 	// Clean up
