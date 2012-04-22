@@ -4,12 +4,13 @@
  *
  * Licensed under the Creative Commons Attribution 2.5 License - http://creativecommons.org/licenses/by/2.5/
  *
- * The median cut palette function uses quantize.js which is written by Nick Rabinowitz
- * and licensed under the MIT license. Big props to Nick as this is where the magic happens.
+ * # Thanks
+ * Nick Rabinowitz: Created quantize.js which is used by the median cut palette function. This handles all the hard clustering math.
+ * John Schulz: All around mad genius who helped clean and optimize the code. @JFSIII
  *
- * == Classes
+ * ## Classes
  * CanvasImage
- * == Functions
+ * ## Functions
  * getDominantColor()
  * createPalette()
  * getAverageRGB()
@@ -66,8 +67,7 @@ CanvasImage.prototype.removeCanvas = function () {
  * returns {r: num, g: num, b: num}
  *
  * Use the median cut algorithm provided by quantize.js to cluster similar
- * colors and return the base color from the largest cluster.
- */
+ * colors and return the base color from the largest cluster. */
 function getDominantColor(sourceImage) {
 
     var palette = createPalette(sourceImage, 5);
@@ -120,6 +120,7 @@ function createPalette(sourceImage, colorCount) {
     image.removeCanvas();
 
     return palette;
+
 }
 
 
