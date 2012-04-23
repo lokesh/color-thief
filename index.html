@@ -46,18 +46,18 @@
 <!-- Using Mustache templating -->
 <script id='template' type='text/x-mustache'>
   {{#images}}
-  <div class="imageSection clearfix {{class}} ">
+  <div class="imageSection {{class}} ">
     <div class="imageWrap">
       <img class="targetImage" src="img/{{file}}" data-colorcount="{{colorCount}}" />
     </div>
     <div class="colors">
-      <div class="function dominantColor clearfix">
+      <div class="function dominantColor">
         <h3>Dominant Color</h3>
-        <div class="swatches clearfix"></div>
+        <div class="swatches"></div>
       </div>
       <div class="function medianCutPalette clearfix">
         <h3>Palette</h3>
-        <div class="swatches clearfix"></div>
+        <div class="swatches"></div>
       </div>
     </div>
   </div>
