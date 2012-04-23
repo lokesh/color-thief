@@ -1,5 +1,5 @@
 /*
- * Image Palette v1.0
+ * Color Thief v1.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
  *
  * Licensed under the Creative Commons Attribution 2.5 License - http://creativecommons.org/licenses/by/2.5/
@@ -28,17 +28,17 @@
 */
 var CanvasImage = function (image) {
     // If jquery object is passed in, get html element
-    this.imgEl = (image.jquery) ? image[0] : image;
+    imgEl = (image.jquery) ? image[0] : image;
 
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
 
     document.body.appendChild(this.canvas);
 
-    this.width = this.canvas.width = $(this.imgEl).width();
-    this.height = this.canvas.height = $(this.imgEl).height();
+    this.width = this.canvas.width = imgEl.width;
+    this.height = this.canvas.height = imgEl.height;
 
-    this.context.drawImage(this.imgEl, 0, 0);
+    this.context.drawImage(imgEl, 0, 0, this.width, this.height);
 };
 
 CanvasImage.prototype.clear = function () {
