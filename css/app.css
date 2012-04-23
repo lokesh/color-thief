@@ -449,9 +449,3 @@ header {
 canvas {
   display: none;
 }
-
-/* line 181, ../sass/app.sass */
-img {
-  width: 100px;
-  height: 100px;
-}

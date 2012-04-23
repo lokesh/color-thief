@@ -1,0 +1,179 @@
+@import "compass/reset"
+@import "compass/css3"
+@import "compass/utilities/general/clearfix"
+
+body, input, textarea
+  margin: 40px
+  color: #888
+  background: #222
+  font: 16px/1.625em "Varela Round", "lucida grande", tahoma, sans-serif
+  -wbkite-font-smoothing: antialiased
+  
+h1, h2, h3, h4, h5, h6
+  color: white
+  font-family: "Terminal Dosis", "lucida grande", tahoma, sans-serif
+  line-height: 1em
+  font-weight: 600
+  margin-bottom: 0.5em
+ 
+h1
+  font-size: 72px
+  line-height: 0.5em
+  margin-bottom: 0.3em
+  small
+    font-size: 20px
+  span
+    +transition( color 1s)
+  &:hover
+    .char1
+      +transition( color .2s)    
+      color: red
+    .char2
+      +transition( color .2s .1s)    
+      color: orange
+    .char3
+      +transition( color .2s .2s)    
+      color: yellow
+    .char4
+      +transition( color .2s .3s)    
+      color: green
+    .char5
+      +transition( color .2s .4s)    
+      color: blue
+    .char6
+      +transition( color .2s .5s)    
+      color: indigo
+    .char7
+      +transition( color .2s .6s)    
+      color: violet
+    .char8
+      +transition( color .2s .7s)    
+      color: red
+    .char9
+      +transition( color .2s .8s)    
+      color: orange
+    .char10
+      +transition( color .2s .9s)    
+      color: yellow
+    .char11
+      +transition( color .2s 1s)    
+      color: green
+
+h2
+  font-size: 40px
+  line-height: 1.2em
+  text-align: center
+
+h3
+  font-size: 16px
+  letter-spacing: 0.1em
+  text-transform: uppercase
+
+h4
+  font-size: 20px
+  margin-bottom: 1.25em
+
+p
+  margin-bottom: 1.25em
+
+
+strong
+  font-weight: bold
+  
+  
+/* Forms */
+input
+  &[type=text], &[type=password]
+    background: #fafafa
+    +box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.1))
+    border: 1px solid #dddddd
+    color: #888888
+    +border-radius(4px)
+
+textarea
+  background: #fafafa
+  +box-shadow( inset 0 1px 1px rgba(0, 0, 0, 0.1))
+  border: 1px solid #dddddd
+  color: #888888
+  +border-radius(4px)
+
+input[type=text]:focus
+  color: #373737
+
+textarea
+  &:focus
+    color: #373737
+  padding-left: 3px
+  width: 98%
+
+input[type=text]
+  padding: 3px
+
+
+/* Links */
+a
+  color: #09a1ec
+  text-decoration: none
+  &:hover
+    color: #7fd2fa
+
+#container
+  width: 900px
+  margin: 0 auto
+
+header
+  padding-bottom: 40px
+  text-align: center
+  width: 600px
+  margin: 0 auto
+
+.medianCutPalette h3
+  margin-top: 20px
+
+.imageSection
+  margin-bottom: 80px
+  background: #111111
+  +border-radius(10px)
+  +pie-clearfix
+  .imageWrap
+    +border-left-radius(10px)
+    width: 400px
+    height: 300px
+    float: left
+    margin-right: 20px
+    background: url(../img/dark_checkered_bg.png)
+    .targetImage
+      +border-left-radius(10px)
+  .colors
+    margin-top: 20px
+    width: 400px
+    float: left
+    .function
+      clear: left
+      margin-bottom: 10px
+      +pie-clearfix
+      .swatches .swatch
+        width: 40px
+        height: 20px
+        margin-right: 2px
+        background: #dddddd
+        float: left
+        +transition( all .5s)
+        &:hover
+          +transition( none)
+          +scale(1.2, 1.2)
+          +box-shadow( 0 1px 10px black)
+        &:first-child
+          +border-left-radius(4px)
+        &:last-child
+          +border-right-radius(4px)
+
+/* Hardcoding the offset for the FB icon example
+.fbIcon .imageWrap .targetImage
+  +border-radius(0)
+  position: relative
+  top: 142px
+  left: 192px
+
+canvas
+  display: none

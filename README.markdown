@@ -33,7 +33,7 @@ colors.
 ##License
 by Lokesh Dhakar | [lokeshdhakar.com](http://www.lokeshdhakar.com)  | [twitter.com/lokeshdhakar](http://twitter.com/lokeshdhakar)  
 
-Thanks to [jfsiii](https://github.com/jfsiii) for a large number of code improvements and other for submitting issues and fixes.
+Thanks to [jfsiii](https://github.com/jfsiii) for a large number of code improvements and others for submitting issues and fixes.
 
 Licensed under the [Creative Commons Attribution 2.5 License](http://creativecommons.org/licenses/by/2.5/)
 
