@@ -36,6 +36,6 @@ Thumbs.db
 # App Files #
 #############
 *.tmproj
-*.css
-*.sass-cache
-*.sass
+.sass-cache/*
+Rakefile
+rsync-exclude
