@@ -1,5 +1,5 @@
 /*
- * Image Palette v1.0
+ * Color Thief v1.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
  *
  * Licensed under the Creative Commons Attribution 2.5 License - http://creativecommons.org/licenses/by/2.5/
