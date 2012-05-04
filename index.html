@@ -18,27 +18,39 @@
 </head>
 <body>
 
+<div id="dropbox">
+  <span class="message">Drop images here to upload. <br /><i>(they will only be visible to you)</i></span>
+</div>
+
+
 <div id="container">
 	<header>
       <h1>Color Thief</h1>
-      <h4><a href="http://lokeshdhakar.com">by Lokesh Dhakar</a></small></h4>
+      <h4><a href="http://lokeshdhakar.com">by Lokesh Dhakar</a></small> <span class="divider">|</span> <a href="https://twitter.com/intent/user?screen_name=lokeshdhakar">Follow me on Twitter</a></h4>
       
-      <p>A script for grabbing the dominant color or color palette from an image. Uses Javascript and the canvas tag to make it happen.</p>
+      <p class="lead">A script for grabbing the dominant color or color palette from an image. Uses Javascript and the canvas tag to make it happen.</p>
       <p><a href="http://www.lokeshdhakar.com/color-thief/">Read more on my blog</a> | <a href="https://github.com/lokesh/color-thief">Get the code on Github</a>
       </p>
 	</header>
 
-  <h2>Examples</h2>
-	<div id="main" role="main">
 
-	</div>
+  <h2>Try it out</h2>
+  <section class="try">
+    <div class="imageSection">
+        test
+    </div>
+  </section>
+  
+  <h2>Examples</h2>
+	<section class="examples" id="main" role="main">
+
+	</section>
 </div> <!--! end of #container -->
 
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
 <script src="js/libs/jquery.lettering.js"></script>
+<script src="js/libs/jquery.filedrop.js"></script>
 <script src="js/libs/mustache.js"></script>
-
-
 <script src="js/libs/quantize.js"></script>
 <script src="js/color-thief.js"></script>
 
