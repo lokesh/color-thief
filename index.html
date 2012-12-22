@@ -29,21 +29,13 @@
 	</header>
 
 	<div id="main" role="main">
-    <h2>Test it out</h2>
-      <div class="imageSection">
-        <div id="dropZone" class="imageWrap">
-        </div>
-        <div class="colors">
-          <div class="function dominantColor">
-            <h3>Dominant Color</h3>
-            <div class="swatches"></div>
-          </div>
-          <div class="function medianCutPalette clearfix">
-            <h3>Palette</h3>
-            <div class="swatches"></div>
-          </div>
-        </div>
+    <div id='dragDrop' style='display: none'>
+      <h2>Test it out</h2>
+      <div id="dropZone" class="dropZone">
       </div>
+
+      <div id="draggedImages"></div>
+    </div>
 
     <h2>Examples</h2>
 
@@ -64,7 +56,7 @@
   {{#images}}
   <div class="imageSection {{class}} ">
     <div class="imageWrap">
-      <img class="targetImage" src="img/{{file}}" data-colorcount="{{colorCount}}" />
+      <img class="targetImage" src="{{file}}" data-colorcount="{{colorCount}}" />
     </div>
     <div class="colors">
       <div class="function dominantColor">

@@ -229,18 +229,26 @@ strong {
 
 /* Drag and Drop area */
 /* line 84, ../sass/app.sass */
-#dropZone {
+.dropZone {
+  width: 900px;
+  height: 200px;
+  margin-bottom: 60px;
   background: url("../img/drag_placeholder.png");
 }
-/* line 86, ../sass/app.sass */
-#dropZone.dragging {
+/* line 89, ../sass/app.sass */
+.dropZone.dragging {
   -webkit-box-shadow: inset 0 1px 10px #09a1ec;
   -moz-box-shadow: inset 0 1px 10px #09a1ec;
   box-shadow: inset 0 1px 10px #09a1ec;
 }
 
+/* line 91, ../sass/app.sass */
+.droppedImage {
+  display: none;
+}
+
 /* Forms */
-/* line 93, ../sass/app.sass */
+/* line 99, ../sass/app.sass */
 input[type=text], input[type=password] {
   background: #fafafa;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -255,7 +263,7 @@ input[type=text], input[type=password] {
   border-radius: 4px;
 }
 
-/* line 100, ../sass/app.sass */
+/* line 106, ../sass/app.sass */
 textarea {
   background: #fafafa;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -270,44 +278,44 @@ textarea {
   border-radius: 4px;
 }
 
-/* line 107, ../sass/app.sass */
+/* line 113, ../sass/app.sass */
 input[type=text]:focus {
   color: #373737;
 }
 
-/* line 110, ../sass/app.sass */
+/* line 116, ../sass/app.sass */
 textarea {
   padding-left: 3px;
   width: 98%;
 }
-/* line 111, ../sass/app.sass */
+/* line 117, ../sass/app.sass */
 textarea:focus {
   color: #373737;
 }
 
-/* line 116, ../sass/app.sass */
+/* line 122, ../sass/app.sass */
 input[type=text] {
   padding: 3px;
 }
 
 /* Links */
-/* line 121, ../sass/app.sass */
+/* line 127, ../sass/app.sass */
 a {
   color: #09a1ec;
   text-decoration: none;
 }
-/* line 124, ../sass/app.sass */
+/* line 130, ../sass/app.sass */
 a:hover {
   color: #7fd2fa;
 }
 
-/* line 127, ../sass/app.sass */
+/* line 133, ../sass/app.sass */
 #container {
   width: 900px;
   margin: 0 auto;
 }
 
-/* line 131, ../sass/app.sass */
+/* line 137, ../sass/app.sass */
 header {
   padding-bottom: 40px;
   text-align: center;
@@ -315,12 +323,12 @@ header {
   margin: 0 auto;
 }
 
-/* line 137, ../sass/app.sass */
+/* line 143, ../sass/app.sass */
 .medianCutPalette h3 {
   margin-top: 20px;
 }
 
-/* line 140, ../sass/app.sass */
+/* line 146, ../sass/app.sass */
 .imageSection {
   margin-bottom: 80px;
   background: #111111;
@@ -337,7 +345,7 @@ header {
   display: table;
   clear: both;
 }
-/* line 145, ../sass/app.sass */
+/* line 151, ../sass/app.sass */
 .imageSection .imageWrap {
   -moz-border-radius-topleft: 10px;
   -webkit-border-top-left-radius: 10px;
@@ -350,23 +358,15 @@ header {
   float: left;
   margin-right: 20px;
   background: url(../img/dark_checkered_bg.png);
+  overflow: hidden;
 }
-/* line 152, ../sass/app.sass */
-.imageSection .imageWrap .targetImage {
-  -moz-border-radius-topleft: 10px;
-  -webkit-border-top-left-radius: 10px;
-  border-top-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-/* line 154, ../sass/app.sass */
+/* line 160, ../sass/app.sass */
 .imageSection .colors {
   margin-top: 20px;
   width: 400px;
   float: left;
 }
-/* line 158, ../sass/app.sass */
+/* line 164, ../sass/app.sass */
 .imageSection .colors .function {
   clear: left;
   margin-bottom: 10px;
@@ -378,7 +378,7 @@ header {
   display: table;
   clear: both;
 }
-/* line 162, ../sass/app.sass */
+/* line 168, ../sass/app.sass */
 .imageSection .colors .function .swatches .swatch {
   width: 40px;
   height: 20px;
@@ -390,7 +390,7 @@ header {
   -o-transition: all 0.5s;
   transition: all 0.5s;
 }
-/* line 169, ../sass/app.sass */
+/* line 175, ../sass/app.sass */
 .imageSection .colors .function .swatches .swatch:hover {
   -webkit-transition: none;
   -moz-transition: none;
@@ -405,7 +405,7 @@ header {
   -moz-box-shadow: 0 1px 10px black;
   box-shadow: 0 1px 10px black;
 }
-/* line 173, ../sass/app.sass */
+/* line 179, ../sass/app.sass */
 .imageSection .colors .function .swatches .swatch:first-child {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
@@ -414,7 +414,7 @@ header {
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-/* line 175, ../sass/app.sass */
+/* line 181, ../sass/app.sass */
 .imageSection .colors .function .swatches .swatch:last-child {
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
@@ -425,7 +425,7 @@ header {
 }
 
 /* Hardcoding the offset for the FB icon example */
-/* line 179, ../sass/app.sass */
+/* line 185, ../sass/app.sass */
 .fbIcon .imageWrap .targetImage {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -437,7 +437,7 @@ header {
   left: 192px;
 }
 
-/* line 185, ../sass/app.sass */
+/* line 191, ../sass/app.sass */
 canvas {
   display: none;
 }

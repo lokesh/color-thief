@@ -3,43 +3,53 @@ $(document).ready(function () {
     // Use mustache.js templating to create layout
 
     var imageArray = { images: [
-        {"file": "3.jpg"},
-        {"file": "4.jpg"},
-        {"file": "5.jpg"},
-        {"file": "logo1.png"},
-        {"file": "icon1.png", "colorCount": "4", "class": "fbIcon"}
+        {"file": "img/3.jpg"},
+        {"file": "img/4.jpg"},
+        {"file": "img/5.jpg"},
+        {"file": "img/logo1.png"},
+        {"file": "img/icon1.png", "colorCount": "4", "class": "fbIcon"}
     ]};
 
-    // Setup the drag and drop behavior
-    var $dropZone = $('#dropZone');
+    // Setup the drag and drop behavior if supported
+    if (typeof window.FileReader === 'function') {
+      $('#dragDrop').show();
 
-    var dragEnter = function( evt ){
-      evt.stopPropagation();
-      evt.preventDefault();
-      $dropZone.addClass('dragging');
-    };
+      var $dropZone = $('#dropZone');
 
-    var dragLeave = function( evt ){
-      evt.stopPropagation();
-      evt.preventDefault();
-      $dropZone.removeClass('dragging');
-    };
+      var dragEnter = function( evt ){
+        evt.stopPropagation();
+        evt.preventDefault();
+        $dropZone.addClass('dragging');
+      };
 
-    var dragOver = function( evt ){
-      evt.stopPropagation();
-      evt.preventDefault();
-    };
+      var dragLeave = function( evt ){
+        evt.stopPropagation();
+        evt.preventDefault();
+        $dropZone.removeClass('dragging');
+      };
 
-    var drop = function( evt ){
-      evt.stopPropagation();
-      evt.preventDefault();
-      $dropZone.removeClass('dragging');
-      
-      var dt = evt.originalEvent.dataTransfer;
-      var files = dt.files;
+      var dragOver = function( evt ){
+        evt.stopPropagation();
+        evt.preventDefault();
+      };
 
-      handleFile( files );
-    };
+      var drop = function( evt ){
+        evt.stopPropagation();
+        evt.preventDefault();
+        $dropZone.removeClass('dragging');
+        
+        var dt = evt.originalEvent.dataTransfer;
+        var files = dt.files;
+
+        handleFiles( files );
+      };
+
+      $dropZone
+        .on('dragenter', dragEnter)
+        .on('dragleave', dragLeave)
+        .on('dragover', dragOver)
+        .on('drop', drop);
+    }
 
     var displayColors = function( image ) {
       var $image = $(image);
@@ -64,32 +74,35 @@ $(document).ready(function () {
       appendColors(medianPalette, medianCutPalette);
     };
 
-    function handleFile(files) {
-      var file = files[0];
+    function handleFiles( files ) {
       var imageType = /image.*/;
+      var fileCount = files.length;
 
-      if (file.type.match(imageType)) {
-        var img = document.createElement("img");
-        img.classList.add("targetImage");
-        img.width = 400;
-        img.height = 300;
-        img.file = file;
-        $dropZone.append(img);
-         
-        var reader = new FileReader();
-        reader.onload = function(e){
-            img.src = e.target.result;
-            displayColors( img );
-          };
-        reader.readAsDataURL(file);
+      for (var i = 0; i < fileCount; i++) {
+        var file = files[i];
+
+        if ( file.type.match(imageType) ) {
+          var reader = new FileReader();
+          reader.onload = function( e ) {
+              imageInfo = { images: [
+                  {'class': 'droppedImage', file: e.target.result}
+                ]};
+
+              var html = Mustache.to_html($('#template').html(), imageInfo);
+              $('#draggedImages').prepend( html );
+
+              var img = $('.droppedImage .targetImage').get(0);
+              displayColors( img );
+              util.centerImg( img, 400, 300);
+
+              $('.droppedImage').slideDown();
+            };
+          reader.readAsDataURL(file);
+        } else {
+          alert('File must be a supported image type.');
+        }
       }
     }
-
-    $dropZone
-      .on('dragenter', dragEnter)
-      .on('dragleave', dragLeave)
-      .on('dragover', dragOver)
-      .on('drop', drop);
 
     var html = Mustache.to_html($('#template').html(), imageArray);
     $('#main').append(html);
@@ -104,3 +117,20 @@ $(document).ready(function () {
       displayColors( image );
     });
 });
+
+var util = {
+  centerImg: function( img, containerWidth, containerHeight) {
+      var $img = $(img);
+      var imgHeight = $img.get(0).height;
+      var imgWidth = $img.get(0).width;
+
+      if ( imgHeight < containerHeight ) {
+        var vOffset = ( containerHeight - imgHeight )/2;
+        $img.css('margin-top', ( hOffset + "px" ));
+      }
+      if ( imgWidth < containerWidth ) {
+        var hOffset = ( containerWidth - imgWidth )/2;
+        $img.css('margin-left', ( hOffset + "px" ));
+      }
+    }
+};
