@@ -92,10 +92,14 @@ $(document).ready(function () {
               $('#draggedImages').prepend( html );
 
               var img = $('.droppedImage .targetImage').get(0);
-              displayColors( img );
-              util.centerImg( img, 400, 300);
 
-              $('.droppedImage').slideDown();
+              // Must wait for image to load in DOM, not just load from FileReader
+              $(img).on('load', function() {
+                displayColors( img );
+                util.centerImg( img, 400, 300);
+
+                $('.droppedImage').slideDown();
+              });
             };
           reader.readAsDataURL(file);
         } else {
@@ -121,16 +125,25 @@ $(document).ready(function () {
 var util = {
   centerImg: function( img, containerWidth, containerHeight) {
       var $img = $(img);
-      var imgHeight = $img.get(0).height;
       var imgWidth = $img.get(0).width;
+      var imgHeight = $img.get(0).height;
+      var imgAspectRatio = imgHeight/imgWidth;
 
-      if ( imgHeight < containerHeight ) {
-        var vOffset = ( containerHeight - imgHeight )/2;
-        $img.css('margin-top', ( hOffset + "px" ));
+      if ( imgHeight > containerHeight ) {
+        imgWidth = containerHeight / imgAspectRatio;
+        $img.css('width', ( imgWidth + "px" ));
       }
+      if ( imgWidth > containerWidth ) {
+        $img.css('width', ( containerWidth + "px" ));
+        imgHeight =  imgAspectRatio * containerWidth;
+      }      
       if ( imgWidth < containerWidth ) {
         var hOffset = ( containerWidth - imgWidth )/2;
         $img.css('margin-left', ( hOffset + "px" ));
+      }
+      if ( imgHeight < containerHeight ) {
+        var vOffset = ( containerHeight - imgHeight )/2;
+        $img.css('margin-top', ( vOffset + "px" ));
       }
     }
 };
