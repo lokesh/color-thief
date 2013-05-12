@@ -28,13 +28,21 @@
       </p>
 	</header>
 
-  <h2>Examples</h2>
 	<div id="main" role="main">
+    <div id='dragDrop' style='display: none'>
+      <h2>Test it out</h2>
+      <div id="dropZone" class="dropZone">
+      </div>
+
+      <div id="draggedImages"></div>
+    </div>
+
+    <h2>Examples</h2>
 
 	</div>
 </div> <!--! end of #container -->
 
-<script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.8.3.min.js"><\/script>')</script>
 <script src="js/libs/jquery.lettering.js"></script>
 <script src="js/libs/mustache.js"></script>
 
@@ -48,7 +56,7 @@
   {{#images}}
   <div class="imageSection {{class}} ">
     <div class="imageWrap">
-      <img class="targetImage" src="img/{{file}}" data-colorcount="{{colorCount}}" />
+      <img class="targetImage" src="{{file}}" data-colorcount="{{colorCount}}" />
     </div>
     <div class="colors">
       <div class="function dominantColor">

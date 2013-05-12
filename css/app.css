@@ -1,4 +1,4 @@
-/* line 17, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 17, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -15,50 +15,50 @@ time, mark, audio, video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
   font: inherit;
+  font-size: 100%;
   vertical-align: baseline;
 }
 
-/* line 20, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-body {
+/* line 22, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html {
   line-height: 1;
 }
 
-/* line 22, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 24, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 26, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 28, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 101, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 103, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 30, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 32, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 114, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 116, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block;
 }
@@ -95,7 +95,6 @@ h1 small {
 h1 span {
   -webkit-transition: color 1s;
   -moz-transition: color 1s;
-  -ms-transition: color 1s;
   -o-transition: color 1s;
   transition: color 1s;
 }
@@ -103,97 +102,96 @@ h1 span {
 h1:hover .char1 {
   -webkit-transition: color 0.2s;
   -moz-transition: color 0.2s;
-  -ms-transition: color 0.2s;
   -o-transition: color 0.2s;
   transition: color 0.2s;
   color: red;
 }
 /* line 31, ../sass/app.sass */
 h1:hover .char2 {
-  -webkit-transition: color 0.2s 0.1s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.1s;
   -moz-transition: color 0.2s 0.1s;
-  -ms-transition: color 0.2s 0.1s;
   -o-transition: color 0.2s 0.1s;
   transition: color 0.2s 0.1s;
   color: orange;
 }
 /* line 34, ../sass/app.sass */
 h1:hover .char3 {
-  -webkit-transition: color 0.2s 0.2s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.2s;
   -moz-transition: color 0.2s 0.2s;
-  -ms-transition: color 0.2s 0.2s;
   -o-transition: color 0.2s 0.2s;
   transition: color 0.2s 0.2s;
   color: yellow;
 }
 /* line 37, ../sass/app.sass */
 h1:hover .char4 {
-  -webkit-transition: color 0.2s 0.3s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.3s;
   -moz-transition: color 0.2s 0.3s;
-  -ms-transition: color 0.2s 0.3s;
   -o-transition: color 0.2s 0.3s;
   transition: color 0.2s 0.3s;
   color: green;
 }
 /* line 40, ../sass/app.sass */
 h1:hover .char5 {
-  -webkit-transition: color 0.2s 0.4s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.4s;
   -moz-transition: color 0.2s 0.4s;
-  -ms-transition: color 0.2s 0.4s;
   -o-transition: color 0.2s 0.4s;
   transition: color 0.2s 0.4s;
   color: blue;
 }
 /* line 43, ../sass/app.sass */
 h1:hover .char6 {
-  -webkit-transition: color 0.2s 0.5s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.5s;
   -moz-transition: color 0.2s 0.5s;
-  -ms-transition: color 0.2s 0.5s;
   -o-transition: color 0.2s 0.5s;
   transition: color 0.2s 0.5s;
   color: indigo;
 }
 /* line 46, ../sass/app.sass */
 h1:hover .char7 {
-  -webkit-transition: color 0.2s 0.6s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.6s;
   -moz-transition: color 0.2s 0.6s;
-  -ms-transition: color 0.2s 0.6s;
   -o-transition: color 0.2s 0.6s;
   transition: color 0.2s 0.6s;
   color: violet;
 }
 /* line 49, ../sass/app.sass */
 h1:hover .char8 {
-  -webkit-transition: color 0.2s 0.7s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.7s;
   -moz-transition: color 0.2s 0.7s;
-  -ms-transition: color 0.2s 0.7s;
   -o-transition: color 0.2s 0.7s;
   transition: color 0.2s 0.7s;
   color: red;
 }
 /* line 52, ../sass/app.sass */
 h1:hover .char9 {
-  -webkit-transition: color 0.2s 0.8s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.8s;
   -moz-transition: color 0.2s 0.8s;
-  -ms-transition: color 0.2s 0.8s;
   -o-transition: color 0.2s 0.8s;
   transition: color 0.2s 0.8s;
   color: orange;
 }
 /* line 55, ../sass/app.sass */
 h1:hover .char10 {
-  -webkit-transition: color 0.2s 0.9s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 0.9s;
   -moz-transition: color 0.2s 0.9s;
-  -ms-transition: color 0.2s 0.9s;
   -o-transition: color 0.2s 0.9s;
   transition: color 0.2s 0.9s;
   color: yellow;
 }
 /* line 58, ../sass/app.sass */
 h1:hover .char11 {
-  -webkit-transition: color 0.2s 1s;
+  -webkit-transition: color 0.2s;
+  -webkit-transition-delay: 1s;
   -moz-transition: color 0.2s 1s;
-  -ms-transition: color 0.2s 1s;
   -o-transition: color 0.2s 1s;
   transition: color 0.2s 1s;
   color: green;
@@ -229,8 +227,28 @@ strong {
   font-weight: bold;
 }
 
+/* Drag and Drop area */
+/* line 84, ../sass/app.sass */
+.dropZone {
+  width: 900px;
+  height: 200px;
+  margin-bottom: 60px;
+  background: url("../img/drag_placeholder.png");
+}
+/* line 89, ../sass/app.sass */
+.dropZone.dragging {
+  -webkit-box-shadow: inset 0 1px 10px #09a1ec;
+  -moz-box-shadow: inset 0 1px 10px #09a1ec;
+  box-shadow: inset 0 1px 10px #09a1ec;
+}
+
+/* line 91, ../sass/app.sass */
+.droppedImage {
+  display: none;
+}
+
 /* Forms */
-/* line 86, ../sass/app.sass */
+/* line 99, ../sass/app.sass */
 input[type=text], input[type=password] {
   background: #fafafa;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -245,7 +263,7 @@ input[type=text], input[type=password] {
   border-radius: 4px;
 }
 
-/* line 93, ../sass/app.sass */
+/* line 106, ../sass/app.sass */
 textarea {
   background: #fafafa;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -260,44 +278,44 @@ textarea {
   border-radius: 4px;
 }
 
-/* line 100, ../sass/app.sass */
+/* line 113, ../sass/app.sass */
 input[type=text]:focus {
   color: #373737;
 }
 
-/* line 103, ../sass/app.sass */
+/* line 116, ../sass/app.sass */
 textarea {
   padding-left: 3px;
   width: 98%;
 }
-/* line 104, ../sass/app.sass */
+/* line 117, ../sass/app.sass */
 textarea:focus {
   color: #373737;
 }
 
-/* line 109, ../sass/app.sass */
+/* line 122, ../sass/app.sass */
 input[type=text] {
   padding: 3px;
 }
 
 /* Links */
-/* line 114, ../sass/app.sass */
+/* line 127, ../sass/app.sass */
 a {
   color: #09a1ec;
   text-decoration: none;
 }
-/* line 117, ../sass/app.sass */
+/* line 130, ../sass/app.sass */
 a:hover {
   color: #7fd2fa;
 }
 
-/* line 120, ../sass/app.sass */
+/* line 133, ../sass/app.sass */
 #container {
   width: 900px;
   margin: 0 auto;
 }
 
-/* line 124, ../sass/app.sass */
+/* line 137, ../sass/app.sass */
 header {
   padding-bottom: 40px;
   text-align: center;
@@ -305,12 +323,12 @@ header {
   margin: 0 auto;
 }
 
-/* line 130, ../sass/app.sass */
+/* line 143, ../sass/app.sass */
 .medianCutPalette h3 {
   margin-top: 20px;
 }
 
-/* line 133, ../sass/app.sass */
+/* line 146, ../sass/app.sass */
 .imageSection {
   margin-bottom: 80px;
   background: #111111;
@@ -321,62 +339,46 @@ header {
   border-radius: 10px;
   *zoom: 1;
 }
-/* line 38, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .imageSection:after {
   content: "";
   display: table;
   clear: both;
 }
-/* line 138, ../sass/app.sass */
+/* line 151, ../sass/app.sass */
 .imageSection .imageWrap {
   -moz-border-radius-topleft: 10px;
   -webkit-border-top-left-radius: 10px;
-  -ms-border-top-left-radius: 10px;
-  -o-border-top-left-radius: 10px;
   border-top-left-radius: 10px;
   -moz-border-radius-bottomleft: 10px;
   -webkit-border-bottom-left-radius: 10px;
-  -ms-border-bottom-left-radius: 10px;
-  -o-border-bottom-left-radius: 10px;
   border-bottom-left-radius: 10px;
   width: 400px;
   height: 300px;
   float: left;
   margin-right: 20px;
   background: url(../img/dark_checkered_bg.png);
+  overflow: hidden;
 }
-/* line 145, ../sass/app.sass */
-.imageSection .imageWrap .targetImage {
-  -moz-border-radius-topleft: 10px;
-  -webkit-border-top-left-radius: 10px;
-  -ms-border-top-left-radius: 10px;
-  -o-border-top-left-radius: 10px;
-  border-top-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  -ms-border-bottom-left-radius: 10px;
-  -o-border-bottom-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-/* line 147, ../sass/app.sass */
+/* line 160, ../sass/app.sass */
 .imageSection .colors {
   margin-top: 20px;
   width: 400px;
   float: left;
 }
-/* line 151, ../sass/app.sass */
+/* line 164, ../sass/app.sass */
 .imageSection .colors .function {
   clear: left;
   margin-bottom: 10px;
   *zoom: 1;
 }
-/* line 38, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .imageSection .colors .function:after {
   content: "";
   display: table;
   clear: both;
 }
-/* line 155, ../sass/app.sass */
+/* line 168, ../sass/app.sass */
 .imageSection .colors .function .swatches .swatch {
   width: 40px;
   height: 20px;
@@ -385,15 +387,13 @@ header {
   float: left;
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s;
 }
-/* line 162, ../sass/app.sass */
+/* line 175, ../sass/app.sass */
 .imageSection .colors .function .swatches .swatch:hover {
   -webkit-transition: none;
   -moz-transition: none;
-  -ms-transition: none;
   -o-transition: none;
   transition: none;
   -webkit-transform: scale(1.2, 1.2);
@@ -405,35 +405,27 @@ header {
   -moz-box-shadow: 0 1px 10px black;
   box-shadow: 0 1px 10px black;
 }
-/* line 166, ../sass/app.sass */
+/* line 179, ../sass/app.sass */
 .imageSection .colors .function .swatches .swatch:first-child {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
-  -ms-border-top-left-radius: 4px;
-  -o-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
-  -ms-border-bottom-left-radius: 4px;
-  -o-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-/* line 168, ../sass/app.sass */
+/* line 181, ../sass/app.sass */
 .imageSection .colors .function .swatches .swatch:last-child {
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
-  -ms-border-top-right-radius: 4px;
-  -o-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
-  -ms-border-bottom-right-radius: 4px;
-  -o-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
 
 /* Hardcoding the offset for the FB icon example */
-/* line 172, ../sass/app.sass */
+/* line 185, ../sass/app.sass */
 .fbIcon .imageWrap .targetImage {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -445,7 +437,7 @@ header {
   left: 192px;
 }
 
-/* line 178, ../sass/app.sass */
+/* line 191, ../sass/app.sass */
 canvas {
   display: none;
 }
