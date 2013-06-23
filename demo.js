@@ -1,14 +1,37 @@
 $(document).ready(function () {
 
-    // Use mustache.js templating to create layout
-
-    var imageArray = { images: [
-        {"file": "img/3.jpg"},
-        {"file": "img/4.jpg"},
-        {"file": "img/5.jpg"},
-        {"file": "img/logo1.png"},
-        {"file": "img/icon1.png", "colorCount": "4", "class": "fbIcon"}
+    // Uses mustache.js templating to create layout
+    var imageArray = {images: [
+        {"file": "img/photo1.jpg"},
+        {"file": "img/photo2.jpg"},
+        {"file": "img/photo3.jpg"}
     ]};
+
+    var displayColors = function(image) {
+      var $image = $(image);
+      var imageSection = $image.closest('.image-section');
+      var appendColors = function(colors, root) {
+          $.each(colors, function(index, value) {
+              var swatchEl = $('<div>', {'class': 'swatch'})
+                  .css('background-color', 'rgba('+ value +', 1)');
+              root.append(swatchEl);
+          });
+      };
+
+      var colorThief = new ColorThief();
+
+      // Dominant Color
+      var dominantColor = colorThief.getColor(image);
+      var dominantSwatch = imageSection.find('.get-color .swatches');
+      appendColors([dominantColor], dominantSwatch);
+
+      // Palette
+      var colorCount = $image.attr('data-colorcount') ? $image.data('colorcount') : 10;
+      var medianPalette = colorThief.getPalette(image, colorCount);
+      var medianCutPalette = imageSection.find('.get-palette .swatches');
+      appendColors(medianPalette, medianCutPalette);
+    };
+
 
     // Setup the drag and drop behavior if supported
     if (typeof window.FileReader === 'function') {
@@ -16,63 +39,37 @@ $(document).ready(function () {
 
       var $dropZone = $('#dropZone');
 
-      var dragEnter = function( evt ){
-        evt.stopPropagation();
-        evt.preventDefault();
+      var handleDragEnter = function(event){
         $dropZone.addClass('dragging');
+        return false;
       };
 
-      var dragLeave = function( evt ){
-        evt.stopPropagation();
-        evt.preventDefault();
+      var handleDragLeave = function(event){
         $dropZone.removeClass('dragging');
+        return false;
       };
 
-      var dragOver = function( evt ){
-        evt.stopPropagation();
-        evt.preventDefault();
+      var handleDragOver = function(event){
+        return false;
       };
 
-      var drop = function( evt ){
-        evt.stopPropagation();
-        evt.preventDefault();
+      var handleDrop = function(event){
         $dropZone.removeClass('dragging');
-        
-        var dt = evt.originalEvent.dataTransfer;
+
+        var dt    = event.originalEvent.dataTransfer;
         var files = dt.files;
 
-        handleFiles( files );
+        handleFiles(files);
+
+        return false;
       };
 
       $dropZone
-        .on('dragenter', dragEnter)
-        .on('dragleave', dragLeave)
-        .on('dragover', dragOver)
-        .on('drop', drop);
+        .on('dragenter', handleDragEnter)
+        .on('dragleave', handleDragLeave)
+        .on('dragover', handleDragOver)
+        .on('drop', handleDrop);
     }
-
-    var displayColors = function( image ) {
-      var $image = $(image);
-      var imageSection = $image.closest('.imageSection');
-      var appendColors = function (colors, root) {
-          $.each(colors, function (index, value) {
-              var swatchEl = $('<div>', {'class': 'swatch'})
-                  .css('background-color', 'rgba('+ value +', 1)');
-              root.append(swatchEl);
-          });
-      };
-
-      // Dominant Color
-      var dominantColor = getDominantColor(image);
-      var dominantSwatch = imageSection.find('.dominantColor .swatches');
-      appendColors([dominantColor], dominantSwatch);
-
-      // Palette
-      var colorCount = $image.attr('data-colorcount') ? $image.data('colorcount') : 10;
-      var medianPalette = createPalette(image, colorCount);
-      var medianCutPalette = imageSection.find('.medianCutPalette .swatches');
-      appendColors(medianPalette, medianCutPalette);
-    };
 
     function handleFiles( files ) {
       var imageType = /image.*/;
@@ -108,18 +105,20 @@ $(document).ready(function () {
       }
     }
 
-    var html = Mustache.to_html($('#template').html(), imageArray);
-    $('#main').append(html);
-
     // Use lettering.js to give letter by letter styling control for the h1 title
     $("h1").lettering();
 
+
+    var html = Mustache.to_html($('#image-section-template').html(), imageArray);
+    $('#examples').append(html);
+
+
     // For each image:
     // Once image is loaded, get dominant color and palette and display them.
-    $('img').bind('load', function (event) {
-      var image = event.target;
-      displayColors( image );
-    });
+    // $('img').bind('load', function (event) {
+    //   var image = event.target;
+    //   displayColors(image);
+    // });
 });
 
 var util = {
@@ -136,7 +135,7 @@ var util = {
       if ( imgWidth > containerWidth ) {
         $img.css('width', ( containerWidth + "px" ));
         imgHeight =  imgAspectRatio * containerWidth;
-      }      
+      }
       if ( imgWidth < containerWidth ) {
         var hOffset = ( containerWidth - imgWidth )/2;
         $img.css('margin-left', ( hOffset + "px" ));

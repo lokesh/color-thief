@@ -1,4 +1,4 @@
-/* line 17, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 17, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -20,412 +20,220 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-/* line 22, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 22, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html {
   line-height: 1;
 }
 
-/* line 24, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 26, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 28, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 30, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 103, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 103, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 32, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 32, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 116, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 116, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block;
 }
 
-/* line 5, ../sass/app.sass */
+/* line 29, ../sass/app.sass */
 body, input, textarea {
   margin: 40px;
-  color: #888888;
-  background: #222222;
-  font: 16px/1.625em "Varela Round", "lucida grande", tahoma, sans-serif;
-  -wbkite-font-smoothing: antialiased;
+  color: #aaaaaa;
+  background: #444444;
+  font-size: 18px;
+  font-family: "Karla", "lucida grande", sans-serif;
 }
 
-/* line 12, ../sass/app.sass */
+/* line 36, ../sass/app.sass */
 h1, h2, h3, h4, h5, h6 {
   color: white;
-  font-family: "Terminal Dosis", "lucida grande", tahoma, sans-serif;
-  line-height: 1em;
-  font-weight: 600;
+  line-height: 1.2em;
+  font-weight: 500;
   margin-bottom: 0.5em;
 }
 
-/* line 19, ../sass/app.sass */
-h1 {
-  font-size: 72px;
-  line-height: 0.5em;
-  margin-bottom: 0.3em;
-}
-/* line 23, ../sass/app.sass */
-h1 small {
-  font-size: 20px;
-}
-/* line 25, ../sass/app.sass */
-h1 span {
-  -webkit-transition: color 1s;
-  -moz-transition: color 1s;
-  -o-transition: color 1s;
-  transition: color 1s;
-}
-/* line 28, ../sass/app.sass */
-h1:hover .char1 {
-  -webkit-transition: color 0.2s;
-  -moz-transition: color 0.2s;
-  -o-transition: color 0.2s;
-  transition: color 0.2s;
-  color: red;
-}
-/* line 31, ../sass/app.sass */
-h1:hover .char2 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.1s;
-  -moz-transition: color 0.2s 0.1s;
-  -o-transition: color 0.2s 0.1s;
-  transition: color 0.2s 0.1s;
-  color: orange;
-}
-/* line 34, ../sass/app.sass */
-h1:hover .char3 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.2s;
-  -moz-transition: color 0.2s 0.2s;
-  -o-transition: color 0.2s 0.2s;
-  transition: color 0.2s 0.2s;
-  color: yellow;
-}
-/* line 37, ../sass/app.sass */
-h1:hover .char4 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.3s;
-  -moz-transition: color 0.2s 0.3s;
-  -o-transition: color 0.2s 0.3s;
-  transition: color 0.2s 0.3s;
-  color: green;
-}
-/* line 40, ../sass/app.sass */
-h1:hover .char5 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.4s;
-  -moz-transition: color 0.2s 0.4s;
-  -o-transition: color 0.2s 0.4s;
-  transition: color 0.2s 0.4s;
-  color: blue;
-}
-/* line 43, ../sass/app.sass */
-h1:hover .char6 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.5s;
-  -moz-transition: color 0.2s 0.5s;
-  -o-transition: color 0.2s 0.5s;
-  transition: color 0.2s 0.5s;
-  color: indigo;
-}
-/* line 46, ../sass/app.sass */
-h1:hover .char7 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.6s;
-  -moz-transition: color 0.2s 0.6s;
-  -o-transition: color 0.2s 0.6s;
-  transition: color 0.2s 0.6s;
-  color: violet;
-}
-/* line 49, ../sass/app.sass */
-h1:hover .char8 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.7s;
-  -moz-transition: color 0.2s 0.7s;
-  -o-transition: color 0.2s 0.7s;
-  transition: color 0.2s 0.7s;
-  color: red;
-}
-/* line 52, ../sass/app.sass */
-h1:hover .char9 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.8s;
-  -moz-transition: color 0.2s 0.8s;
-  -o-transition: color 0.2s 0.8s;
-  transition: color 0.2s 0.8s;
-  color: orange;
-}
-/* line 55, ../sass/app.sass */
-h1:hover .char10 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 0.9s;
-  -moz-transition: color 0.2s 0.9s;
-  -o-transition: color 0.2s 0.9s;
-  transition: color 0.2s 0.9s;
-  color: yellow;
-}
-/* line 58, ../sass/app.sass */
-h1:hover .char11 {
-  -webkit-transition: color 0.2s;
-  -webkit-transition-delay: 1s;
-  -moz-transition: color 0.2s 1s;
-  -o-transition: color 0.2s 1s;
-  transition: color 0.2s 1s;
-  color: green;
-}
-
-/* line 62, ../sass/app.sass */
+/* line 42, ../sass/app.sass */
 h2 {
-  font-size: 40px;
+  font-size: 36px;
   line-height: 1.2em;
-  text-align: center;
 }
 
-/* line 67, ../sass/app.sass */
+/* line 46, ../sass/app.sass */
 h3 {
   font-size: 16px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-/* line 72, ../sass/app.sass */
+/* line 51, ../sass/app.sass */
 h4 {
   font-size: 20px;
   margin-bottom: 1.25em;
 }
 
-/* line 76, ../sass/app.sass */
+/* line 55, ../sass/app.sass */
 p {
+  line-height: 1.5em;
   margin-bottom: 1.25em;
 }
 
-/* line 80, ../sass/app.sass */
+/* line 59, ../sass/app.sass */
 strong {
   font-weight: bold;
 }
 
-/* Drag and Drop area */
-/* line 84, ../sass/app.sass */
-.dropZone {
-  width: 900px;
-  height: 200px;
-  margin-bottom: 60px;
-  background: url("../img/drag_placeholder.png");
-}
-/* line 89, ../sass/app.sass */
-.dropZone.dragging {
-  -webkit-box-shadow: inset 0 1px 10px #09a1ec;
-  -moz-box-shadow: inset 0 1px 10px #09a1ec;
-  box-shadow: inset 0 1px 10px #09a1ec;
-}
-
-/* line 91, ../sass/app.sass */
-.droppedImage {
-  display: none;
-}
-
-/* Forms */
-/* line 99, ../sass/app.sass */
-input[type=text], input[type=password] {
-  background: #fafafa;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
-  border: 1px solid #dddddd;
-  color: #888888;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-}
-
-/* line 106, ../sass/app.sass */
-textarea {
-  background: #fafafa;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
-  border: 1px solid #dddddd;
-  color: #888888;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-}
-
-/* line 113, ../sass/app.sass */
-input[type=text]:focus {
-  color: #373737;
-}
-
-/* line 116, ../sass/app.sass */
-textarea {
-  padding-left: 3px;
-  width: 98%;
-}
-/* line 117, ../sass/app.sass */
-textarea:focus {
-  color: #373737;
-}
-
-/* line 122, ../sass/app.sass */
-input[type=text] {
-  padding: 3px;
-}
-
 /* Links */
-/* line 127, ../sass/app.sass */
+/* line 63, ../sass/app.sass */
 a {
-  color: #09a1ec;
+  color: #00bfa8;
   text-decoration: none;
 }
-/* line 130, ../sass/app.sass */
+/* line 66, ../sass/app.sass */
 a:hover {
-  color: #7fd2fa;
+  color: #59ffeb;
 }
 
-/* line 133, ../sass/app.sass */
-#container {
-  width: 900px;
-  margin: 0 auto;
-}
-
-/* line 137, ../sass/app.sass */
-header {
-  padding-bottom: 40px;
+/* -- Layout ------------------------------------------------------------------ */
+/* line 71, ../sass/app.sass */
+.wrapper {
   text-align: center;
-  width: 600px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
-/* line 143, ../sass/app.sass */
-.medianCutPalette h3 {
+/* line 76, ../sass/app.sass */
+.description {
+  max-width: 450px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* line 81, ../sass/app.sass */
+.image-section {
+  margin-bottom: 80px;
+  background: #2b2b2b;
+}
+/* line 84, ../sass/app.sass */
+.image-section .image-wrap {
+  position: relative;
+  background: #444444;
+}
+
+/* line 89, ../sass/app.sass */
+.target-image {
+  width: 100%;
+}
+
+/* line 92, ../sass/app.sass */
+.run-functions-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  border: none;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  color: #817702;
+  background-color: #fdf485;
+  font-size: 24px;
+  cursor: pointer;
+}
+/* line 106, ../sass/app.sass */
+.run-functions-button:hover {
+  background-color: #fef9b7;
+  color: #9a8f03;
+}
+/* line 109, ../sass/app.sass */
+.run-functions-button:active {
+  -webkit-transform: scale(0.9, 0.9);
+  -moz-transform: scale(0.9, 0.9);
+  -ms-transform: scale(0.9, 0.9);
+  -o-transform: scale(0.9, 0.9);
+  transform: scale(0.9, 0.9);
+}
+
+/* line 112, ../sass/app.sass */
+.color-thief-output {
   margin-top: 20px;
 }
 
-/* line 146, ../sass/app.sass */
-.imageSection {
-  margin-bottom: 80px;
-  background: #111111;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
-  border-radius: 10px;
-  *zoom: 1;
-}
-/* line 38, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
-.imageSection:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-/* line 151, ../sass/app.sass */
-.imageSection .imageWrap {
-  -moz-border-radius-topleft: 10px;
-  -webkit-border-top-left-radius: 10px;
-  border-top-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  width: 400px;
-  height: 300px;
-  float: left;
-  margin-right: 20px;
-  background: url(../img/dark_checkered_bg.png);
-  overflow: hidden;
-}
-/* line 160, ../sass/app.sass */
-.imageSection .colors {
-  margin-top: 20px;
-  width: 400px;
-  float: left;
-}
-/* line 164, ../sass/app.sass */
-.imageSection .colors .function {
+/* line 115, ../sass/app.sass */
+.function {
   clear: left;
   margin-bottom: 10px;
   *zoom: 1;
 }
-/* line 38, ../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
-.imageSection .colors .function:after {
+/* line 38, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+.function:after {
   content: "";
   display: table;
   clear: both;
 }
-/* line 168, ../sass/app.sass */
-.imageSection .colors .function .swatches .swatch {
-  width: 40px;
-  height: 20px;
+
+/* line 120, ../sass/app.sass */
+.swatch {
+  width: 60px;
+  height: 30px;
   margin-right: 2px;
   background: #dddddd;
   float: left;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
+  -webkit-transition: scale 0.5s;
+  -moz-transition: scale 0.5s;
+  -o-transition: scale 0.5s;
+  transition: scale 0.5s;
 }
-/* line 175, ../sass/app.sass */
-.imageSection .colors .function .swatches .swatch:hover {
+/* line 127, ../sass/app.sass */
+.swatch:hover {
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
   transition: none;
-  -webkit-transform: scale(1.2, 1.2);
-  -moz-transform: scale(1.2, 1.2);
-  -ms-transform: scale(1.2, 1.2);
-  -o-transform: scale(1.2, 1.2);
-  transform: scale(1.2, 1.2);
+  -webkit-transform: scale(1.1, 1.1);
+  -moz-transform: scale(1.1, 1.1);
+  -ms-transform: scale(1.1, 1.1);
+  -o-transform: scale(1.1, 1.1);
+  transform: scale(1.1, 1.1);
   -webkit-box-shadow: 0 1px 10px black;
   -moz-box-shadow: 0 1px 10px black;
   box-shadow: 0 1px 10px black;
 }
-/* line 179, ../sass/app.sass */
-.imageSection .colors .function .swatches .swatch:first-child {
-  -moz-border-radius-topleft: 4px;
-  -webkit-border-top-left-radius: 4px;
-  border-top-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-}
-/* line 181, ../sass/app.sass */
-.imageSection .colors .function .swatches .swatch:last-child {
-  -moz-border-radius-topright: 4px;
-  -webkit-border-top-right-radius: 4px;
-  border-top-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  -webkit-border-bottom-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
 
 /* Hardcoding the offset for the FB icon example */
-/* line 185, ../sass/app.sass */
+/* line 133, ../sass/app.sass */
 .fbIcon .imageWrap .targetImage {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -437,7 +245,240 @@ header {
   left: 192px;
 }
 
-/* line 191, ../sass/app.sass */
+/* line 139, ../sass/app.sass */
 canvas {
   display: none;
+}
+
+/* -- Animated logo ------------------------------------------------------------------ */
+/* line 143, ../sass/app.sass */
+h1 {
+  font-size: 72px;
+  line-height: 0.5em;
+  margin-bottom: 0.3em;
+}
+/* line 147, ../sass/app.sass */
+h1 small {
+  font-size: 20px;
+}
+/* line 150, ../sass/app.sass */
+h1 .char1 {
+  -webkit-transition: color 0.1s;
+  -moz-transition: color 0.1s;
+  -o-transition: color 0.1s;
+  transition: color 0.1s;
+}
+/* line 152, ../sass/app.sass */
+h1 .char2 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.05s;
+  -moz-transition: color 0.1s 0.05s;
+  -o-transition: color 0.1s 0.05s;
+  transition: color 0.1s 0.05s;
+}
+/* line 154, ../sass/app.sass */
+h1 .char3 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.1s;
+  -moz-transition: color 0.1s 0.1s;
+  -o-transition: color 0.1s 0.1s;
+  transition: color 0.1s 0.1s;
+}
+/* line 156, ../sass/app.sass */
+h1 .char4 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.15s;
+  -moz-transition: color 0.1s 0.15s;
+  -o-transition: color 0.1s 0.15s;
+  transition: color 0.1s 0.15s;
+}
+/* line 158, ../sass/app.sass */
+h1 .char5 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.2s;
+  -moz-transition: color 0.1s 0.2s;
+  -o-transition: color 0.1s 0.2s;
+  transition: color 0.1s 0.2s;
+}
+/* line 161, ../sass/app.sass */
+h1 .char7 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.3s;
+  -moz-transition: color 0.1s 0.3s;
+  -o-transition: color 0.1s 0.3s;
+  transition: color 0.1s 0.3s;
+}
+/* line 163, ../sass/app.sass */
+h1 .char8 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.35s;
+  -moz-transition: color 0.1s 0.35s;
+  -o-transition: color 0.1s 0.35s;
+  transition: color 0.1s 0.35s;
+}
+/* line 165, ../sass/app.sass */
+h1 .char9 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.4s;
+  -moz-transition: color 0.1s 0.4s;
+  -o-transition: color 0.1s 0.4s;
+  transition: color 0.1s 0.4s;
+}
+/* line 167, ../sass/app.sass */
+h1 .char10 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.45s;
+  -moz-transition: color 0.1s 0.45s;
+  -o-transition: color 0.1s 0.45s;
+  transition: color 0.1s 0.45s;
+}
+/* line 169, ../sass/app.sass */
+h1 .char11 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.5s;
+  -moz-transition: color 0.1s 0.5s;
+  -o-transition: color 0.1s 0.5s;
+  transition: color 0.1s 0.5s;
+}
+/* line 172, ../sass/app.sass */
+h1:hover .char1 {
+  -webkit-transition: color 0.1s;
+  -moz-transition: color 0.1s;
+  -o-transition: color 0.1s;
+  transition: color 0.1s;
+  color: #ff4040;
+}
+/* line 175, ../sass/app.sass */
+h1:hover .char2 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.05s;
+  -moz-transition: color 0.1s 0.05s;
+  -o-transition: color 0.1s 0.05s;
+  transition: color 0.1s 0.05s;
+  color: #ff8000;
+}
+/* line 178, ../sass/app.sass */
+h1:hover .char3 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.1s;
+  -moz-transition: color 0.1s 0.1s;
+  -o-transition: color 0.1s 0.1s;
+  transition: color 0.1s 0.1s;
+  color: #fdf485;
+}
+/* line 181, ../sass/app.sass */
+h1:hover .char4 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.15s;
+  -moz-transition: color 0.1s 0.15s;
+  -o-transition: color 0.1s 0.15s;
+  transition: color 0.1s 0.15s;
+  color: #00bfa8;
+}
+/* line 184, ../sass/app.sass */
+h1:hover .char5 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.2s;
+  -moz-transition: color 0.1s 0.2s;
+  -o-transition: color 0.1s 0.2s;
+  transition: color 0.1s 0.2s;
+  color: #0096df;
+}
+/* line 188, ../sass/app.sass */
+h1:hover .char7 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.3s;
+  -moz-transition: color 0.1s 0.3s;
+  -o-transition: color 0.1s 0.3s;
+  transition: color 0.1s 0.3s;
+  color: #ff4040;
+}
+/* line 191, ../sass/app.sass */
+h1:hover .char8 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.35s;
+  -moz-transition: color 0.1s 0.35s;
+  -o-transition: color 0.1s 0.35s;
+  transition: color 0.1s 0.35s;
+  color: #ff8000;
+}
+/* line 194, ../sass/app.sass */
+h1:hover .char9 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.4s;
+  -moz-transition: color 0.1s 0.4s;
+  -o-transition: color 0.1s 0.4s;
+  transition: color 0.1s 0.4s;
+  color: #fdf485;
+}
+/* line 197, ../sass/app.sass */
+h1:hover .char10 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.45s;
+  -moz-transition: color 0.1s 0.45s;
+  -o-transition: color 0.1s 0.45s;
+  transition: color 0.1s 0.45s;
+  color: #00bfa8;
+}
+/* line 200, ../sass/app.sass */
+h1:hover .char11 {
+  -webkit-transition: color 0.1s;
+  -webkit-transition-delay: 0.5s;
+  -moz-transition: color 0.1s 0.5s;
+  -o-transition: color 0.1s 0.5s;
+  transition: color 0.1s 0.5s;
+  color: #0096df;
+}
+
+/* -- Drag and drop ------------------------------------------------------------------ */
+/* line 207, ../sass/app.sass */
+.drag-and-drop {
+  display: none;
+}
+
+/* line 210, ../sass/app.sass */
+.dropZone {
+  height: 200px;
+  margin-bottom: 60px;
+  background: url("../img/drag_placeholder.png");
+}
+/* line 214, ../sass/app.sass */
+.dropZone.dragging {
+  -webkit-box-shadow: inset 0 1px 10px #09a1ec;
+  -moz-box-shadow: inset 0 1px 10px #09a1ec;
+  box-shadow: inset 0 1px 10px #09a1ec;
+}
+
+/* line 216, ../sass/app.sass */
+.droppedImage {
+  display: none;
+}
+
+@media only screen and (max-width: 480px) {
+  /* line 223, ../sass/app.sass */
+  body {
+    margin: 40px 0;
+    font-size: 14px;
+  }
+
+  /* line 226, ../sass/app.sass */
+  .intro {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* line 229, ../sass/app.sass */
+  h1 {
+    font-size: 48px;
+  }
+
+  /* line 231, ../sass/app.sass */
+  h2 {
+    font-size: 24px;
+  }
+
+  /* line 233, ../sass/app.sass */
+  h3 {
+    font-size: 14px;
+  }
 }

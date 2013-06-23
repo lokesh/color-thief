@@ -2,67 +2,46 @@
 @import "compass/css3"
 @import "compass/utilities/general/clearfix"
 
+$lightGray: #eeeeee
+$blue: #0096df
+$green: #00bfa8
+$yellow: #fdf485
+$orange: #ff8000
+$red: #ff4040
+
+$color: #aaa
+$bgColor: #444
+
+$headingColor: #444
+$linkColor: $green
+
+$fontSize: 18px
+$columnWidth: 600px
+
+// $codeColor: #eff
+// $inputColor: #555
+// $selectionColor: $yellow
+
+// $altColor: lighten($color, 30%)
+// $altCommentsColor: lighten($color, 10%)
+
+
 body, input, textarea
   margin: 40px
-  color: #888
-  background: #222
-  font: 16px/1.625em "Varela Round", "lucida grande", tahoma, sans-serif
-  -wbkite-font-smoothing: antialiased
-  
+  color: $color
+  background: $bgColor
+  font-size: $fontSize
+  font-family: "Karla", "lucida grande", sans-serif
+
 h1, h2, h3, h4, h5, h6
   color: white
-  font-family: "Terminal Dosis", "lucida grande", tahoma, sans-serif
-  line-height: 1em
-  font-weight: 600
+  line-height: 1.2em
+  font-weight: 500
   margin-bottom: 0.5em
- 
-h1
-  font-size: 72px
-  line-height: 0.5em
-  margin-bottom: 0.3em
-  small
-    font-size: 20px
-  span
-    +transition( color 1s)
-  &:hover
-    .char1
-      +transition( color .2s)    
-      color: red
-    .char2
-      +transition( color .2s .1s)    
-      color: orange
-    .char3
-      +transition( color .2s .2s)    
-      color: yellow
-    .char4
-      +transition( color .2s .3s)    
-      color: green
-    .char5
-      +transition( color .2s .4s)    
-      color: blue
-    .char6
-      +transition( color .2s .5s)    
-      color: indigo
-    .char7
-      +transition( color .2s .6s)    
-      color: violet
-    .char8
-      +transition( color .2s .7s)    
-      color: red
-    .char9
-      +transition( color .2s .8s)    
-      color: orange
-    .char10
-      +transition( color .2s .9s)    
-      color: yellow
-    .char11
-      +transition( color .2s 1s)    
-      color: green
 
 h2
-  font-size: 40px
+  font-size: 36px
   line-height: 1.2em
-  text-align: center
 
 h3
   font-size: 16px
@@ -74,15 +53,161 @@ h4
   margin-bottom: 1.25em
 
 p
+  line-height: 1.5em
   margin-bottom: 1.25em
-
 
 strong
   font-weight: bold
-  
-/* Drag and Drop area */
+
+/* Links */
+a
+  color: $linkColor
+  text-decoration: none
+  &:hover
+    color: lighten($linkColor, 30%)
+
+/* -- Layout ------------------------------------------------------------------ */
+
+.wrapper
+  text-align: center
+  max-width: $columnWidth
+  margin: 0 auto
+
+.description
+  max-width: 450px
+  margin-right: auto
+  margin-left: auto
+
+.image-section
+  margin-bottom: 80px
+  background: darken($bgColor, 10%)
+  .image-wrap
+    position: relative
+    background: #444
+    // background: url(../img/dark_checkered_bg.png)
+
+.target-image
+  width: 100%
+
+.run-functions-button
+  position: absolute
+  top: 50%
+  left: 50%
+  width: 100px
+  height: 100px
+  margin-top: -50px
+  margin-left: -50px
+  border: none
+  +border-radius(50%)
+  color: darken($yellow, 50%)
+  background-color: $yellow
+  font-size: 24px
+  cursor: pointer
+  &:hover
+    background-color: lighten($yellow, 10%)
+    color: darken($yellow, 45%)
+  &:active
+    +scale(0.9)
+
+.color-thief-output
+  margin-top: 20px
+
+.function
+  clear: left
+  margin-bottom: 10px
+  +pie-clearfix
+
+.swatch
+  width: 60px
+  height: 30px
+  margin-right: 2px
+  background: #dddddd
+  float: left
+  +transition(scale .5s)
+  &:hover
+    +transition(none)
+    +scale(1.1, 1.1)
+    +box-shadow( 0 1px 10px black)
+
+/* Hardcoding the offset for the FB icon example */
+.fbIcon .imageWrap .targetImage
+  +border-radius(0)
+  position: relative
+  top: 142px
+  left: 192px
+
+canvas
+  display: none
+
+/* -- Animated logo ------------------------------------------------------------------ */
+h1
+  font-size: 72px
+  line-height: 0.5em
+  margin-bottom: 0.3em
+  small
+    font-size: 20px
+
+  .char1
+    +transition( color .1s)
+  .char2
+    +transition( color .1s .05s)
+  .char3
+    +transition( color .1s .1s)
+  .char4
+    +transition( color .1s .15s)
+  .char5
+    +transition( color .1s .2s)
+
+  .char7
+    +transition( color .1s .3s)
+  .char8
+    +transition( color .1s .35s)
+  .char9
+    +transition( color .1s .4s)
+  .char10
+    +transition( color .1s .45s)
+  .char11
+    +transition( color .1s .5s)
+  &:hover
+    .char1
+      +transition( color .1s)
+      color: $red
+    .char2
+      +transition( color .1s .05s)
+      color: $orange
+    .char3
+      +transition( color .1s .1s)
+      color: $yellow
+    .char4
+      +transition( color .1s .15s)
+      color: $green
+    .char5
+      +transition( color .1s .2s)
+      color: $blue
+
+    .char7
+      +transition( color .1s .3s)
+      color: $red
+    .char8
+      +transition( color .1s .35s)
+      color: $orange
+    .char9
+      +transition( color .1s .4s)
+      color: $yellow
+    .char10
+      +transition( color .1s .45s)
+      color: $green
+    .char11
+      +transition( color .1s .5s)
+      color: $blue
+
+
+/* -- Drag and drop ------------------------------------------------------------------ */
+
+.drag-and-drop
+  display: none
+
 .dropZone
-  width: 900px
   height: 200px
   margin-bottom: 60px
   background: url("../img/drag_placeholder.png")
@@ -92,100 +217,18 @@ strong
   display: none
   .targetImage
     // width: 100%
-    
-  
-/* Forms */
-input
-  &[type=text], &[type=password]
-    background: #fafafa
-    +box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.1))
-    border: 1px solid #dddddd
-    color: #888888
-    +border-radius(4px)
-
-textarea
-  background: #fafafa
-  +box-shadow( inset 0 1px 1px rgba(0, 0, 0, 0.1))
-  border: 1px solid #dddddd
-  color: #888888
-  +border-radius(4px)
-
-input[type=text]:focus
-  color: #373737
-
-textarea
-  &:focus
-    color: #373737
-  padding-left: 3px
-  width: 98%
-
-input[type=text]
-  padding: 3px
 
 
-/* Links */
-a
-  color: #09a1ec
-  text-decoration: none
-  &:hover
-    color: #7fd2fa
-
-#container
-  width: 900px
-  margin: 0 auto
-
-header
-  padding-bottom: 40px
-  text-align: center
-  width: 600px
-  margin: 0 auto
-
-.medianCutPalette h3
-  margin-top: 20px
-
-.imageSection
-  margin-bottom: 80px
-  background: #111111
-  +border-radius(10px)
-  +pie-clearfix
-  .imageWrap
-    +border-left-radius(10px)
-    width: 400px
-    height: 300px
-    float: left
-    margin-right: 20px
-    background: url(../img/dark_checkered_bg.png)
-    overflow: hidden
-  .colors
-    margin-top: 20px
-    width: 400px
-    float: left
-    .function
-      clear: left
-      margin-bottom: 10px
-      +pie-clearfix
-      .swatches .swatch
-        width: 40px
-        height: 20px
-        margin-right: 2px
-        background: #dddddd
-        float: left
-        +transition( all .5s)
-        &:hover
-          +transition( none)
-          +scale(1.2, 1.2)
-          +box-shadow( 0 1px 10px black)
-        &:first-child
-          +border-left-radius(4px)
-        &:last-child
-          +border-right-radius(4px)
-
-/* Hardcoding the offset for the FB icon example
-.fbIcon .imageWrap .targetImage
-  +border-radius(0)
-  position: relative
-  top: 142px
-  left: 192px
-
-canvas
-  display: none
+@media only screen and (max-width : 480px)
+  body
+    margin: 40px 0
+    font-size: $fontSize - 4
+  .intro
+    padding-left: 20px
+    padding-right: 20px
+  h1
+    font-size: 48px // from 72px
+  h2
+    font-size: 24px // from 40px
+  h3
+    font-size: 14px // from 16px
