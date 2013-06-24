@@ -78,22 +78,31 @@ ColorThief.prototype.getColor = function(sourceImage, quality) {
 
 
 /*
- * getPalette(sourceImage, colorCount[, quality])
+ * getPalette(sourceImage[, colorCount, quality])
  * returns array[ {r: num, g: num, b: num}, {r: num, g: num, b: num}, ...]
  *
  * Use the median cut algorithm provided by quantize.js to cluster similar colors.
  *
- * Quality is an optional argument. It needs to be an integer. 0 is the highest quality settings.
+ * colorCount determines the size of the palette; the number of colors returned. If not set, it
+ * defaults to 10.
+ *
+ * BUGGY: Function does not always return the requested amount of colors. It can be +/- 2.
+ *
+ * quality is an optional argument. It needs to be an integer. 0 is the highest quality settings.
  * 10 is the default. There is a trade-off between quality and speed. The bigger the number, the
  * faster the palette generation but the greater the likelihood that colors will be missed.
  *
- * BUGGY: Function does not always return the requested amount of colors. It can be +/- 2.
+ *
  */
 ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
 
+    if (typeof colorCount === 'undefined') {
+        colorCount = 10;
+    };
     if (typeof quality === 'undefined') {
         quality = 10;
     };
+
     // Create custom CanvasImage object
     var image      = new CanvasImage(sourceImage);
     var imageData  = image.getImageData();

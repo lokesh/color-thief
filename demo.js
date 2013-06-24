@@ -30,8 +30,6 @@ $(document).ready(function () {
 
   var colorThief = new ColorThief();
 
-  var PALETTE_COLOR_COUNT = 10;
-
   // Run Color Thief functions and display results below image.
   // We also log execution time of functions for display.
   var showColorsForImage = function($image, $imageSection ) {
@@ -39,7 +37,7 @@ $(document).ready(function () {
     var start                    = Date.now();
     var color                    = colorThief.getColor(image);
     var elapsedTimeForGetColor   = Date.now() - start;
-    var palette                  = colorThief.getPalette(image, PALETTE_COLOR_COUNT);
+    var palette                  = colorThief.getPalette(image);
     var elapsedTimeForGetPalette = Date.now() - start + elapsedTimeForGetColor;
 
     var colorThiefOutput = {

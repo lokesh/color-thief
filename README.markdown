@@ -17,14 +17,14 @@ getColor(sourceImage[, quality])
 returns {r: num, g: num, b: num}
 ```
 
-###Build a color palette from an image
+###Build a 8 color palette from an image
 ```js
 var colorThief = new ColorThief();
-colorThief.getPalette(sourceImage);
+colorThief.getPalette(sourceImage, 8);
 ```
 
 ```js
-getPalette(sourceImage, colorCount[, quality])
+getPalette(sourceImage[, colorCount, quality])
 returns [ [num, num, num], [num, num, num], ... ]
 ```
 
