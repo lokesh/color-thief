@@ -20,71 +20,81 @@
 <div class="wrapper">
 
   <section class="intro">
-      <h1>Color Thief</h1>
+      <header>
+        <h1 class="logo">Color Thief</h1>
+      </header>
       <h4><a href="http://lokeshdhakar.com">by Lokesh Dhakar</a></small></h4>
-
       <p class="description">A script for grabbing the color palette from an image. Uses Javascript and the canvas tag to make it happen.</p>
-      <p><a href="http://www.lokeshdhakar.com/color-thief/">Read more about it on my blog</a> or <a href="https://github.com/lokesh/color-thief">get the code on Github</a>
-      </p>
+      <p class="read-more-links"><a href="http://www.lokeshdhakar.com/color-thief/">Read more about it on my blog</a> or <a href="https://github.com/lokesh/color-thief">get the code on Github</a></p>
 	</section>
 
-	<section class="examples" id="examples">
-    <h2>Examples</h2>
+	<section id="examples" class="examples">
+    <header>
+      <h2 class="section-header">Examples</h2>
+    </header>
 	</section>
 
-  <sectcion class="drag-and-drop" id="dragDrop">
-    <h2>Try it yourself</h2>
-    <div id="dropZone" class="dropZone">
+  <section id="drag-drop" class="drag-drop">
+    <header>
+      <h2 class="section-header">Try it yourself</h2>
+    </header>
+    <div id="drop-zone" class="drop-zone">
+      <div class="drop-zone-label default-label">Drag an image here</div>
+      <div class="drop-zone-label dragging-label">Drop it here!</div>
     </div>
-    <div id="draggedImages"></div>
+    <div id="dragged-images" class="dragged-images"></div>
   </div>
 
-</div> <!--! end of #container -->
+</div>
+
 
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.8.3.min.js"><\/script>')</script>
 <script src="js/libs/jquery.lettering.js"></script>
 <script src="js/libs/mustache.js"></script>
-
-<script src="js/libs/quantize.js"></script>
 <script src="js/color-thief.js"></script>
 
-<!-- Using Mustache for templating -->
+
+<!-- Mustache templates -->
 <script id='image-section-template' type='text/x-mustache'>
   {{#images}}
-  <div class="image-section {{class}} ">
+  <div class="image-section {{class}}">
     <div class="image-wrap">
       <button class="run-functions-button">Click</button>
-      <img class="target-image" src="{{file}}" data-colorcount="{{colorCount}}" />
+      <img class="target-image" src="{{file}}" />
     </div>
-    <div class="color-thief-output-template"></div>
+    <div class="color-thief-output"></div>
   </div>
   {{/images}}
 </script>
 
-<script id='color-thief-output-template' type='text/x-mustache'>
+<script id="color-thief-output-template" type="text/x-mustache">
   <div class="function get-color">
-    <div class="function-details">
-      <h3 class="function-title">Dominant Color</h3>
-      <div class="function-code">colorThief.getColor()</div>
-      <div class="function-execution-time">20ms</div>
+    <h3 class="function-title">Dominant Color</h3>
+    <div class="swatches">
+      <div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>
     </div>
-    <div class="function-output">
-      <div class="swatches"></div>
+    <div class="function-code">
+      <code>colorThief.getColor(image):{{elapsedTimeForGetColor}}ms</code>
     </div>
   </div>
   <div class="function get-palette">
-    <div class="function-details">
-      <h3 class="function-title">Palette</h3>
-      <div class="function-code">colorThief.getPalette()</div>
-      <div class="function-execution-time">20ms</div>
-    </div>
+    <h3 class="function-title">Palette</h3>
     <div class="function-output">
-      <div class="swatches"></div>
+      <div class="swatches">
+        {{#palette}}
+          <div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>
+        {{/palette}}
+      </div>
+    </div>
+    <div class="function-code">
+      <code>colorThief.getPalette(image):{{elapsedTimeForGetPalette}}ms</code>
     </div>
   </div>
 </script>
 
+
 <script src="demo.js"></script>
+
 
 </body>
 </html>

@@ -1,148 +1,126 @@
 $(document).ready(function () {
 
-    // Uses mustache.js templating to create layout
-    var imageArray = {images: [
-        {"file": "img/photo1.jpg"},
-        {"file": "img/photo2.jpg"},
-        {"file": "img/photo3.jpg"}
-    ]};
+  // Use lettering.js to generate spans for each letter in the logo.
+  // This is used to create the on hover animated rainbow effect.
+  $('.logo').lettering();
 
-    var displayColors = function(image) {
-      var $image = $(image);
-      var imageSection = $image.closest('.image-section');
-      var appendColors = function(colors, root) {
-          $.each(colors, function(index, value) {
-              var swatchEl = $('<div>', {'class': 'swatch'})
-                  .css('background-color', 'rgba('+ value +', 1)');
-              root.append(swatchEl);
-          });
-      };
 
-      var colorThief = new ColorThief();
+  // ---------------------
+  // Color Thief demo code
+  // ---------------------
+  var imageArray = {images: [
+      {'file': 'img/photo1.jpg'},
+      {'file': 'img/photo2.jpg'},
+      {'file': 'img/photo3.jpg'}
+  ]};
 
-      // Dominant Color
-      var dominantColor = colorThief.getColor(image);
-      var dominantSwatch = imageSection.find('.get-color .swatches');
-      appendColors([dominantColor], dominantSwatch);
+  // Render example images
+  var examplesHTML = Mustache.to_html($('#image-section-template').html(), imageArray);
+  $('#examples').append(examplesHTML);
 
-      // Palette
-      var colorCount = $image.attr('data-colorcount') ? $image.data('colorcount') : 10;
-      var medianPalette = colorThief.getPalette(image, colorCount);
-      var medianCutPalette = imageSection.find('.get-palette .swatches');
-      appendColors(medianPalette, medianCutPalette);
+  // Event handlers
+  $('.run-functions-button').on('click', function(event) {
+    var $this             = $(this);
+    $this.text('...');
+    var $imageSection     = $this.closest('.image-section');
+    var $colorThiefOutput = $imageSection.find('.color-thief-output');
+    var $targetimage      = $imageSection.find('.target-image');
+    showColorsForImage($targetimage, $imageSection);
+  });
+
+  var colorThief = new ColorThief();
+
+  var PALETTE_COLOR_COUNT = 10;
+
+  // Run Color Thief functions and display results below image.
+  // We also log execution time of functions for display.
+  var showColorsForImage = function($image, $imageSection ) {
+    var image                    = $image[0];
+    var start                    = Date.now();
+    var color                    = colorThief.getColor(image);
+    var elapsedTimeForGetColor   = Date.now() - start;
+    var palette                  = colorThief.getPalette(image, PALETTE_COLOR_COUNT);
+    var elapsedTimeForGetPalette = Date.now() - start - elapsedTimeForGetColor;
+
+    var colorThiefOutput = {
+      color: color,
+      palette: palette,
+      elapsedTimeForGetColor: elapsedTimeForGetColor,
+      elapsedTimeForGetPalette: elapsedTimeForGetPalette
     };
+    var colorThiefOuputHTML = Mustache.to_html($('#color-thief-output-template').html(), colorThiefOutput);
+    $imageSection.find('.run-functions-button').addClass('hide');
+    $imageSection.find('.color-thief-output').append(colorThiefOuputHTML).slideDown();
 
-
-    // Setup the drag and drop behavior if supported
-    if (typeof window.FileReader === 'function') {
-      $('#dragDrop').show();
-
-      var $dropZone = $('#dropZone');
-
-      var handleDragEnter = function(event){
-        $dropZone.addClass('dragging');
-        return false;
-      };
-
-      var handleDragLeave = function(event){
-        $dropZone.removeClass('dragging');
-        return false;
-      };
-
-      var handleDragOver = function(event){
-        return false;
-      };
-
-      var handleDrop = function(event){
-        $dropZone.removeClass('dragging');
-
-        var dt    = event.originalEvent.dataTransfer;
-        var files = dt.files;
-
-        handleFiles(files);
-
-        return false;
-      };
-
-      $dropZone
-        .on('dragenter', handleDragEnter)
-        .on('dragleave', handleDragLeave)
-        .on('dragover', handleDragOver)
-        .on('drop', handleDrop);
+    // If the color-thief-output div is not in the viewport or cut off, scroll down.
+    var windowHeight          = $(window).height();
+    var currentScrollPosition = $('body').scrollTop()
+    var outputOffsetTop       = $imageSection.find('.color-thief-output').offset().top
+    if ((currentScrollPosition < outputOffsetTop) && (currentScrollPosition + windowHeight - 250 < outputOffsetTop)) {
+       $('body').animate({scrollTop: outputOffsetTop - windowHeight + 200 + "px"});
     }
+  };
 
-    function handleFiles( files ) {
-      var imageType = /image.*/;
-      var fileCount = files.length;
+  // Drag'n'drop demo
+  // Thanks to Nathan Spady (http://nspady.com/) who did the bulk of the drag'n'drop work.
 
-      for (var i = 0; i < fileCount; i++) {
-        var file = files[i];
+  // Setup the drag and drop behavior if supported
+  if (typeof window.FileReader === 'function') {
+    $('#drag-drop').show();
+    var $dropZone = $('#drop-zone');
+    var handleDragEnter = function(event){
+      $dropZone.addClass('dragging');
+      return false;
+    };
+    var handleDragLeave = function(event){
+      $dropZone.removeClass('dragging');
+      return false;
+    };
+    var handleDragOver = function(event){
+      return false;
+    };
+    var handleDrop = function(event){
+      $dropZone.removeClass('dragging');
+      handleFiles(event.originalEvent.dataTransfer.files);
+      return false;
+    };
+    $dropZone
+      .on('dragenter', handleDragEnter)
+      .on('dragleave', handleDragLeave)
+      .on('dragover', handleDragOver)
+      .on('drop', handleDrop);
+  }
 
-        if ( file.type.match(imageType) ) {
-          var reader = new FileReader();
-          reader.onload = function( e ) {
-              imageInfo = { images: [
-                  {'class': 'droppedImage', file: e.target.result}
-                ]};
+  function handleFiles(files) {
+    var $draggedImages = $('#dragged-images');
+    var imageType      = /image.*/;
+    var fileCount      = files.length;
 
-              var html = Mustache.to_html($('#template').html(), imageInfo);
-              $('#draggedImages').prepend( html );
+    for (var i = 0; i < fileCount; i++) {
+      var file = files[i];
 
-              var img = $('.droppedImage .targetImage').get(0);
+      if (file.type.match(imageType)) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            imageInfo = { images: [
+                {'class': 'dropped-image', file: event.target.result}
+              ]};
+            console.log(imageInfo);
+            var imageSectionHTML = Mustache.to_html($('#image-section-template').html(), imageInfo);
+            $draggedImages.prepend(imageSectionHTML);
 
-              // Must wait for image to load in DOM, not just load from FileReader
-              $(img).on('load', function() {
-                displayColors( img );
-                util.centerImg( img, 400, 300);
+            var $imageSection = $draggedImages.find('.image-section').first();
+            var $image        = $('.dropped-image .target-image');
 
-                $('.droppedImage').slideDown();
-              });
-            };
-          reader.readAsDataURL(file);
-        } else {
-          alert('File must be a supported image type.');
-        }
+            // Must wait for image to load in DOM, not just load from FileReader
+            $image.on('load', function() {
+              showColorsForImage($image, $imageSection);
+            });
+          };
+        reader.readAsDataURL(file);
+      } else {
+        alert('File must be a supported image type.');
       }
     }
-
-    // Use lettering.js to give letter by letter styling control for the h1 title
-    $("h1").lettering();
-
-
-    var html = Mustache.to_html($('#image-section-template').html(), imageArray);
-    $('#examples').append(html);
-
-
-    // For each image:
-    // Once image is loaded, get dominant color and palette and display them.
-    // $('img').bind('load', function (event) {
-    //   var image = event.target;
-    //   displayColors(image);
-    // });
+  }
 });
-
-var util = {
-  centerImg: function( img, containerWidth, containerHeight) {
-      var $img = $(img);
-      var imgWidth = $img.get(0).width;
-      var imgHeight = $img.get(0).height;
-      var imgAspectRatio = imgHeight/imgWidth;
-
-      if ( imgHeight > containerHeight ) {
-        imgWidth = containerHeight / imgAspectRatio;
-        $img.css('width', ( imgWidth + "px" ));
-      }
-      if ( imgWidth > containerWidth ) {
-        $img.css('width', ( containerWidth + "px" ));
-        imgHeight =  imgAspectRatio * containerWidth;
-      }
-      if ( imgWidth < containerWidth ) {
-        var hOffset = ( containerWidth - imgWidth )/2;
-        $img.css('margin-left', ( hOffset + "px" ));
-      }
-      if ( imgHeight < containerHeight ) {
-        var vOffset = ( containerHeight - imgHeight )/2;
-        $img.css('margin-top', ( vOffset + "px" ));
-      }
-    }
-};
