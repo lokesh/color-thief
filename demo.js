@@ -40,7 +40,7 @@ $(document).ready(function () {
     var color                    = colorThief.getColor(image);
     var elapsedTimeForGetColor   = Date.now() - start;
     var palette                  = colorThief.getPalette(image, PALETTE_COLOR_COUNT);
-    var elapsedTimeForGetPalette = Date.now() - start - elapsedTimeForGetColor;
+    var elapsedTimeForGetPalette = Date.now() - start + elapsedTimeForGetColor;
 
     var colorThiefOutput = {
       color: color,
@@ -49,6 +49,7 @@ $(document).ready(function () {
       elapsedTimeForGetPalette: elapsedTimeForGetPalette
     };
     var colorThiefOuputHTML = Mustache.to_html($('#color-thief-output-template').html(), colorThiefOutput);
+    $imageSection.addClass('with-color-thief-output');
     $imageSection.find('.run-functions-button').addClass('hide');
     $imageSection.find('.color-thief-output').append(colorThiefOuputHTML).slideDown();
 
@@ -65,7 +66,8 @@ $(document).ready(function () {
   // Thanks to Nathan Spady (http://nspady.com/) who did the bulk of the drag'n'drop work.
 
   // Setup the drag and drop behavior if supported
-  if (typeof window.FileReader === 'function') {
+  if (Modernizr.draganddrop && !!window.FileReader && !isMobile()) {
+
     $('#drag-drop').show();
     var $dropZone = $('#drop-zone');
     var handleDragEnter = function(event){
@@ -105,7 +107,7 @@ $(document).ready(function () {
             imageInfo = { images: [
                 {'class': 'dropped-image', file: event.target.result}
               ]};
-            console.log(imageInfo);
+
             var imageSectionHTML = Mustache.to_html($('#image-section-template').html(), imageInfo);
             $draggedImages.prepend(imageSectionHTML);
 
@@ -123,4 +125,15 @@ $(document).ready(function () {
       }
     }
   }
+
+  // This is not good practice. :-P
+  function isMobile(){
+    // if we want a more complete list use this: http://detectmobilebrowsers.com/
+    // str.test() is more efficent than str.match()
+    // remember str.test is case sensitive
+    var isMobile = (/iphone|ipod|ipad|android|ie|blackberry|fennec/).test
+         (navigator.userAgent.toLowerCase());
+    return isMobile;
+}
+
 });

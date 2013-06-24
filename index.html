@@ -10,7 +10,7 @@
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <script src="js/libs/modernizr-2.0.6.min.js"></script>
+  <script src="js/libs/modernizr.custom.js"></script>
   <link href='http://fonts.googleapis.com/css?family=Karla:400,700|Cousine' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/app.css">
 
@@ -43,12 +43,17 @@
       <div class="drop-zone-label dragging-label">Drop it here!</div>
     </div>
     <div id="dragged-images" class="dragged-images"></div>
-  </div>
+  </section>
+
+  <section id="sharing" class="sharing">
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="lokesh" data-size="large">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </section>
 
 </div>
 
 
-<script>window.jQuery || document.write('<script src="js/libs/jquery-1.8.3.min.js"><\/script>')</script>
+<script src="js/libs/jquery-2.0.2.min.js"></script>
 <script src="js/libs/jquery.lettering.js"></script>
 <script src="js/libs/mustache.js"></script>
 <script src="js/color-thief.js"></script>
@@ -59,7 +64,10 @@
   {{#images}}
   <div class="image-section {{class}}">
     <div class="image-wrap">
-      <button class="run-functions-button">Click</button>
+      <button class="run-functions-button">
+        <span class="no-touch-label">Click</span>
+        <span class="touch-label">Tap</span>
+      </button>
       <img class="target-image" src="{{file}}" />
     </div>
     <div class="color-thief-output"></div>

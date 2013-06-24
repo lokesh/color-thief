@@ -1,5 +1,5 @@
 /*
- * Color Thief v1.0
+ * Color Thief v2.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
  *
  * License
@@ -13,7 +13,6 @@
  * John Schulz - For clean up and optimization. @JFSIII
  * Nathan Spady - For adding drag and drop support to the demo page.
  *
- * Requires jquery and quantize.js.
  */
 
 
@@ -24,18 +23,15 @@
   with a set of helper functions.
 */
 var CanvasImage = function (image) {
-    // If jquery object is passed in, get html element
-    imgEl = (image.jquery) ? image[0] : image;
-
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
 
     document.body.appendChild(this.canvas);
 
-    this.width  = this.canvas.width  = imgEl.width;
-    this.height = this.canvas.height = imgEl.height;
+    this.width  = this.canvas.width  = image.width;
+    this.height = this.canvas.height = image.height;
 
-    this.context.drawImage(imgEl, 0, 0, this.width, this.height);
+    this.context.drawImage(image, 0, 0, this.width, this.height);
 };
 
 CanvasImage.prototype.clear = function () {
@@ -55,36 +51,49 @@ CanvasImage.prototype.getImageData = function () {
 };
 
 CanvasImage.prototype.removeCanvas = function () {
-    $(this.canvas).remove();
+    this.canvas.parentNode.removeChild(this.canvas);
 };
 
 
 var ColorThief = function () {};
 
 /*
- * getColor(sourceImage)
+ * getColor(sourceImage[, quality])
  * returns {r: num, g: num, b: num}
  *
  * Use the median cut algorithm provided by quantize.js to cluster similar
- * colors and return the base color from the largest cluster. */
-ColorThief.prototype.getColor = function(sourceImage) {
-    var palette       = this.getPalette(sourceImage, 5);
+ * colors and return the base color from the largest cluster.
+ *
+ * Quality is an optional argument. It needs to be an integer. 0 is the highest quality settings.
+ * 10 is the default. There is a trade-off between quality and speed. The bigger the number, the
+ * faster a color will be returned but the greater the likelihood that it will not be the visually
+ * most dominant color.
+ *
+ * */
+ColorThief.prototype.getColor = function(sourceImage, quality) {
+    var palette       = this.getPalette(sourceImage, 5, quality);
     var dominantColor = palette[0];
     return dominantColor;
 };
 
 
 /*
- * createPalette(sourceImage, colorCount)
+ * getPalette(sourceImage, colorCount[, quality])
  * returns array[ {r: num, g: num, b: num}, {r: num, g: num, b: num}, ...]
  *
- * Use the median cut algorithm provided by quantize.js to cluster similar
- * colors.
+ * Use the median cut algorithm provided by quantize.js to cluster similar colors.
+ *
+ * Quality is an optional argument. It needs to be an integer. 0 is the highest quality settings.
+ * 10 is the default. There is a trade-off between quality and speed. The bigger the number, the
+ * faster the palette generation but the greater the likelihood that colors will be missed.
  *
  * BUGGY: Function does not always return the requested amount of colors. It can be +/- 2.
  */
-ColorThief.prototype.getPalette = function(sourceImage, colorCount) {
+ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
 
+    if (typeof quality === 'undefined') {
+        quality = 10;
+    };
     // Create custom CanvasImage object
     var image      = new CanvasImage(sourceImage);
     var imageData  = image.getImageData();
@@ -93,7 +102,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount) {
 
     // Store the RGB values in an array format suitable for quantize function
     var pixelArray = [];
-    for (var i = 0, offset, r, g, b, a; i < pixelCount; i++) {
+    for (var i = 0, offset, r, g, b, a; i < pixelCount; i = i + quality) {
         offset = i * 4;
         r = pixels[offset + 0];
         g = pixels[offset + 1];
@@ -116,7 +125,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount) {
     image.removeCanvas();
 
     return palette;
-}
+};
 
 
 
@@ -152,7 +161,7 @@ if (!pv) {
         max: function(array, f) {
           return Math.max.apply(null, f ? pv.map(array, f) : array);
         }
-    }
+    };
 }
 
 

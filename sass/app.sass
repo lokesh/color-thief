@@ -46,7 +46,7 @@ h1
 h2
   font-size: 36px
   line-height: 1.2em
-  margin-bottom: 0.2em
+  margin-bottom: 0.3em
 
 h3
   font-size: 16px
@@ -108,7 +108,25 @@ img
   .image-wrap
     position: relative
     background: #444
-    // background: url(../img/dark_checkered_bg.png)
+
+.examples
+  .image-section
+    .target-image
+      +border-bottom-radius($radius)
+      +box-shadow(0 4px 0 #333)
+  .color-thief-output
+    +box-shadow(none)
+  .image-section.with-color-thief-output
+    .target-image
+      +border-bottom-radius(0)
+      +box-shadow(none)
+    .color-thief-output
+      +box-shadow(0 4px 0 #333)
+
+.sharing
+  position: fixed
+  top: 20px
+  right: 0
 
 /* -- Image examples ------------------------------------------------------------------ */
 
@@ -124,6 +142,7 @@ img
   +border-radius(50%)
   color: darken($yellow, 55%)
   background-color: $yellow
+  border-bottom: 2px solid darken($yellow, 60%)
   font-size: 24px
   font-weight: 500
   cursor: pointer
@@ -133,17 +152,32 @@ img
   &:active
     +scale(0.9)
   &.hide
-    +transition(all .4s)
+    +transition(transform .4s, top .4s)
     top: 100%
     +scale(0)
 
+// Use Modernizr to check for touch support
+.touch
+  .touch-label
+    display: inline
+  .no-touch-label
+    display: none
+.no-touch
+  .touch-label
+    display: none
+  .no-touch-label
+    display: inline
+
 .target-image
   width: 100%
+  +border-top-radius($radius)
 
 .color-thief-output
   display: none
   padding: 20px
   background-color: #eee
+  +border-bottom-radius($radius)
+  +box-shadow(0 4px 0 #333)
   .function-title
     color: $bgColor
     font-weight: bold
@@ -229,6 +263,7 @@ canvas
 .drop-zone
   height: 400px
   margin-bottom: 80px
+  +border-radius($radius)
   background: url("../img/dark_checkered_bg.png")
   &.dragging
     +box-shadow(inset 0 0 0 4px $linkColor)
@@ -259,10 +294,12 @@ canvas
     // width: 100%
 
 
+/* -- Responsive design -------------------------------------------------------------- */
+
 @media only screen and (max-width : 480px)
   body
-    margin: 40px 0
-    font-size: $fontSize - 4
+    margin: 80px 0 40px 0
+    font-size: $fontSize - 3
   .intro
     padding-left: 20px
     padding-right: 20px
@@ -272,3 +309,19 @@ canvas
     font-size: 24px // from 40px
   h3
     font-size: 14px // from 16px
+  .examples,
+  .dragged-images
+    .image-section
+      .target-image
+        +border-radius(0)
+      .color-thief-output
+        +border-radius(0)
+  .examples
+    .image-wrap
+      min-height:  200px
+
+@media only screen and (min-width : 640px)
+  .examples
+    .image-wrap
+      min-height: 450px // All 3 examples are 450px tall.
+
