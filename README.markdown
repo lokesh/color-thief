@@ -34,8 +34,8 @@ returns [ [num, num, num], [num, num, num], ... ]
 ##Credits and license
 
 ###Author
-by Lokesh Dhakar
-[lokeshdhakar.com](http://www.lokeshdhakar.com)
+by Lokesh Dhakar  
+[lokeshdhakar.com](http://www.lokeshdhakar.com)  
 [twitter.com/lokeshdhakar](http://twitter.com/lokeshdhakar)
 
 ###Thanks
