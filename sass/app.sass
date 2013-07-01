@@ -9,7 +9,7 @@ $yellow: #fdf485
 $orange: #ff8000
 $red: #ff4040
 
-$color: #aaa
+$color: #ccc
 $bgColor: #444
 
 $headingColor: #444
@@ -19,18 +19,11 @@ $fontSize: 18px
 $columnWidth: 600px
 $radius: 4px
 
-// $codeColor: #eff
-// $inputColor: #555
-// $selectionColor: $yellow
-
-// $altColor: lighten($color, 30%)
-// $altCommentsColor: lighten($color, 10%)
-
+body
+  background: $bgColor
 
 body, input, textarea
-  margin: 40px 40px 80px 40px
   color: $color
-  background: $bgColor
   font-size: $fontSize
   font-family: "Karla", "lucida grande", sans-serif
 
@@ -82,6 +75,9 @@ img
   display: block
 
 /* -- Layout ------------------------------------------------------------------ */
+
+body
+  margin: 40px 40px 80px 40px
 
 .wrapper
   max-width: $columnWidth

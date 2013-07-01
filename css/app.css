@@ -1,4 +1,4 @@
-/* line 17, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 17, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -20,50 +20,50 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-/* line 22, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 22, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html {
   line-height: 1;
 }
 
-/* line 24, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 26, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 28, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 30, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 103, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 103, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 32, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 32, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 116, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 116, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block;
 }
 
-/* line 30, ../sass/app.sass */
+/* line 22, ../sass/app.sass */
 body, input, textarea {
   margin: 40px 40px 80px 40px;
   color: #aaaaaa;
@@ -72,27 +72,27 @@ body, input, textarea {
   font-family: "Karla", "lucida grande", sans-serif;
 }
 
-/* line 37, ../sass/app.sass */
+/* line 29, ../sass/app.sass */
 h1, h2, h3, h4, h5, h6 {
   color: white;
   line-height: 1.2em;
   font-weight: 500;
 }
 
-/* line 42, ../sass/app.sass */
+/* line 34, ../sass/app.sass */
 h1 {
   font-size: 72px;
   line-height: 1em;
 }
 
-/* line 46, ../sass/app.sass */
+/* line 38, ../sass/app.sass */
 h2 {
   font-size: 36px;
   line-height: 1.2em;
   margin-bottom: 0.3em;
 }
 
-/* line 51, ../sass/app.sass */
+/* line 43, ../sass/app.sass */
 h3 {
   font-size: 16px;
   letter-spacing: 0.1em;
@@ -100,24 +100,24 @@ h3 {
   text-transform: uppercase;
 }
 
-/* line 57, ../sass/app.sass */
+/* line 49, ../sass/app.sass */
 h4 {
   font-size: 20px;
   margin-bottom: 1em;
 }
 
-/* line 61, ../sass/app.sass */
+/* line 53, ../sass/app.sass */
 p {
   line-height: 1.4em;
   margin-bottom: 1em;
 }
 
-/* line 65, ../sass/app.sass */
+/* line 57, ../sass/app.sass */
 strong {
   font-weight: bold;
 }
 
-/* line 68, ../sass/app.sass */
+/* line 60, ../sass/app.sass */
 code,
 kbd {
   font: 12px "Andale Mono", "DejaVu Sans Mono", monospace;
@@ -125,64 +125,64 @@ kbd {
 }
 
 /* Links */
-/* line 74, ../sass/app.sass */
+/* line 66, ../sass/app.sass */
 a {
   color: #00bfa8;
   text-decoration: none;
 }
-/* line 77, ../sass/app.sass */
+/* line 69, ../sass/app.sass */
 a:hover {
   color: #59ffeb;
 }
 
 /* Images */
-/* line 81, ../sass/app.sass */
+/* line 73, ../sass/app.sass */
 img {
   display: block;
 }
 
 /* -- Layout ------------------------------------------------------------------ */
-/* line 86, ../sass/app.sass */
+/* line 78, ../sass/app.sass */
 .wrapper {
   max-width: 600px;
   margin: 0 auto;
 }
 
-/* line 90, ../sass/app.sass */
+/* line 82, ../sass/app.sass */
 .section-header {
   text-align: center;
 }
 
-/* line 93, ../sass/app.sass */
+/* line 85, ../sass/app.sass */
 .intro {
   text-align: center;
   margin-bottom: 2em;
 }
 
-/* line 97, ../sass/app.sass */
+/* line 89, ../sass/app.sass */
 .description {
   max-width: 450px;
   margin-right: auto;
   margin-left: auto;
 }
 
-/* line 102, ../sass/app.sass */
+/* line 94, ../sass/app.sass */
 .read-more-links {
   font-size: 16px;
 }
 
-/* line 105, ../sass/app.sass */
+/* line 97, ../sass/app.sass */
 .image-section {
   margin-bottom: 80px;
   background: #2b2b2b;
 }
-/* line 108, ../sass/app.sass */
+/* line 100, ../sass/app.sass */
 .image-section .image-wrap {
   position: relative;
   background: #444444;
 }
 
-/* line 114, ../sass/app.sass */
+/* line 106, ../sass/app.sass */
 .examples .image-section .target-image {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
@@ -194,13 +194,13 @@ img {
   -moz-box-shadow: 0 4px 0 #333333;
   box-shadow: 0 4px 0 #333333;
 }
-/* line 117, ../sass/app.sass */
+/* line 109, ../sass/app.sass */
 .examples .color-thief-output {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 120, ../sass/app.sass */
+/* line 112, ../sass/app.sass */
 .examples .image-section.with-color-thief-output .target-image {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -212,14 +212,14 @@ img {
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 123, ../sass/app.sass */
+/* line 115, ../sass/app.sass */
 .examples .image-section.with-color-thief-output .color-thief-output {
   -webkit-box-shadow: 0 4px 0 #333333;
   -moz-box-shadow: 0 4px 0 #333333;
   box-shadow: 0 4px 0 #333333;
 }
 
-/* line 126, ../sass/app.sass */
+/* line 118, ../sass/app.sass */
 .sharing {
   position: fixed;
   top: 20px;
@@ -227,7 +227,7 @@ img {
 }
 
 /* -- Image examples ------------------------------------------------------------------ */
-/* line 133, ../sass/app.sass */
+/* line 125, ../sass/app.sass */
 .run-functions-button {
   position: absolute;
   top: 50%;
@@ -249,12 +249,12 @@ img {
   font-weight: 500;
   cursor: pointer;
 }
-/* line 149, ../sass/app.sass */
+/* line 141, ../sass/app.sass */
 .run-functions-button:hover {
   background-color: #fef9b7;
   color: #4f4901;
 }
-/* line 152, ../sass/app.sass */
+/* line 144, ../sass/app.sass */
 .run-functions-button:active {
   -webkit-transform: scale(0.9, 0.9);
   -moz-transform: scale(0.9, 0.9);
@@ -262,7 +262,7 @@ img {
   -o-transform: scale(0.9, 0.9);
   transform: scale(0.9, 0.9);
 }
-/* line 154, ../sass/app.sass */
+/* line 146, ../sass/app.sass */
 .run-functions-button.hide {
   -webkit-transition: -webkit-transform 0.4s, top 0.4s;
   -moz-transition: -moz-transform 0.4s, top 0.4s;
@@ -276,25 +276,25 @@ img {
   transform: scale(0, 0);
 }
 
-/* line 161, ../sass/app.sass */
+/* line 153, ../sass/app.sass */
 .touch .touch-label {
   display: inline;
 }
-/* line 163, ../sass/app.sass */
+/* line 155, ../sass/app.sass */
 .touch .no-touch-label {
   display: none;
 }
 
-/* line 166, ../sass/app.sass */
+/* line 158, ../sass/app.sass */
 .no-touch .touch-label {
   display: none;
 }
-/* line 168, ../sass/app.sass */
+/* line 160, ../sass/app.sass */
 .no-touch .no-touch-label {
   display: inline;
 }
 
-/* line 171, ../sass/app.sass */
+/* line 163, ../sass/app.sass */
 .target-image {
   width: 100%;
   -moz-border-radius-topleft: 4px;
@@ -305,7 +305,7 @@ img {
   border-top-right-radius: 4px;
 }
 
-/* line 175, ../sass/app.sass */
+/* line 167, ../sass/app.sass */
 .color-thief-output {
   display: none;
   padding: 20px;
@@ -320,29 +320,29 @@ img {
   -moz-box-shadow: 0 4px 0 #333333;
   box-shadow: 0 4px 0 #333333;
 }
-/* line 181, ../sass/app.sass */
+/* line 173, ../sass/app.sass */
 .color-thief-output .function-title {
   color: #444444;
   font-weight: bold;
 }
 
-/* line 185, ../sass/app.sass */
+/* line 177, ../sass/app.sass */
 .function {
   margin-bottom: 10px;
 }
 
-/* line 188, ../sass/app.sass */
+/* line 180, ../sass/app.sass */
 .swatches {
   *zoom: 1;
 }
-/* line 38, ../../../../.rvm/gems/ruby-1.9.2-p320/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .swatches:after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* line 191, ../sass/app.sass */
+/* line 183, ../sass/app.sass */
 .swatch {
   width: 60px;
   height: 30px;
@@ -351,20 +351,20 @@ img {
   float: left;
 }
 
-/* line 198, ../sass/app.sass */
+/* line 190, ../sass/app.sass */
 canvas {
   display: none;
 }
 
 /* -- Animated logo ------------------------------------------------------------------ */
-/* line 203, ../sass/app.sass */
+/* line 195, ../sass/app.sass */
 .logo .char1 {
   -webkit-transition: color 0.1s;
   -moz-transition: color 0.1s;
   -o-transition: color 0.1s;
   transition: color 0.1s;
 }
-/* line 205, ../sass/app.sass */
+/* line 197, ../sass/app.sass */
 .logo .char2 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.05s;
@@ -372,7 +372,7 @@ canvas {
   -o-transition: color 0.1s 0.05s;
   transition: color 0.1s 0.05s;
 }
-/* line 207, ../sass/app.sass */
+/* line 199, ../sass/app.sass */
 .logo .char3 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.1s;
@@ -380,7 +380,7 @@ canvas {
   -o-transition: color 0.1s 0.1s;
   transition: color 0.1s 0.1s;
 }
-/* line 209, ../sass/app.sass */
+/* line 201, ../sass/app.sass */
 .logo .char4 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.15s;
@@ -388,7 +388,7 @@ canvas {
   -o-transition: color 0.1s 0.15s;
   transition: color 0.1s 0.15s;
 }
-/* line 211, ../sass/app.sass */
+/* line 203, ../sass/app.sass */
 .logo .char5 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.2s;
@@ -396,7 +396,7 @@ canvas {
   -o-transition: color 0.1s 0.2s;
   transition: color 0.1s 0.2s;
 }
-/* line 214, ../sass/app.sass */
+/* line 206, ../sass/app.sass */
 .logo .char7 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.3s;
@@ -404,7 +404,7 @@ canvas {
   -o-transition: color 0.1s 0.3s;
   transition: color 0.1s 0.3s;
 }
-/* line 216, ../sass/app.sass */
+/* line 208, ../sass/app.sass */
 .logo .char8 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.35s;
@@ -412,7 +412,7 @@ canvas {
   -o-transition: color 0.1s 0.35s;
   transition: color 0.1s 0.35s;
 }
-/* line 218, ../sass/app.sass */
+/* line 210, ../sass/app.sass */
 .logo .char9 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.4s;
@@ -420,7 +420,7 @@ canvas {
   -o-transition: color 0.1s 0.4s;
   transition: color 0.1s 0.4s;
 }
-/* line 220, ../sass/app.sass */
+/* line 212, ../sass/app.sass */
 .logo .char10 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.45s;
@@ -428,7 +428,7 @@ canvas {
   -o-transition: color 0.1s 0.45s;
   transition: color 0.1s 0.45s;
 }
-/* line 222, ../sass/app.sass */
+/* line 214, ../sass/app.sass */
 .logo .char11 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.5s;
@@ -436,7 +436,7 @@ canvas {
   -o-transition: color 0.1s 0.5s;
   transition: color 0.1s 0.5s;
 }
-/* line 225, ../sass/app.sass */
+/* line 217, ../sass/app.sass */
 .logo:hover .char1 {
   -webkit-transition: color 0.1s;
   -moz-transition: color 0.1s;
@@ -444,7 +444,7 @@ canvas {
   transition: color 0.1s;
   color: #ff4040;
 }
-/* line 228, ../sass/app.sass */
+/* line 220, ../sass/app.sass */
 .logo:hover .char2 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.05s;
@@ -453,7 +453,7 @@ canvas {
   transition: color 0.1s 0.05s;
   color: #ff8000;
 }
-/* line 231, ../sass/app.sass */
+/* line 223, ../sass/app.sass */
 .logo:hover .char3 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.1s;
@@ -462,7 +462,7 @@ canvas {
   transition: color 0.1s 0.1s;
   color: #fdf485;
 }
-/* line 234, ../sass/app.sass */
+/* line 226, ../sass/app.sass */
 .logo:hover .char4 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.15s;
@@ -471,7 +471,7 @@ canvas {
   transition: color 0.1s 0.15s;
   color: #00bfa8;
 }
-/* line 237, ../sass/app.sass */
+/* line 229, ../sass/app.sass */
 .logo:hover .char5 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.2s;
@@ -480,7 +480,7 @@ canvas {
   transition: color 0.1s 0.2s;
   color: #0096df;
 }
-/* line 241, ../sass/app.sass */
+/* line 233, ../sass/app.sass */
 .logo:hover .char7 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.3s;
@@ -489,7 +489,7 @@ canvas {
   transition: color 0.1s 0.3s;
   color: #ff4040;
 }
-/* line 244, ../sass/app.sass */
+/* line 236, ../sass/app.sass */
 .logo:hover .char8 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.35s;
@@ -498,7 +498,7 @@ canvas {
   transition: color 0.1s 0.35s;
   color: #ff8000;
 }
-/* line 247, ../sass/app.sass */
+/* line 239, ../sass/app.sass */
 .logo:hover .char9 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.4s;
@@ -507,7 +507,7 @@ canvas {
   transition: color 0.1s 0.4s;
   color: #fdf485;
 }
-/* line 250, ../sass/app.sass */
+/* line 242, ../sass/app.sass */
 .logo:hover .char10 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.45s;
@@ -516,7 +516,7 @@ canvas {
   transition: color 0.1s 0.45s;
   color: #00bfa8;
 }
-/* line 253, ../sass/app.sass */
+/* line 245, ../sass/app.sass */
 .logo:hover .char11 {
   -webkit-transition: color 0.1s;
   -webkit-transition-delay: 0.5s;
@@ -527,12 +527,12 @@ canvas {
 }
 
 /* -- Drag and drop ------------------------------------------------------------------ */
-/* line 260, ../sass/app.sass */
+/* line 252, ../sass/app.sass */
 .drag-drop {
   display: none;
 }
 
-/* line 263, ../sass/app.sass */
+/* line 255, ../sass/app.sass */
 .drop-zone {
   height: 400px;
   margin-bottom: 80px;
@@ -543,22 +543,22 @@ canvas {
   border-radius: 4px;
   background: url("../img/dark_checkered_bg.png");
 }
-/* line 268, ../sass/app.sass */
+/* line 260, ../sass/app.sass */
 .drop-zone.dragging {
   -webkit-box-shadow: inset 0 0 0 4px #00bfa8;
   -moz-box-shadow: inset 0 0 0 4px #00bfa8;
   box-shadow: inset 0 0 0 4px #00bfa8;
 }
-/* line 270, ../sass/app.sass */
+/* line 262, ../sass/app.sass */
 .drop-zone.dragging .default-label {
   display: none;
 }
-/* line 272, ../sass/app.sass */
+/* line 264, ../sass/app.sass */
 .drop-zone.dragging .dragging-label {
   display: block;
 }
 
-/* line 275, ../sass/app.sass */
+/* line 267, ../sass/app.sass */
 .drop-zone-label {
   position: relative;
   top: 170px;
@@ -576,46 +576,46 @@ canvas {
   pointer-events: none;
 }
 
-/* line 287, ../sass/app.sass */
+/* line 279, ../sass/app.sass */
 .dragging-label {
   display: none;
 }
 
-/* line 291, ../sass/app.sass */
+/* line 283, ../sass/app.sass */
 .dropped-image .run-functions-button {
   display: none;
 }
 
 /* -- Responsive design -------------------------------------------------------------- */
 @media only screen and (max-width: 480px) {
-  /* line 300, ../sass/app.sass */
+  /* line 292, ../sass/app.sass */
   body {
     margin: 80px 0 40px 0;
     font-size: 15px;
   }
 
-  /* line 303, ../sass/app.sass */
+  /* line 295, ../sass/app.sass */
   .intro {
     padding-left: 20px;
     padding-right: 20px;
   }
 
-  /* line 306, ../sass/app.sass */
+  /* line 298, ../sass/app.sass */
   h1 {
     font-size: 48px;
   }
 
-  /* line 308, ../sass/app.sass */
+  /* line 300, ../sass/app.sass */
   h2 {
     font-size: 24px;
   }
 
-  /* line 310, ../sass/app.sass */
+  /* line 302, ../sass/app.sass */
   h3 {
     font-size: 14px;
   }
 
-  /* line 315, ../sass/app.sass */
+  /* line 307, ../sass/app.sass */
   .examples .image-section .target-image,
   .dragged-images .image-section .target-image {
     -webkit-border-radius: 0;
@@ -624,7 +624,7 @@ canvas {
     -o-border-radius: 0;
     border-radius: 0;
   }
-  /* line 317, ../sass/app.sass */
+  /* line 309, ../sass/app.sass */
   .examples .image-section .color-thief-output,
   .dragged-images .image-section .color-thief-output {
     -webkit-border-radius: 0;
@@ -634,13 +634,13 @@ canvas {
     border-radius: 0;
   }
 
-  /* line 320, ../sass/app.sass */
+  /* line 312, ../sass/app.sass */
   .examples .image-wrap {
     min-height: 200px;
   }
 }
 @media only screen and (min-width: 640px) {
-  /* line 325, ../sass/app.sass */
+  /* line 317, ../sass/app.sass */
   .examples .image-wrap {
     min-height: 450px;
   }

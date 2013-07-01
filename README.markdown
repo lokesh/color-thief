@@ -36,7 +36,7 @@ returns [ [num, num, num], [num, num, num], ... ]
 ###Author
 by Lokesh Dhakar  
 [lokeshdhakar.com](http://www.lokeshdhakar.com)  
-[twitter.com/lokeshdhakar](http://twitter.com/lokeshdhakar)
+[twitter.com/lokesh](http://twitter.com/lokesh)
 
 ###Thanks
 * Nick Rabinowitz - For creating quantize.js.
