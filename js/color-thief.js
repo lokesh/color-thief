@@ -330,8 +330,8 @@ var MMCQ = (function() {
                 gval = pixel[1] >> rshift;
                 bval = pixel[2] >> rshift;
             return (rval >= vbox.r1 && rval <= vbox.r2 &&
-                    gval >= vbox.g1 && rval <= vbox.g2 &&
-                    bval >= vbox.b1 && rval <= vbox.b2);
+                    gval >= vbox.g1 && gval <= vbox.g2 &&
+                    bval >= vbox.b1 && bval <= vbox.b2);
         }
     };
 
@@ -373,7 +373,7 @@ var MMCQ = (function() {
                 d2 = Math.sqrt(
                     Math.pow(color[0] - vboxes.peek(i).color[0], 2) +
                     Math.pow(color[1] - vboxes.peek(i).color[1], 2) +
-                    Math.pow(color[1] - vboxes.peek(i).color[1], 2)
+                    Math.pow(color[2] - vboxes.peek(i).color[2], 2)
                 );
                 if (d2 < d1 || d1 === undefined) {
                     d1 = d2;
