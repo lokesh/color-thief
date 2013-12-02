@@ -31,6 +31,19 @@ getPalette(sourceImage[, colorCount, quality])
 returns [ [num, num, num], [num, num, num], ... ]
 ```
 
+###Node.js
+Install the module via npm
+```bash
+npm install color-thief
+```
+And use it:
+```js
+var ColorThief = require('color-thief');
+```
+
+###Node Tests
+Run the node tests via `npm test`
+
 ##Credits and license
 
 ###Author
