@@ -1,0 +1,18 @@
+{
+  "name": "color-thief",
+  "version": "2.0.1",
+  "description": "A script for grabbing the color palette from an image. Uses Javascript and the canvas tag to make it happen.",
+  "main": "js/color-thief.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/null2/color-thief.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/null2/color-thief/issues"
+  },
+  "dependencies": {
+    "canvas": "~1.1.2"
+  }
+}

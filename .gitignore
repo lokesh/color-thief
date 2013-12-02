@@ -39,3 +39,4 @@ Thumbs.db
 .sass-cache/*
 Rakefile
 rsync-exclude
+node_modules

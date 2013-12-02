@@ -22,16 +22,35 @@
   It also simplifies some of the canvas context manipulation
   with a set of helper functions.
 */
+
+var iAmOnNode = typeof module !== 'undefined' && module.exports;
+
+
+if (iAmOnNode) {
+  var Canvas = require('canvas');
+  var Image = Canvas.Image;
+  var fs = require('fs');
+}
+
 var CanvasImage = function (image) {
-    this.canvas  = document.createElement('canvas');
+    // in node we use strings as path to an image
+    // whereas in the browser we use an image element
+    if (iAmOnNode) {
+      this.canvas = new Canvas()
+      var img = new Image;
+      img.src = fs.readFileSync(image);
+    } else {
+      this.canvas = document.createElement('canvas');
+      document.body.appendChild(this.canvas);
+      var img = image;
+    }
+    
     this.context = this.canvas.getContext('2d');
 
-    document.body.appendChild(this.canvas);
+    this.width  = this.canvas.width  = img.width;
+    this.height = this.canvas.height = img.height;
 
-    this.width  = this.canvas.width  = image.width;
-    this.height = this.canvas.height = image.height;
-
-    this.context.drawImage(image, 0, 0, this.width, this.height);
+    this.context.drawImage(img, 0, 0, this.width, this.height);
 };
 
 CanvasImage.prototype.clear = function () {
@@ -51,7 +70,9 @@ CanvasImage.prototype.getImageData = function () {
 };
 
 CanvasImage.prototype.removeCanvas = function () {
+  if (this.canvas.parentNode) {
     this.canvas.parentNode.removeChild(this.canvas);
+  }
 };
 
 
@@ -611,3 +632,8 @@ var MMCQ = (function() {
         quantize: quantize
     }
 })();
+
+
+if (iAmOnNode) {
+  module.exports = ColorThief;
+}
