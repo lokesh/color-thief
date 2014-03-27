@@ -31,6 +31,14 @@ getPalette(sourceImage[, colorCount, quality])
 returns [ [num, num, num], [num, num, num], ... ]
 ```
 
+###Notes
+
+Two things to keep in mind:
+
+* `sourceImage` should be an image element, not the image source
+* `sourceImage` needs to be a single element. Calling `colorThief.getColor(sourceImage)` if `sourceImage` is an array of image elements will likely throw an error.
+
+
 ##Credits and license
 
 ###Author
