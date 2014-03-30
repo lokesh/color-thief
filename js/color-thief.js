@@ -38,7 +38,13 @@ var CanvasImage = function (image) {
     if (iAmOnNode) {
       this.canvas = new Canvas()
       var img = new Image;
-      img.src = fs.readFileSync(image);
+
+      if(image instanceof Buffer) {
+        img.src = image
+      }else{
+        img.src = fs.readFileSync(image);
+      }
+
     } else {
       this.canvas = document.createElement('canvas');
       document.body.appendChild(this.canvas);
