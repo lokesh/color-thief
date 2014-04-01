@@ -274,7 +274,7 @@ var MMCQ = (function() {
                 for (i = vbox.r1; i <= vbox.r2; i++) {
                     for (j = vbox.g1; j <= vbox.g2; j++) {
                         for (k = vbox.b1; k <= vbox.b2; k++) {
-                             index = getColorIndex(i,j,k);
+                             var index = getColorIndex(i,j,k);
                              npix += (histo[index] || 0);
                         }
                     }
