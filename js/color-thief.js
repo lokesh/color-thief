@@ -98,10 +98,10 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
 
     if (typeof colorCount === 'undefined') {
         colorCount = 10;
-    };
+    }
     if (typeof quality === 'undefined') {
         quality = 10;
-    };
+    }
 
     // Create custom CanvasImage object
     var image      = new CanvasImage(sourceImage);
@@ -154,18 +154,14 @@ if (!pv) {
     var pv = {
         map: function(array, f) {
           var o = {};
-          return f
-              ? array.map(function(d, i) { o.index = i; return f.call(o, d); })
-              : array.slice();
+          return f ? array.map(function(d, i) { o.index = i; return f.call(o, d); }) : array.slice();
         },
         naturalOrder: function(a, b) {
             return (a < b) ? -1 : ((a > b) ? 1 : 0);
         },
         sum: function(array, f) {
           var o = {};
-          return array.reduce(f
-              ? function(p, d, i) { o.index = i; return p + f.call(o, d); }
-              : function(p, d) { return p + d; }, 0);
+          return array.reduce(f ? function(p, d, i) { o.index = i; return p + f.call(o, d); } : function(p, d) { return p + d; }, 0);
         },
         max: function(array, f) {
           return Math.max.apply(null, f ? pv.map(array, f) : array);
@@ -341,8 +337,8 @@ var MMCQ = (function() {
             return pv.naturalOrder(
                 a.vbox.count()*a.vbox.volume(),
                 b.vbox.count()*b.vbox.volume()
-            )
-        });;
+            );
+        });
     }
     CMap.prototype = {
         push: function(vbox) {
@@ -352,7 +348,7 @@ var MMCQ = (function() {
             });
         },
         palette: function() {
-            return this.vboxes.map(function(vb) { return vb.color });
+            return this.vboxes.map(function(vb) { return vb.color; });
         },
         size: function() {
             return this.vboxes.size();
@@ -385,7 +381,7 @@ var MMCQ = (function() {
         forcebw: function() {
             // XXX: won't  work yet
             var vboxes = this.vboxes;
-            vboxes.sort(function(a,b) { return pv.naturalOrder(pv.sum(a.color), pv.sum(b.color) )});
+            vboxes.sort(function(a,b) { return pv.naturalOrder(pv.sum(a.color), pv.sum(b.color));});
 
             // force darkest color to black if everything < 5
             var lowest = vboxes[0].color;
@@ -445,7 +441,7 @@ var MMCQ = (function() {
             maxw = pv.max([rw, gw, bw]);
         // only one pixel, no split
         if (vbox.count() == 1) {
-            return [vbox.copy()]
+            return [vbox.copy()];
         }
         /* Find the partial sum arrays along the selected axis. */
         var total = 0,
@@ -492,7 +488,7 @@ var MMCQ = (function() {
             }
         }
         partialsum.forEach(function(d,i) {
-            lookaheadsum[i] = total-d
+            lookaheadsum[i] = total-d;
         });
         function doCut(color) {
             var dim1 = color + '1',
@@ -540,14 +536,14 @@ var MMCQ = (function() {
 
         // check that we aren't below maxcolors already
         var nColors = 0;
-        histo.forEach(function() { nColors++ });
+        histo.forEach(function() { nColors++; });
         if (nColors <= maxcolors) {
             // XXX: generate the new colors from the histo and return
         }
 
         // get the beginning vbox from the colors
         var vbox = vboxFromPixels(pixels, histo),
-            pq = new PQueue(function(a,b) { return pv.naturalOrder(a.count(), b.count()) });
+            pq = new PQueue(function(a,b) { return pv.naturalOrder(a.count(), b.count()); });
         pq.push(vbox);
 
         // inner function to do the iteration
@@ -589,7 +585,7 @@ var MMCQ = (function() {
 
         // Re-sort by the product of pixel occupancy times the size in color space.
         var pq2 = new PQueue(function(a,b) {
-            return pv.naturalOrder(a.count()*a.volume(), b.count()*b.volume())
+            return pv.naturalOrder(a.count()*a.volume(), b.count()*b.volume());
         });
         while (pq.size()) {
             pq2.push(pq.pop());
@@ -609,5 +605,5 @@ var MMCQ = (function() {
 
     return {
         quantize: quantize
-    }
+    };
 })();
