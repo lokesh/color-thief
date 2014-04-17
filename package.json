@@ -1,14 +1,21 @@
 {
   "name": "color-thief",
-  "version": "2.1.0",
-  "author": "Lokesh Dhakar",
+  "version": "2.0.0",
+  "private": true,
+  "author": {
+    "name": "Lokesh Dhakar",
+    "email": "lokesh.dhakar@gmail.com",
+    "url": "http://lokeshdhakar.com/"
+  },
   "description": "Get the dominant color or color palette from an image.",
   "keywords": [
     "color",
     "palette",
-    "picker",
-    "thief",
-    "dominant"
+    "sampling",
+    "image",
+    "picture",
+    "photo",
+    "canvas"
   ],
   "homepage": "http://lokeshdhakar.com/projects/color-thief/",
   "repository": {
@@ -24,6 +31,7 @@
       "url": "http://creativecommons.org/licenses/by/2.5/"
     }
   ],
+  "main": "dist/color-thief.min.js",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-compass": "^0.7.2",

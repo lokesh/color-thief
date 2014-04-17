@@ -5,8 +5,8 @@ module.exports = function(grunt) {
     compass: {
       dist: {
         options: {
-          sassDir: 'sass',
-          cssDir: 'css',
+          sassDir: 'examples/sass',
+          cssDir: 'examples/css',
           environment: 'production'
         }
       }
@@ -27,21 +27,15 @@ module.exports = function(grunt) {
         src: '.',
         dest: '<%- host_config.directory %>',
         exclusions: [
-          '.DS_Store',
-          '.sass-cache',
-          '.git*',
-          '.host_config',
-          '.ftppass',
-          'node_modules',
-          'sass',
-          'Gruntfile.js',
-          'package.json',
-          'README.markdown'
+          '**/.*',
+          '.*',
+          'bower_components',
+          'node_modules'
         ]
       }
     },
     jshint: {
-      files: ['js/color-thief.js']
+      files: ['src/color-thief.js']
     },
     uglify: {
       options: {
@@ -50,13 +44,13 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'js/color-thief.min.js': ['js/color-thief.js']
+          'dist/color-thief.min.js': ['src/color-thief.js']
         }
       }
     },   
     watch: {
       sass: {
-        files: ['sass/*.sass'],
+        files: ['examples/sass/*.sass'],
         tasks: ['compass'],
         options: {
           livereload: true,
@@ -64,7 +58,7 @@ module.exports = function(grunt) {
         },
       },
       test: {
-        files: ['js/color-thief.js'],
+        files: ['src/color-thief.js'],
         tasks: ['jshint']
       }
     }

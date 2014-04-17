@@ -9,9 +9,9 @@ $(document).ready(function () {
   // Color Thief demo code
   // ---------------------
   var imageArray = {images: [
-      {'file': 'img/photo1.jpg'},
-      {'file': 'img/photo2.jpg'},
-      {'file': 'img/photo3.jpg'}
+      {'file': 'examples/img/photo1.jpg'},
+      {'file': 'examples/img/photo2.jpg'},
+      {'file': 'examples/img/photo3.jpg'}
   ]};
 
   // Render example images
@@ -47,8 +47,10 @@ $(document).ready(function () {
       elapsedTimeForGetPalette: elapsedTimeForGetPalette
     };
     var colorThiefOuputHTML = Mustache.to_html($('#color-thief-output-template').html(), colorThiefOutput);
+
     $imageSection.addClass('with-color-thief-output');
     $imageSection.find('.run-functions-button').addClass('hide');
+
     setTimeout(function(){
       $imageSection.find('.color-thief-output').append(colorThiefOuputHTML).slideDown();
       // If the color-thief-output div is not in the viewport or cut off, scroll down.
@@ -59,7 +61,6 @@ $(document).ready(function () {
          $('body').animate({scrollTop: outputOffsetTop - windowHeight + 200 + "px"});
       }
     }, 300);
-    
   };
 
   // Drag'n'drop demo
