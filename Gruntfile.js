@@ -40,7 +40,7 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         preserveComments: 'some',
-        sourceMap: true
+        sourceMap: false
       },
       dist: {
         files: {

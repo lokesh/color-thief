@@ -4,7 +4,8 @@ v2.0.0
 - Strip out jQuery requirement
 - Credit those who helped with edits - Nathan Spady for drag and drop support.
 
-#### Examples
+**Demo page and example changes**
+
 - Don't show yellow circle buttons till images have loaded
 - Add FB and Twitter buttons
 - Add drag n drop support
