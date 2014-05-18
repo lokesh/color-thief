@@ -23,9 +23,10 @@
   with a set of helper functions.
 */
 
-var iAmOnNode = typeof module !== 'undefined' && module.exports;
-
-
+var iAmOnNode = false;
+if (typeof process !== 'undefined' && process.execPath && process.execPath.indexOf('node') !== -1) {
+    iAmOnNode = true;
+}
 if (iAmOnNode) {
   var Canvas = require('canvas');
   var Image = Canvas.Image;
@@ -640,6 +641,6 @@ var MMCQ = (function() {
 })();
 
 
-if (iAmOnNode) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = ColorThief;
 }
