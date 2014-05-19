@@ -57,6 +57,10 @@ CanvasImage.prototype.removeCanvas = function () {
 
 var ColorThief = function () {};
 
+if (module && typeof module.exports !== 'undefined') {
+    module.exports = ColorThief;
+}
+
 /*
  * getColor(sourceImage[, quality])
  * returns {r: num, g: num, b: num}
