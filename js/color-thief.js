@@ -136,6 +136,23 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     var imageData  = image.getImageData();
     var pixels     = imageData.data;
     var pixelCount = image.getPixelCount();
+    var palette    = this.getPaletteFromPixels(pixels, pixelCount, colorCount, quality);
+
+    // Clean up
+    image.removeCanvas();
+
+    return palette;
+};
+
+/*
+ * getPaletteFromPixels(pixels, pixelCount, colorCount, quality)
+ * returns array[ {r: num, g: num, b: num}, {r: num, g: num, b: num}, ...]
+ *
+ * Low-level function that takes pixels and computes color palette.
+ * Used by getPalette() and getColor()
+ *
+ */
+ColorThief.prototype.getPaletteFromPixels = function(pixels, pixelCount, colorCount, quality) {
 
     // Store the RGB values in an array format suitable for quantize function
     var pixelArray = [];
@@ -158,14 +175,8 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     var cmap    = MMCQ.quantize(pixelArray, colorCount);
     var palette = cmap.palette();
 
-    // Clean up
-    image.removeCanvas();
-
     return palette;
-};
-
-
-
+}
 
 /*!
  * quantize.js Copyright 2008 Nick Rabinowitz.
