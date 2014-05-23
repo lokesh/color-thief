@@ -1,0 +1,22 @@
+{
+  "name": "color-thief",
+  "description": "Extract dominant color or color palette from image",
+  "author": "Lokesh Dhakar <lokesh.dhakar@gmail.com>",
+  "repo": "null2/color-thief",
+  "version": "2.0.0",
+  "keywords": [
+     "color",
+     "canvas"
+  ],
+  "dependencies": {
+  },
+  "main": "js/color-thief.js",
+  "scripts": [
+    "js/color-thief.js"
+  ],
+  "json": [
+  ],
+  "remotes": [
+    "https://raw.githubusercontent.com"
+  ]
+}
