@@ -22,16 +22,34 @@
   It also simplifies some of the canvas context manipulation
   with a set of helper functions.
 */
-var CanvasImage = function (image) {
+var CanvasImage = function (image, area) {
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
 
     document.body.appendChild(this.canvas);
 
-    this.width  = this.canvas.width  = image.width;
+    this.width = this.canvas.width = image.width;
     this.height = this.canvas.height = image.height;
 
+    if (typeof(area) !== 'undefined') {
+        var a = {
+            'startx': typeof(area.startx) !== 'undefined' ? Math.max(0, area.startx) : 0,
+            'starty': typeof(area.starty) !== 'undefined' ? Math.max(0, area.starty) : 0,
+            'width': typeof(area.width) !== 'undefined' ? area.width : this.width,
+            'height': typeof(area.height) !== 'undefined' ? area.height : this.height
+        };
+
+        if (this.width < a.startx + a.width || this.height < a.starty + a.height) {
+            //Invalid area
+            this.area = undefined;
+        } else {
+            this.area = a;
+        }
+    }
+
+
     this.context.drawImage(image, 0, 0, this.width, this.height);
+
 };
 
 CanvasImage.prototype.clear = function () {
@@ -43,11 +61,19 @@ CanvasImage.prototype.update = function (imageData) {
 };
 
 CanvasImage.prototype.getPixelCount = function () {
-    return this.width * this.height;
+    if (typeof(this.area) !== 'undefined') {
+        return  this.area.width * this.area.height;
+    } else {
+        return this.width * this.height;
+    }
 };
 
 CanvasImage.prototype.getImageData = function () {
-    return this.context.getImageData(0, 0, this.width, this.height);
+    if (typeof(this.area) !== 'undefined') {
+        return this.context.getImageData(this.area.startx, this.area.starty, this.area.width, this.area.height);
+    } else {
+        return this.context.getImageData(0, 0, this.width, this.height);
+    }
 };
 
 CanvasImage.prototype.removeCanvas = function () {
@@ -69,9 +95,17 @@ var ColorThief = function () {};
  * faster a color will be returned but the greater the likelihood that it will not be the visually
  * most dominant color.
  *
+ *
+ * Area is an optionnal argument. It is an object describe below.
+ * If not all the image have to be used, you can specify an area for the image using this.
+ * @param area.startx x origin of the area
+ * @param area.starty y origin of the area
+ * @param area.width width of the area
+ * @param area.height height of the area
+ *
  * */
-ColorThief.prototype.getColor = function(sourceImage, quality) {
-    var palette       = this.getPalette(sourceImage, 5, quality);
+ColorThief.prototype.getColor = function (sourceImage, quality, area) {
+    var palette       = this.getPalette(sourceImage, 5, quality, area);
     var dominantColor = palette[0];
     return dominantColor;
 };
@@ -92,9 +126,17 @@ ColorThief.prototype.getColor = function(sourceImage, quality) {
  * 10 is the default. There is a trade-off between quality and speed. The bigger the number, the
  * faster the palette generation but the greater the likelihood that colors will be missed.
  *
+ * Area is an optionnal argument. It is an object describe below.
+ * If not all the image have to be used, you can specify an area for the image using this.
+ * @param area.startx x origin of the area
+ * @param area.starty y origin of the area
+ * @param area.width width of the area
+ * @param area.height height of the area
+ *
+ *
  *
  */
-ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
+ColorThief.prototype.getPalette = function (sourceImage, colorCount, quality, area) {
 
     if (typeof colorCount === 'undefined') {
         colorCount = 10;
@@ -104,7 +146,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     }
 
     // Create custom CanvasImage object
-    var image      = new CanvasImage(sourceImage);
+    var image      = new CanvasImage(sourceImage, area);
     var imageData  = image.getImageData();
     var pixels     = imageData.data;
     var pixelCount = image.getPixelCount();
