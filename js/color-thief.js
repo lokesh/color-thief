@@ -98,8 +98,14 @@ var ColorThief = function () {};
  * most dominant color.
  *
  * */
-ColorThief.prototype.getColor = function(sourceImage, quality) {
-    var palette       = this.getPalette(sourceImage, 5, quality);
+ColorThief.prototype.getColor = function(sourceImage, quality, allowWhite) {
+    // control if second parameter is allowWhite
+    if (quality === true || quality === false) {
+      allowWhite = quality;
+      quality = undefined;
+    }
+  
+    var palette       = this.getPalette(sourceImage, 5, quality, allowWhite);
     var dominantColor = palette[0];
     return dominantColor;
 };
@@ -122,7 +128,7 @@ ColorThief.prototype.getColor = function(sourceImage, quality) {
  *
  *
  */
-ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
+ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality, allowWhite) {
 
     if (typeof colorCount === 'undefined') {
         colorCount = 10;
@@ -136,7 +142,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     var imageData  = image.getImageData();
     var pixels     = imageData.data;
     var pixelCount = image.getPixelCount();
-    var palette    = this.getPaletteFromPixels(pixels, pixelCount, colorCount, quality);
+    var palette    = this.getPaletteFromPixels(pixels, pixelCount, colorCount, quality, allowWhite);
 
     // Clean up
     image.removeCanvas();
@@ -152,7 +158,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
  * Used by getPalette() and getColor()
  *
  */
-ColorThief.prototype.getPaletteFromPixels = function(pixels, pixelCount, colorCount, quality) {
+ColorThief.prototype.getPaletteFromPixels = function(pixels, pixelCount, colorCount, quality, allowWhite) {
 
     // Store the RGB values in an array format suitable for quantize function
     var pixelArray = [];
@@ -164,7 +170,7 @@ ColorThief.prototype.getPaletteFromPixels = function(pixels, pixelCount, colorCo
         a = pixels[offset + 3];
         // If pixel is mostly opaque and not white
         if (a >= 125) {
-            if (!(r > 250 && g > 250 && b > 250)) {
+            if ((!(r > 250 && g > 250 && b > 250) && allowWhite !== true) || (!(r > 255 && g > 255 && b > 255) && allowWhite === true )) {
                 pixelArray.push([r, g, b]);
             }
         }
