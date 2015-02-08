@@ -16,7 +16,7 @@
     "url": "https://github.com/null2/color-thief/issues"
   },
   "dependencies": {
-    "canvas": "~1.1.2"
+    "canvas": "~1.2.0"
   },
   "devDependencies": {
     "nodeunit": "~0.8.2"
