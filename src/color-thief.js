@@ -96,7 +96,7 @@ ColorThief.prototype.getColor = function(sourceImage, quality) {
  */
 ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
 
-    if (typeof colorCount === 'undefined') {
+    if (typeof colorCount === 'undefined' || colorCount < 2 || colorCount > 256) {
         colorCount = 10;
     }
     if (typeof quality === 'undefined') {
