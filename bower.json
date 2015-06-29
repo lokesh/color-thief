@@ -5,7 +5,7 @@
     "Lokesh Dhakar"
   ],
   "description": "Grab the dominant color or color palette from an image.",
-  "main": "js/color-thief.js",
+  "main": "src/color-thief.js",
   "keywords": [
     "color",
     "palette",
