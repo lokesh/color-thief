@@ -4,8 +4,8 @@
  *
  * License
  * -------
- * Creative Commons Attribution 2.5 License:
- * http://creativecommons.org/licenses/by/2.5/
+ * MIT License:
+ * https://github.com/lokesh/color-thief/blob/master/LICENSE
  *
  * Thanks
  * ------
