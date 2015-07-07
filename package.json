@@ -27,8 +27,8 @@
   },
   "licenses": [
     {
-      "type": "Creative Commons Attribution 2.5 License",
-      "url": "http://creativecommons.org/licenses/by/2.5/"
+      "type": "MIT License",
+      "url": "https://github.com/lokesh/color-thief/blob/master/LICENSE"
     }
   ],
   "main": "dist/color-thief.min.js",
