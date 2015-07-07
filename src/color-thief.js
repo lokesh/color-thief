@@ -266,7 +266,7 @@ var MMCQ = (function() {
                 histo = vbox.histo;
             if (!vbox._count_set || force) {
                 var npix = 0,
-                    i, j, k;
+                    i, j, k, index;
                 for (i = vbox.r1; i <= vbox.r2; i++) {
                     for (j = vbox.g1; j <= vbox.g2; j++) {
                         for (k = vbox.b1; k <= vbox.b2; k++) {
