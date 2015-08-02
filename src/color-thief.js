@@ -70,8 +70,8 @@ var ColorThief = function () {};
  * most dominant color.
  *
  * */
-ColorThief.prototype.getColor = function(sourceImage, quality) {
-    var palette       = this.getPalette(sourceImage, 5, quality);
+ColorThief.prototype.getColor = function(sourceImage, quality, ctype) {
+    var palette       = this.getPalette(sourceImage, 5, quality, ctype);
     var dominantColor = palette[0];
     return dominantColor;
 };
@@ -94,7 +94,7 @@ ColorThief.prototype.getColor = function(sourceImage, quality) {
  *
  *
  */
-ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
+ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality, ctype) {
 
     if (typeof colorCount === 'undefined') {
         colorCount = 10;
@@ -133,10 +133,29 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     // Clean up
     image.removeCanvas();
 
+    // Reproduce as HEX values
+    if (ctype === "hex"){
+        var palettehex = [];
+        for (var x=0; x < palette.length; x++) {
+            palettehex.push([rgba2hex(palette[x][0],palette[x][1],palette[x][2])]);
+        }
+        palette = palettehex;
+    }
+
     return palette;
 };
 
-
+/*
+Retrun Color Values in HEX format
+*/
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+// convert RGBA color data to hex
+function rgba2hex(r, g, b) {
+    return componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
 
 
 /*!
@@ -607,3 +626,5 @@ var MMCQ = (function() {
         quantize: quantize
     };
 })();
+
+
