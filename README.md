@@ -32,6 +32,18 @@ getPalette(sourceImage[, colorCount, quality])
 returns [ [num, num, num], [num, num, num], ... ]
 ```
 
+In this example, we get an 8 color palette in HEX format (default is rbg).
+
+```js
+var colorThief = new ColorThief();
+colorThief.getPalette(sourceImage, 8 ,10,"hex");
+```
+
+```js
+getPalette(sourceImage[, colorCount, quality, ctype])
+returns [ [num], [num], ... ]
+```
+
 
 ## Changelog
 
