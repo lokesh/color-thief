@@ -548,10 +548,16 @@ var MMCQ = (function() {
 
         // inner function to do the iteration
         function iter(lh, target) {
-            var ncolors = 1,
+            var ncolors = lh.size(),
                 niters = 0,
                 vbox;
             while (niters < maxIterations) {
+                if (ncolors >= target) return;
+                if (niters++ > maxIterations) {
+//                    console.log("infinite loop; perhaps too few pixels!");
+                    return;
+                }
+
                 vbox = lh.pop();
                 if (!vbox.count())  { /* just put it back */
                     lh.push(vbox);
@@ -572,11 +578,6 @@ var MMCQ = (function() {
                     lh.push(vbox2);
                     ncolors++;
                 }
-                if (ncolors >= target) return;
-                if (niters++ > maxIterations) {
-//                    console.log("infinite loop; perhaps too few pixels!");
-                    return;
-                }
             }
         }
 
@@ -592,7 +593,7 @@ var MMCQ = (function() {
         }
 
         // next set - generate the median cuts using the (npix * vol) sorting.
-        iter(pq2, maxcolors - pq2.size());
+        iter(pq2, maxcolors);
 
         // calculate the actual colors
         var cmap = new CMap();
