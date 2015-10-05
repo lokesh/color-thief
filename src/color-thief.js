@@ -2,16 +2,17 @@
  * Color Thief v2.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
  *
- * License
- * -------
- * Creative Commons Attribution 2.5 License:
- * http://creativecommons.org/licenses/by/2.5/
- *
  * Thanks
  * ------
  * Nick Rabinowitz - For creating quantize.js.
  * John Schulz - For clean up and optimization. @JFSIII
  * Nathan Spady - For adding drag and drop support to the demo page.
+ *
+ * License
+ * -------
+ * Copyright 2011, 2015 Lokesh Dhakar
+ * Released under the MIT license
+ * https://raw.githubusercontent.com/lokesh/color-thief/master/LICENSE
  *
  */
 

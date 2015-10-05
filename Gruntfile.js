@@ -47,7 +47,7 @@ module.exports = function(grunt) {
           'dist/color-thief.min.js': ['src/color-thief.js']
         }
       }
-    },   
+    },
     watch: {
       sass: {
         files: ['examples/sass/*.sass'],

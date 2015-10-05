@@ -15,7 +15,7 @@
     "photo",
     "canvas"
   ],
-  "license": "CC BY 2.5",
+  "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
