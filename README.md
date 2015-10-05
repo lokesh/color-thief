@@ -35,8 +35,9 @@ returns [ [num, num, num], [num, num, num], ... ]
 
 ## Changelog
 
-### v2.0.1 - UNRELEASED
+### v2.0.1 - 2015-10-05
 
+- [Fix] Remove left-over references to Creative Commons License. MIT all-around.
 - [Fix] MMCQ lib issues [#16](https://github.com/lokesh/color-thief/pull/16) by @nobodypb
 - [Fix] Incorrect bower.json main property path. [#37](https://github.com/lokesh/color-thief/pull/37) by @chellem, @joscha, @dkushner
 - [Fix] Quality less than 1 causes infinite loop [#33](https://github.com/lokesh/color-thief/pull/33) by @nteike
