@@ -575,7 +575,7 @@ var MMCQ = (function() {
         // short-circuit
         if (!pixels.length || maxcolors < 2 || maxcolors > 256) {
 //            console.log('wrong number of maxcolors');
-            return false;
+            return new CMap();
         }
 
         // XXX: check color content and convert to grayscale if insufficient
