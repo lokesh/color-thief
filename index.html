@@ -7,12 +7,23 @@
 	<title>Color Thief</title>
 
   <meta name="description" content="Get the dominant color or color palette from an image.">
-  <meta name="author" content="Lokesh Dhakar">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-
-  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Karla%7CMontserrat:700">
+    <meta name="author" content="Lokesh Dhakar">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Karla%7CMontserrat:700">
   <link rel="stylesheet" href="examples/css/screen.css">
 
+    <style>
+        .draggable-rect{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8rem;
+            height: 8rem;
+            background-color: green;
+            color: white;
+            opacity: 0.3;
+        }
+    </style>
 </head>
 <body>
 
@@ -68,6 +79,7 @@
     {{#images}}
     <div class="image-section {{class}}">
       <div class="image-wrap">
+        <div class="draggable-rect" ui-widget-content">Rect</div>
         <button class="run-functions-button">
           <span class="no-touch-label">Click</span>
           <span class="touch-label">Tap</span>
@@ -107,6 +119,7 @@
 
   <script src="src/color-thief.js"></script>
   <script src="examples/js/jquery.js"></script>
+  <script src="examples/js/jquery-ui.js"></script>
   <script src="examples/js/mustache.js"></script>
   <script src="examples/js/demo.js"></script>
 
