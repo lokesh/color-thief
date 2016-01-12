@@ -79,8 +79,8 @@ var ColorThief = function () {
  * most dominant color.
  *
  * */
-ColorThief.prototype.getColor = function (sourceImage, quality) {
-  var palette = this.getPalette(sourceImage, 5, quality);
+ColorThief.prototype.getColor = function (sourceImage, quality, focusRect) {
+  var palette = this.getPalette(sourceImage, 5, quality, focusRect);
   var dominantColor = palette[0];
   return dominantColor;
 };
@@ -103,7 +103,7 @@ ColorThief.prototype.getColor = function (sourceImage, quality) {
  *
  *
  */
-ColorThief.prototype.getPalette = function (sourceImage, colorCount, quality) {
+ColorThief.prototype.getPalette = function (sourceImage, colorCount, quality, focusRect) {
 
   if (typeof colorCount === 'undefined') {
     colorCount = 10;
@@ -113,7 +113,7 @@ ColorThief.prototype.getPalette = function (sourceImage, colorCount, quality) {
   }
 
   // Create custom CanvasImage object
-  var image = new CanvasImage(sourceImage);
+  var image = new CanvasImage(sourceImage, focusRect);
   var imageData = image.getImageData();
   var pixels = imageData.data;
   var pixelCount = image.getPixelCount();
