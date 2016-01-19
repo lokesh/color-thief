@@ -14,6 +14,7 @@ $(document).ready(function () {
       {'file': 'examples/img/photo3.jpg'}
   ]};
 
+
   // Render example images
   var examplesHTML = Mustache.to_html($('#image-section-template').html(), imageArray);
   $('#example-images').append(examplesHTML);
@@ -25,19 +26,26 @@ $(document).ready(function () {
     var $imageSection     = $this.closest('.image-section');
     var $colorThiefOutput = $imageSection.find('.color-thief-output');
     var $targetimage      = $imageSection.find('.target-image');
-    showColorsForImage($targetimage, $imageSection);
-  });
+    var $focusRect = $imageSection.find('div.draggable-rect');
+    var focusRect;
+    if ($focusRect && $focusRect[0] && $imageSection[0]){
+      var fRect = $focusRect[0].getBoundingClientRect();
+      var iRect = $imageSection[0].getBoundingClientRect();
+      focusRect = {top: fRect.top - iRect.top, left: fRect.left - iRect.left, width: fRect.width, height: fRect.height};
+    }
+    showColorsForImage($targetimage, $imageSection, focusRect);
+    });
 
   var colorThief = new ColorThief();
 
   // Run Color Thief functions and display results below image.
   // We also log execution time of functions for display.
-  var showColorsForImage = function($image, $imageSection ) {
+  var showColorsForImage = function($image, $imageSection, focusRect) {
     var image                    = $image[0];
     var start                    = Date.now();
-    var color                    = colorThief.getColor(image);
+    var color                    = colorThief.getColor(image, undefined, focusRect);
     var elapsedTimeForGetColor   = Date.now() - start;
-    var palette                  = colorThief.getPalette(image);
+    var palette                  = colorThief.getPalette(image, undefined, undefined, focusRect);
     var elapsedTimeForGetPalette = Date.now() - start + elapsedTimeForGetColor;
 
     var colorThiefOutput = {
@@ -49,7 +57,7 @@ $(document).ready(function () {
     var colorThiefOuputHTML = Mustache.to_html($('#color-thief-output-template').html(), colorThiefOutput);
 
     $imageSection.addClass('with-color-thief-output');
-    $imageSection.find('.run-functions-button').addClass('hide');
+    //$imageSection.find('.run-functions-button').addClass('hide');
 
     setTimeout(function(){
       $imageSection.find('.color-thief-output').append(colorThiefOuputHTML).slideDown();
@@ -62,6 +70,12 @@ $(document).ready(function () {
       }
     }, 300);
   };
+  $(function () {
+    $('.draggable-rect').draggable({
+      cancel: false
+    });
+
+  });
 
   // Drag'n'drop demo
   // Thanks to Nathan Spady (http://nspady.com/) who did the bulk of the drag'n'drop work.
