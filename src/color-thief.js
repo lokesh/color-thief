@@ -29,16 +29,15 @@ var isValidFocusRect = function (focusRect) {
 var CanvasImage = function (image, focusRect) {
   this.canvas = document.createElement('canvas');
   this.context = this.canvas.getContext('2d');
-
   document.body.appendChild(this.canvas);
-
-  this.width = this.canvas.width = image.width;
-  this.height = this.canvas.height = image.height;
-
   if (!isValidFocusRect(focusRect)) {
+    this.width = this.canvas.width = image.width;
+    this.height = this.canvas.height = image.height;
     this.context.drawImage(image, 0, 0, this.width, this.height);
   } else {
-    this.context.drawImage(image, focusRect.top, focusRect.left, focusRect.width, focusRect.height, 0, 0, this.width, this.height);
+    this.width = this.canvas.width = focusRect.width;
+    this.height = this.canvas.height = focusRect.height;
+    this.context.drawImage(image, focusRect.left, focusRect.top, focusRect.width, focusRect.height, 0, 0, focusRect.width, focusRect.height);
   }
 };
 
