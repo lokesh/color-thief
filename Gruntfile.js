@@ -44,7 +44,18 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/color-thief.min.js': ['src/color-thief.js']
+          'dist/color-thief.min.js': ['dist/color-thief.js']
+        }
+      }
+    },
+    webpack: {
+      build: {
+        entry: "./src/ColorThief.js",
+        output: {
+          libraryTarget: "var",
+          library: "ColorThief",
+          path: __dirname + "/dist",
+          filename: "color-thief.js"
         }
       }
     },
@@ -61,6 +72,10 @@ module.exports = function(grunt) {
         files: ['src/color-thief.js'],
         tasks: ['jshint']
       }
+    },
+    shell: {
+      webpack: { command: 'webpack' },
+      webpackWatch: { command: 'webpack --watch' }
     }
   });
 
@@ -70,8 +85,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-ftp-deploy');
+  grunt.loadNpmTasks('grunt-shell');
 
-
-  grunt.registerTask('default', ['compass', 'connect', 'watch']);
-  grunt.registerTask('build', ['compass', 'jshint', 'uglify']);
+  grunt.registerTask('default', ['compass', 'connect', 'shell:webpackWatch']);
+  grunt.registerTask('build', ['compass', 'jshint', 'shell:webpack', 'uglify']);
 };

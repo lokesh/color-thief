@@ -31,14 +31,17 @@
       "url": "https://raw.githubusercontent.com/lokesh/color-thief/master/LICENSE/"
     }
   ],
-  "main": "dist/color-thief.min.js",
+  "main": "src/ColorThief.js",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-compass": "^0.7.2",
-    "grunt-contrib-watch": "^0.5.3",
     "grunt-contrib-connect": "^0.7.1",
-    "grunt-ftp-deploy": "^0.1.1",
+    "grunt-contrib-jshint": "~0.9.2",
     "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-jshint": "~0.9.2"
+    "grunt-contrib-watch": "^0.5.3",
+    "grunt-ftp-deploy": "^0.1.1",
+    "grunt-shell": "^1.1.2",
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
   }
 }
