@@ -146,7 +146,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality, cty
 };
 
 /*
-Retrun Color Values in HEX format
+Return Color Values in HEX format
 */
 function componentToHex(c) {
     var hex = c.toString(16);
