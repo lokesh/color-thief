@@ -24,13 +24,16 @@
 */
 
 var iAmOnNode = false;
-if (typeof process !== 'undefined' && process.execPath && process.execPath.indexOf('node') !== -1) {
+var Canvas;
+var Image;
+var fs;
+if ( !!process && process.execPath ) {
     iAmOnNode = true;
 }
 if (iAmOnNode) {
-  var Canvas = require('canvas');
-  var Image = Canvas.Image;
-  var fs = require('fs');
+  Canvas = require('canvas');
+  Image = Canvas.Image;
+  fs = require('fs');
 }
 
 var CanvasImage = function (image) {
