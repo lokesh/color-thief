@@ -1,6 +1,7 @@
 *.log
 *.sql
 *.sqlite
+*~
 .htaccess
 .ftppass
 .host_config
