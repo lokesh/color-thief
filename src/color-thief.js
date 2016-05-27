@@ -137,6 +137,50 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     return palette;
 };
 
+ColorThief.prototype.getColorFromUrl = function(imageUrl, callback, quality) {
+    sourceImage = document.createElement("img");
+    var thief = this;
+    sourceImage.addEventListener('load' , function(){
+        var palette = thief.getPalette(sourceImage, 5, quality);
+        var dominantColor = palette[0];
+        callback(dominantColor, imageUrl);
+    });
+    sourceImage.src = imageUrl
+};
+
+
+ColorThief.prototype.getImageData = function(imageUrl, callback) {
+    xhr = new XMLHttpRequest();
+    xhr.open('GET', imageUrl, true);
+    xhr.responseType = 'arraybuffer'
+    xhr.onload = function(e) {
+        if (this.status == 200) {
+            uInt8Array = new Uint8Array(this.response)
+            i = uInt8Array.length
+            binaryString = new Array(i);
+            for (var i = 0; i < uInt8Array.length; i++){
+                binaryString[i] = String.fromCharCode(uInt8Array[i])
+            }
+            data = binaryString.join('')
+            base64 = window.btoa(data)
+            callback ("data:image/png;base64,"+base64)
+        }
+    }
+    xhr.send();
+};
+
+ColorThief.prototype.getColorAsync = function(imageUrl, callback, quality) {
+    var thief = this;
+    this.getImageData(imageUrl, function(imageData){
+        sourceImage = document.createElement("img");
+        sourceImage.addEventListener('load' , function(){
+            var palette = thief.getPalette(sourceImage, 5, quality);
+            var dominantColor = palette[0];
+            callback(dominantColor, this);
+        });
+        sourceImage.src = imageData;      
+    });
+};
 
 
 
