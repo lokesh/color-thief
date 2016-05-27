@@ -1,0 +1,42 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+
+  <script src="examples/js/jquery.js"></script>
+  <script src="src/color-thief.js"></script>
+
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div id="samedomain">
+      <img src="examples/img/photo1.jpg" width="400" height="200">
+        <h1>Same domain, image by url</h1>
+      </div>
+      <script type="text/javascript">
+        var colorThief = new ColorThief();
+        colorSync = colorThief.getColorFromUrl("examples/img/photo1.jpg", function(color){
+          $('#samedomain').css('background-color','rgb('+color[0]+','+color[1]+','+color[2]+')')
+          console.log('url',color)
+        });
+      </script>
+      <div id="crossdomain">
+        <img width="400" height="200">
+        <h1>Cross-domain, image by url</h1>
+      </div>
+      <script type="text/javascript">
+        colorThief.getColorAsync("http://lorempixel.com/400/200/",function(color, element){
+          $('#crossdomain').css('background-color','rgb('+color[0]+','+color[1]+','+color[2]+')')
+          $('#crossdomain img').attr('src',element.src)
+          console.log('async', color, element.src)
+        });
+      </script>
+
+    </div>
+  
+
+  
+
+</body>
+</html>
