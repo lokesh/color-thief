@@ -41,7 +41,7 @@ returns [ [num, num, num], [num, num, num], ... ]
 - [Fix] MMCQ lib issues [#16](https://github.com/lokesh/color-thief/pull/16) by @nobodypb
 - [Fix] Incorrect bower.json main property path. [#37](https://github.com/lokesh/color-thief/pull/37) by @chellem, @joscha, @dkushner
 - [Fix] Quality less than 1 causes infinite loop [#33](https://github.com/lokesh/color-thief/pull/33) by @nteike
-- [Fix] MMCQ.quantize(...) can return false or undefined thus breaking the application (#55)[https://github.com/lokesh/color-thief/pull/55] by @mhahmadi
+- [Fix] MMCQ.quantize(...) can return false or undefined thus breaking the application [#55](https://github.com/lokesh/color-thief/pull/55) by @mhahmadi
 - [Remove] Drop version number from bower.json [#70](https://github.com/lokesh/color-thief/pull/70) by @kkirsche
 
 ### v2.0.0 - 2013-06-23
