@@ -15,7 +15,7 @@ colorThief.getColor(sourceImage);
 
 ```js
 getColor(sourceImage[, quality])
-returns {r: num, g: num, b: num}
+returns [num, num, num]
 ```
 
 ### Build a color palette from an image
