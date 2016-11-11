@@ -18,6 +18,20 @@
  */
 
 
+var iAmOnNode = false;
+var Canvas;
+var Image;
+var fs;
+if ( !!process && process.execPath ) {
+    iAmOnNode = true;
+}
+if (iAmOnNode) {
+  Canvas = require('canvas');
+  Image = Canvas.Image;
+  fs = require('fs');
+}
+
+
 /*
   CanvasImage Class
   Class that wraps the html image element and canvas.
@@ -25,15 +39,31 @@
   with a set of helper functions.
 */
 var CanvasImage = function (image) {
-    this.canvas  = document.createElement('canvas');
+    var img;
+    // in node we use strings as path to an image
+    // whereas in the browser we use an image element
+    if (iAmOnNode) {
+        this.canvas = new Canvas()
+        img = new Image;
+
+        if(image instanceof Buffer) {
+            img.src = image
+        } else {
+            img.src = fs.readFileSync(image);
+        }
+
+    } else {
+        this.canvas = document.createElement('canvas');
+        document.body.appendChild(this.canvas);
+        img = image;
+    }
+    
     this.context = this.canvas.getContext('2d');
 
-    document.body.appendChild(this.canvas);
+    this.width  = this.canvas.width  = img.width;
+    this.height = this.canvas.height = img.height;
 
-    this.width  = this.canvas.width  = image.width;
-    this.height = this.canvas.height = image.height;
-
-    this.context.drawImage(image, 0, 0, this.width, this.height);
+    this.context.drawImage(img, 0, 0, this.width, this.height);
 };
 
 CanvasImage.prototype.clear = function () {
@@ -53,7 +83,9 @@ CanvasImage.prototype.getImageData = function () {
 };
 
 CanvasImage.prototype.removeCanvas = function () {
-    this.canvas.parentNode.removeChild(this.canvas);
+    if (this.canvas.parentNode) {
+        this.canvas.parentNode.removeChild(this.canvas);
+    }
 };
 
 
@@ -655,3 +687,7 @@ var MMCQ = (function() {
         quantize: quantize
     };
 })();
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = ColorThief;
+}
