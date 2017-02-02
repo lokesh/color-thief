@@ -1,11 +1,6 @@
-/*!
+/*
  * Color Thief v2.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
- *
- * License
- * -------
- * Creative Commons Attribution 2.5 License:
- * http://creativecommons.org/licenses/by/2.5/
  *
  * Thanks
  * ------
@@ -13,6 +8,13 @@
  * John Schulz - For clean up and optimization. @JFSIII
  * Nathan Spady - For adding drag and drop support to the demo page.
  *
+ * License
+ * -------
+ * Copyright 2011, 2015 Lokesh Dhakar
+ * Released under the MIT license
+ * https://raw.githubusercontent.com/lokesh/color-thief/master/LICENSE
+ *
+ * @license
  */
 
 
@@ -96,7 +98,7 @@ ColorThief.prototype.getColor = function(sourceImage, quality, ctype) {
  */
 ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality, ctype) {
 
-    if (typeof colorCount === 'undefined') {
+    if (typeof colorCount === 'undefined' || colorCount < 2 || colorCount > 256) {
         colorCount = 10;
     }
     if (typeof quality === 'undefined' || quality < 1) {
@@ -145,6 +147,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality, cty
     return palette;
 };
 
+
 /*
 Return Color Values in HEX format
 */
@@ -156,11 +159,59 @@ function componentToHex(c) {
 function rgba2hex(r, g, b) {
     return componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+=======
+ColorThief.prototype.getColorFromUrl = function(imageUrl, callback, quality) {
+    sourceImage = document.createElement("img");
+    var thief = this;
+    sourceImage.addEventListener('load' , function(){
+        var palette = thief.getPalette(sourceImage, 5, quality);
+        var dominantColor = palette[0];
+        callback(dominantColor, imageUrl);
+    });
+    sourceImage.src = imageUrl
+};
+
+
+ColorThief.prototype.getImageData = function(imageUrl, callback) {
+    xhr = new XMLHttpRequest();
+    xhr.open('GET', imageUrl, true);
+    xhr.responseType = 'arraybuffer'
+    xhr.onload = function(e) {
+        if (this.status == 200) {
+            uInt8Array = new Uint8Array(this.response)
+            i = uInt8Array.length
+            binaryString = new Array(i);
+            for (var i = 0; i < uInt8Array.length; i++){
+                binaryString[i] = String.fromCharCode(uInt8Array[i])
+            }
+            data = binaryString.join('')
+            base64 = window.btoa(data)
+            callback ("data:image/png;base64,"+base64)
+        }
+    }
+    xhr.send();
+};
+
+ColorThief.prototype.getColorAsync = function(imageUrl, callback, quality) {
+    var thief = this;
+    this.getImageData(imageUrl, function(imageData){
+        sourceImage = document.createElement("img");
+        sourceImage.addEventListener('load' , function(){
+            var palette = thief.getPalette(sourceImage, 5, quality);
+            var dominantColor = palette[0];
+            callback(dominantColor, this);
+        });
+        sourceImage.src = imageData;      
+    });
+};
+
+
 
 
 /*!
  * quantize.js Copyright 2008 Nick Rabinowitz.
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ * @license
  */
 
 // fill out a couple protovis dependencies
@@ -168,6 +219,7 @@ function rgba2hex(r, g, b) {
  * Block below copied from Protovis: http://mbostock.github.com/protovis/
  * Copyright 2010 Stanford Visualization Group
  * Licensed under the BSD License: http://www.opensource.org/licenses/bsd-license.php
+ * @license
  */
 if (!pv) {
     var pv = {
@@ -285,7 +337,7 @@ var MMCQ = (function() {
                 histo = vbox.histo;
             if (!vbox._count_set || force) {
                 var npix = 0,
-                    i, j, k;
+                    index, i, j, k;
                 for (i = vbox.r1; i <= vbox.r2; i++) {
                     for (j = vbox.g1; j <= vbox.g2; j++) {
                         for (k = vbox.b1; k <= vbox.b2; k++) {
