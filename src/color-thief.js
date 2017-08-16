@@ -24,7 +24,7 @@
   It also simplifies some of the canvas context manipulation
   with a set of helper functions.
 */
-var CanvasImage = function (image) {
+this.CanvasImage = function (image) {
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
 
@@ -57,7 +57,7 @@ CanvasImage.prototype.removeCanvas = function () {
 };
 
 
-var ColorThief = function () {};
+this.ColorThief = function () {};
 
 /*
  * getColor(sourceImage[, quality])
@@ -241,7 +241,7 @@ var newPixels = myPixels.map(function(p) {
 });
 
  */
-var MMCQ = (function() {
+this.MMCQ = (function() {
     // private constants
     var sigbits = 5,
         rshift = 8 - sigbits,
