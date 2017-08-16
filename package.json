@@ -1,6 +1,6 @@
 {
   "name": "color-thief",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": {
     "name": "Lokesh Dhakar",
     "email": "lokesh.dhakar@gmail.com",
@@ -36,8 +36,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-uglify": "~2.0.0",
-    "grunt-contrib-jshint": "~1.0.0",
-    "grunt-jscs": "^1.8.0",
-    "grunt-contrib-jshint": "^0.11.2"
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-jscs": "^1.8.0"
   }
 }
