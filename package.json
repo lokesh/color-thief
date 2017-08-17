@@ -1,5 +1,5 @@
 {
-  "name": "color-thief",
+  "name": "@cschear/color-thief",
   "version": "2.0.3",
   "author": {
     "name": "Lokesh Dhakar",
@@ -19,7 +19,7 @@
   "homepage": "http://lokeshdhakar.com/projects/color-thief/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lokesh/color-thief.git"
+    "url": "https://github.com/cschear-cricut/color-thief.git"
   },
   "bugs": {
     "url": "https://github.com/lokesh/color-thief/issues"
