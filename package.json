@@ -1,6 +1,6 @@
 {
-  "name": "color-thief",
-  "version": "2.0.2",
+  "name": "@cschear/color-thief",
+  "version": "2.0.4",
   "author": {
     "name": "Lokesh Dhakar",
     "email": "lokesh.dhakar@gmail.com",
@@ -19,7 +19,7 @@
   "homepage": "http://lokeshdhakar.com/projects/color-thief/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lokesh/color-thief.git"
+    "url": "https://github.com/cschear-cricut/color-thief.git"
   },
   "bugs": {
     "url": "https://github.com/lokesh/color-thief/issues"
@@ -36,8 +36,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-uglify": "~2.0.0",
-    "grunt-contrib-jshint": "~1.0.0",
-    "grunt-jscs": "^1.8.0",
-    "grunt-contrib-jshint": "^0.11.2"
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-jscs": "^1.8.0"
   }
 }
