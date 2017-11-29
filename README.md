@@ -5,6 +5,12 @@ A script for grabbing the color palette from an image. Uses Javascript and the c
 [See a Demo](http://lokeshdhakar.com/projects/color-thief) | [Read more on my blog](http://lokeshdhakar.com/color-thief)
 
 
+## Getting Started
+
+`npm install --save colorthief`
+
+If you see an error during install, it is probably related to the system dependencies required by the 'node-canvas' dependency. Follow the steps posted on their repo: https://github.com/Automattic/node-canvas/tree/v1.x#installation
+
 ## How to use
 
 ### Get the dominant color from an image
