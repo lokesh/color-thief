@@ -370,8 +370,8 @@ var MMCQ = (function() {
         },
         contains: function(pixel) {
             var vbox = this,
-                rval = pixel[0] >> rshift;
-                gval = pixel[1] >> rshift;
+                rval = pixel[0] >> rshift,
+                gval = pixel[1] >> rshift,
                 bval = pixel[2] >> rshift;
             return (rval >= vbox.r1 && rval <= vbox.r2 &&
                     gval >= vbox.g1 && gval <= vbox.g2 &&
