@@ -21,23 +21,27 @@
     "type": "git",
     "url": "https://github.com/lokesh/color-thief.git"
   },
-  "bugs": {
-    "url": "https://github.com/lokesh/color-thief/issues"
-  },
   "licenses": [
     {
       "type": "MIT",
       "url": "https://raw.githubusercontent.com/lokesh/color-thief/master/LICENSE/"
     }
   ],
+  "scripts": {
+    "dev": "echo 'coming soon'",
+    "test": "./node_modules/.bin/cypress open"
+  },
   "main": "dist/color-thief.min.js",
   "devDependencies": {
+    "cypress": "^3.2.0",
     "grunt": "~1.0.1",
-    "grunt-contrib-watch": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-jshint": "^0.11.2",
     "grunt-contrib-uglify": "~2.0.0",
-    "grunt-contrib-jshint": "~1.0.0",
-    "grunt-jscs": "^1.8.0",
-    "grunt-contrib-jshint": "^0.11.2"
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-jscs": "^1.8.0"
+  },
+  "engines": {
+    "node": ">=10.15.3"
   }
 }
