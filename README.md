@@ -31,13 +31,3 @@ colorThief.getPalette(sourceImage, 8);
 getPalette(sourceImage[, colorCount, quality])
 returns [ [num, num, num], [num, num, num], ... ]
 ```
-
-
-## Contributing
-
-### Testing
-
-```
-npm run test // Run Cypress acceptance tests
-```
-

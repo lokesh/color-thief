@@ -1,47 +1,45 @@
 {
-  "name": "color-thief",
-  "version": "2.0.2",
-  "author": {
-    "name": "Lokesh Dhakar",
-    "email": "lokesh.dhakar@gmail.com",
-    "url": "http://lokeshdhakar.com/"
-  },
-  "description": "Get the dominant color or color palette from an image.",
-  "keywords": [
-    "color",
-    "palette",
-    "sampling",
-    "image",
-    "picture",
-    "photo",
-    "canvas"
-  ],
-  "homepage": "http://lokeshdhakar.com/projects/color-thief/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lokesh/color-thief.git"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://raw.githubusercontent.com/lokesh/color-thief/master/LICENSE/"
+    "name": "color-thief",
+    "version": "2.0.2",
+    "author": {
+        "name": "Lokesh Dhakar",
+        "email": "lokesh.dhakar@gmail.com",
+        "url": "http://lokeshdhakar.com/"
+    },
+    "description": "Get the dominant color or color palette from an image.",
+    "keywords": [
+        "color",
+        "palette",
+        "sampling",
+        "image",
+        "picture",
+        "photo",
+        "canvas"
+    ],
+    "homepage": "http://lokeshdhakar.com/projects/color-thief/",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lokesh/color-thief.git"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://raw.githubusercontent.com/lokesh/color-thief/master/LICENSE/"
+        }
+    ],
+    "scripts": {
+        "build": "node ./build/build.js",
+        "dev": "http-server ./",
+        "test": "./node_modules/.bin/cypress open"
+    },
+    "main": "dist/color-thief.min.js",
+    "devDependencies": {
+        "@node-minify/core": "^4.0.5",
+        "@node-minify/uglify-es": "^4.0.5",
+        "cypress": "^3.2.0",
+        "http-server": "^0.11.1"
+    },
+    "engines": {
+        "node": ">=10.15.3"
     }
-  ],
-  "scripts": {
-    "dev": "echo 'coming soon'",
-    "test": "./node_modules/.bin/cypress open"
-  },
-  "main": "dist/color-thief.min.js",
-  "devDependencies": {
-    "cypress": "^3.2.0",
-    "grunt": "~1.0.1",
-    "grunt-contrib-connect": "^1.0.2",
-    "grunt-contrib-jshint": "^0.11.2",
-    "grunt-contrib-uglify": "~2.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-jscs": "^1.8.0"
-  },
-  "engines": {
-    "node": ">=10.15.3"
-  }
 }
