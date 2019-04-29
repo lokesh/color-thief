@@ -28,7 +28,6 @@ document.querySelectorAll('.image').forEach((image) => {
 // Run Color Thief functions and display results below image.
 // We also log execution time of functions for display.
 const showColorsForImage = function(image, section) {
-    const file = section.src;
     const start = Date.now();
     const color = colorThief.getColor(image);
     const elapsedTimeForGetColor = Date.now() - start;

@@ -12,7 +12,7 @@
 
     <script id='image-tpl' type='text/x-mustache'>
         {{#.}}
-            <div class="image-section">
+            <div class="image-section" data-image="{{.}}">
                 <h2>{{.}}</h2>
                 <img class="image" src="examples/img/{{.}}" />
                 <div class="output"></div>
@@ -27,8 +27,8 @@
                 <div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>
             </div>
             <code>
-                {{colorStr}}<br>
-                <span class="time">{{elapsedTimeForGetColor}}ms</span>
+                <div class="output-color">{{colorStr}}</div>
+                <div class="time">{{elapsedTimeForGetColor}}ms</div>
             </code>
         </div>
         <div class="palette">
@@ -39,8 +39,8 @@
                 {{/palette}}
             </div>
             <code>
-                {{paletteStr}}<br>
-                <span class="time">{{elapsedTimeForGetPalette}}ms</span>
+                <div class="output-palette">{{paletteStr}}</div>
+                <div class="time">{{elapsedTimeForGetPalette}}ms</div>
             </code>
         </div>
     </script>
