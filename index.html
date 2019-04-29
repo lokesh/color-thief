@@ -13,6 +13,7 @@
     <script id='image-tpl' type='text/x-mustache'>
         {{#.}}
             <div class="image-section">
+                <h2>{{.}}</h2>
                 <img class="image" src="examples/img/{{.}}" />
                 <div class="output"></div>
             </div>
@@ -20,19 +21,27 @@
     </script>
 
     <script id="output-tpl" type="text/x-mustache">
-        <div class="get-color">
-            <h2>Dominant Color</h3>
-            <div class="swatches"></div>
-            <code>colorThief.getColor(image):{{elapsedTimeForGetColor}}ms</code>
+        <div class="color">
+            <h3>Dominant Color</h3>
+            <div class="swatches">
+                <div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>
+            </div>
+            <code>
+                {{colorStr}}<br>
+                <span class="time">{{elapsedTimeForGetColor}}ms</span>
+            </code>
         </div>
-        <div class="get-palette">
-            <h2>Palette</h3>
+        <div class="palette">
+            <h3>Palette</h3>
             <div class="swatches">
                 {{#palette}}
                     <div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>
                 {{/palette}}
             </div>
-            <code>colorThief.getPalette(image):{{elapsedTimeForGetPalette}}ms</code>
+            <code>
+                {{paletteStr}}<br>
+                <span class="time">{{elapsedTimeForGetPalette}}ms</span>
+            </code>
         </div>
     </script>
 

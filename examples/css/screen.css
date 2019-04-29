@@ -1,88 +1,95 @@
 :root {
-  /* Colors */
-  --color: #000;
-  --bg-color: #f9f9f9;
-  --primary-color: #fc4c02;
-  --secondary-color: #f68727;
-  --code-color: var(--primary-color);
-  --code-bg-color: #fff;
+    /* Colors */
+    --color: #000;
+    --bg-color: #f9f9f9;
+    --primary-color: #fc4c02;
+    --secondary-color: #f68727;
+    --muted-color: #999;
+    --code-color: var(--primary-color);
+    --code-bg-color: #fff;
 
-  /* Typography */
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --code-font: Menlo, Consolas, Monaco, Lucida Console, monospace;
-  --bold: 700;
-  --x-bold: 900;
-  --line-height: 1.5em;
-  --line-height-heading: 1.3em;
+    /* Typography */
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --code-font: Menlo, Consolas, Monaco, Lucida Console, monospace;
+    --bold: 700;
+    --x-bold: 900;
+    --line-height: 1.5em;
+    --line-height-heading: 1.3em;
 
-  /* Breakpoints */
-  --sm-screen: 640px;
+    /* Breakpoints */
+    --sm-screen: 640px;
 }
 
 /* Base
  * *----------------------------------------------- */
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    background: var(--bg-color);
 }
 
 /* Typography
  * *----------------------------------------------- */
 
 html {
-  font-size: 16px;
+    font-size: 16px;
+    font-family: var(--font);
+    line-height: var(--line-height);
+    -webkit-font-smoothing: antialiased;
 }
 
-body,
-input,
-button,
-select,
-textarea {
-  font-family: var(--font);
-  font-size: 1rem;
-  line-height: var(--line-height);
-  -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3, h4, h5 {
-  margin-bottom: 0.5em;
-  font-weight: var(--x-bold);
-  line-height: var(--line-height-heading);
-  letter-spacing: -0.005em;
+h1,
+h2,
+h3 {
+    font-weight: var(--x-bold);
+    line-height: var(--line-height-heading);
+    letter-spacing: -0.005em;
 }
 
 h2 {
-  font-size: 1.06rem;
+    margin: 0 0 0.25em 0;
+    font-size: 1.5rem;
+}
+
+h3 {
+    margin: 1em 0 0.25em 0;
+    font-size: 1.06rem;
+}
+
+code {
+    font-family: var(--code-font);
+    overflow-wrap: break-word;
 }
 
 
 /* -- Layout ------------------------------------------------------------------ */
 
-/* -- Examples -- */
 .image-section {
-  border-bottom: 1px solid #ccc;
-  padding: 16px 16px 32px 16px;
-  margin-bottom: 32px;
+    border-bottom: 1px solid #ccc;
+    padding: 16px 16px 32px 16px;
+    margin-bottom: 32px;
 }
 
 .swatch {
-  display: inline-block;
-  margin: 0;
-  background: #dddddd;
+    display: inline-block;
+    background: #dddddd;
 }
 
-.get-color .swatch {
-  width: 6rem;
-  height: 3rem;
+.color .swatch {
+    width: 6rem;
+    height: 3rem;
 }
 
-.get-palette .swatch {
-  width: 3rem;
-  height: 2rem;
+.palette .swatch {
+    width: 3rem;
+    height: 2rem;
 }
 
+.time {
+    color: var(--muted-color);
+    font-weight: normal;
+}
