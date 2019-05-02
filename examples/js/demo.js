@@ -28,22 +28,32 @@ document.querySelectorAll('.image').forEach((image) => {
 // Run Color Thief functions and display results below image.
 // We also log execution time of functions for display.
 const showColorsForImage = function(image, section) {
-    const start = Date.now();
-    const color = colorThief.getColor(image);
-    const elapsedTimeForGetColor = Date.now() - start;
-    const palette = colorThief.getPalette(image);
-    const elapsedTimeForGetPalette = Date.now() - start + elapsedTimeForGetColor;
+    // getColor(img)
+    let start = Date.now();
+    let result = colorThief.getColor(image);
+    let elapsedTime = Date.now() - start;
+    const colorHTML = Mustache.to_html(document.getElementById('color-tpl').innerHTML, {
+        color: result,
+        colorStr: result.toString(),
+        elapsedTime
+    })
 
-    const output = {
-      color: color,
-      colorStr: color.toString(),
-      palette: palette,
-      paletteStr: palette.toString(),
-      elapsedTimeForGetColor: elapsedTimeForGetColor,
-      elapsedTimeForGetPalette: elapsedTimeForGetPalette
-    };
-    const ouputHTML = Mustache.to_html(document.getElementById('output-tpl').innerHTML, output);
+    // getPalette(img)
+    let paletteHTML = '';
+    let colorCounts = [null, 1, 2, 3, 5, 7, 10, 20];
+    colorCounts.forEach((count) => {
+        let start = Date.now();
+        let result = colorThief.getPalette(image, count);
+        let elapsedTime = Date.now() - start;
+        console.log('palette()', count, result.length)
+        paletteHTML += Mustache.to_html(document.getElementById('palette-tpl').innerHTML, {
+            count,
+            palette: result,
+            paletteStr: result.toString(),
+            elapsedTime
+        })
+    });
 
     const outputEl = section.querySelector('.output');
-    outputEl.innerHTML = ouputHTML;
+    outputEl.innerHTML += colorHTML + paletteHTML;
 };

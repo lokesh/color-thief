@@ -20,7 +20,7 @@
         {{/.}}
     </script>
 
-    <script id="output-tpl" type="text/x-mustache">
+    <script id="color-tpl" type="text/x-mustache">
         <div class="color">
             <h3>Dominant Color</h3>
             <div class="swatches">
@@ -31,8 +31,11 @@
                 <div class="time">{{elapsedTimeForGetColor}}ms</div>
             </code>
         </div>
+    </script>
+
+    <script id="palette-tpl" type="text/x-mustache">
         <div class="palette">
-            <h3>Palette</h3>
+            <h3>Palette {{ count }}</h3>
             <div class="swatches">
                 {{#palette}}
                     <div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>
@@ -44,6 +47,7 @@
             </code>
         </div>
     </script>
+
 
     <script src="src/color-thief.js"></script>
     <script src="examples/js/mustache.js"></script>
