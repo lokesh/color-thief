@@ -22,7 +22,7 @@
 
     <script id="color-tpl" type="text/x-mustache">
         <div class="color">
-            <h3>Dominant Color</h3>
+            <h3>getColor(img)</h3>
             <div class="swatches">
                 <div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>
             </div>
@@ -34,8 +34,8 @@
     </script>
 
     <script id="palette-tpl" type="text/x-mustache">
-        <div class="palette">
-            <h3>Palette {{ count }}</h3>
+        <div class="palette" data-count="{{count}}">
+            <h3>getPalette(img, {{count}})</h3>
             <div class="swatches">
                 {{#palette}}
                     <div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>

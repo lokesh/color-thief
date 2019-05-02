@@ -50,3 +50,24 @@ describe('getColor()', function() {
     //     });
     // })
 })
+
+function testPaletteCount(num) {
+    it(`returns ${num} color when colorCount set to ${num}`, function() {
+        cy.get(`[data-image="rainbow-horizontal.png"] .palette[data-count="${num}"] .output-palette`).should(($el) => {
+            const count = rgbCount($el.text())
+            expect(count).to.equal(num);
+        });
+    })
+}
+
+describe('getPalette()', function() {
+    beforeEach(function() {
+        cy.visit('http://localhost:8080');
+    })
+
+    // FULL TEST LIST = [1, 2, 3, 5, 7, 10, 20];
+
+    // Non-breaking tests
+    let testCounts = [5, 7];
+    testCounts.forEach((count) => testPaletteCount(count))
+})
