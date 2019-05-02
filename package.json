@@ -29,7 +29,7 @@
     ],
     "scripts": {
         "build": "node ./build/build.js",
-        "dev": "http-server ./",
+        "dev": "./node_modules/http-server/bin/http-server/",
         "test": "./node_modules/.bin/cypress open"
     },
     "main": "dist/color-thief.min.js",
