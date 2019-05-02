@@ -8,14 +8,10 @@ A script for grabbing the color palette from an image. Uses Javascript and the c
 ## How to use
 
 ### Get the dominant color from an image
+
 ```js
 var colorThief = new ColorThief();
 colorThief.getColor(sourceImage);
-```
-
-```js
-getColor(sourceImage[, quality])
-returns [num, num, num]
 ```
 
 ### Build a color palette from an image
@@ -27,7 +23,10 @@ var colorThief = new ColorThief();
 colorThief.getPalette(sourceImage, 8);
 ```
 
-```js
-getPalette(sourceImage[, colorCount, quality])
-returns [ [num, num, num], [num, num, num], ... ]
-```
+### API
+
+
+| Method | Return | Description |
+| --- | --- | --- |
+| `getColor(image [, quality])` | `[Number, Number, Number]` | WIP |
+| `getPalette(image [, colorCount, quality]` | `[[Number, Number, Number], ...]` | WIP |
