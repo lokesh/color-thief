@@ -1,4 +1,11 @@
-## How to make a release and deploy
+## Running tests
+
+Run Cypress integration tests in Chrome browser.
+
+- `npm run dev` to start local server.
+- `npm run test`
+
+## Making a new release
 
 - Update version number in `src/color-thief.js` and `package.json`
 - Run `npm run build`

@@ -29,14 +29,14 @@
     ],
     "scripts": {
         "build": "node ./build/build.js",
-        "dev": "./node_modules/http-server/bin/http-server/",
+        "dev": "./node_modules/http-server/bin/http-server",
         "test": "./node_modules/.bin/cypress open"
     },
     "main": "dist/color-thief.min.js",
     "devDependencies": {
         "@node-minify/core": "^4.0.5",
         "@node-minify/uglify-es": "^4.0.5",
-        "cypress": "^3.2.0",
+        "cypress": "^3.3.1",
         "http-server": "^0.11.1"
     },
     "engines": {
