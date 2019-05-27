@@ -45,7 +45,6 @@ const showColorsForImage = function(image, section) {
         let start = Date.now();
         let result = colorThief.getPalette(image, count);
         let elapsedTime = Date.now() - start;
-        console.log('palette()', count, result.length)
         paletteHTML += Mustache.to_html(document.getElementById('palette-tpl').innerHTML, {
             count,
             palette: result,
