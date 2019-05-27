@@ -36,14 +36,6 @@ var CanvasImage = function (image) {
     this.context.drawImage(image, 0, 0, this.width, this.height);
 };
 
-CanvasImage.prototype.clear = function () {
-    this.context.clearRect(0, 0, this.width, this.height);
-};
-
-CanvasImage.prototype.update = function (imageData) {
-    this.context.putImageData(imageData, 0, 0);
-};
-
 CanvasImage.prototype.getPixelCount = function () {
     return this.width * this.height;
 };
