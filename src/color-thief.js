@@ -28,8 +28,6 @@ var CanvasImage = function (image) {
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
 
-    document.body.appendChild(this.canvas);
-
     this.width  = this.canvas.width  = image.width;
     this.height = this.canvas.height = image.height;
 
@@ -43,11 +41,6 @@ CanvasImage.prototype.getPixelCount = function () {
 CanvasImage.prototype.getImageData = function () {
     return this.context.getImageData(0, 0, this.width, this.height);
 };
-
-CanvasImage.prototype.removeCanvas = function () {
-    this.canvas.parentNode.removeChild(this.canvas);
-};
-
 
 var ColorThief = function () {};
 
@@ -123,9 +116,6 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     // using median cut algorithm
     var cmap    = MMCQ.quantize(pixelArray, colorCount);
     var palette = cmap? cmap.palette() : null;
-
-    // Clean up
-    image.removeCanvas();
 
     return palette;
 };
