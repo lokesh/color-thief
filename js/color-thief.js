@@ -40,7 +40,7 @@ var CanvasImage = function (image) {
     // in node we use strings as path to an image
     // whereas in the browser we use an image element
     if (iAmOnNode) {
-      this.canvas = new Canvas()
+      this.canvas = Canvas.createCanvas()
       var img = new Image;
 
       if(image instanceof Buffer) {
