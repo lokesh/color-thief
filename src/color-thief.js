@@ -94,9 +94,16 @@ ColorThief.prototype.getColor = function(sourceImage, quality) {
  * 10 is the default. There is a trade-off between quality and speed. The bigger the number, the
  * faster the palette generation but the greater the likelihood that colors will be missed.
  *
+ * filterFunction is an optional argument used to mask parts of the image. It is a callback 
+ * function called on every pixel to determine if that pixel should be considered for the palette. 
+ *
+ *    filterFunction(x, y, r, g, b, a, imageData)
+ *    returns true if the pixel at x, y coordinates should be used. false to skip that pixel.
+ *    - r, g, b, a are the red, green, blue, and alpha values of the pixel.
+ *    - imageData is an ImageData object of the sourceImage with width/height properties.
  *
  */
-ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
+ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality, filterFunction) {
 
     if (typeof colorCount === 'undefined' || colorCount < 2 || colorCount > 256) {
         colorCount = 10;
@@ -119,6 +126,14 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
         g = pixels[offset + 1];
         b = pixels[offset + 2];
         a = pixels[offset + 3];
+        
+        if (filterFunction) {
+            var y = Math.floor(i / imageData.width);
+            var x = i % imageData.width;
+            if (!filterFunction(x, y, r, b, g, a, imageData)) {
+                continue;
+            }
+        }
         // If pixel is mostly opaque and not white
         if (a >= 125) {
             if (!(r > 250 && g > 250 && b > 250)) {
