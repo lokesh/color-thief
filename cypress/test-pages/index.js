@@ -1,9 +1,12 @@
 var colorThief = new ColorThief();
 
 var images = [
-    'image-1.jpg',
-    'image-2.jpg',
-    'image-3.jpg',
+    'black.png',
+    'red.png',
+    'rainbow-horizontal.png',
+    'rainbow-vertical.png',
+    // 'transparent.png',
+    // 'white.png',
 ];
 
 // Render example images
@@ -25,11 +28,9 @@ document.querySelectorAll('.image').forEach((image) => {
 // Run Color Thief functions and display results below image.
 // We also log execution time of functions for display.
 const showColorsForImage = function(image, section) {
+    // getColor(img)
     let start = Date.now();
-
-    // 🎨🔓
     let result = colorThief.getColor(image);
-
     let elapsedTime = Date.now() - start;
     const colorHTML = Mustache.to_html(document.getElementById('color-tpl').innerHTML, {
         color: result,
@@ -39,13 +40,10 @@ const showColorsForImage = function(image, section) {
 
     // getPalette(img)
     let paletteHTML = '';
-    let colorCounts = [2, 9];
+    let colorCounts = [null, 1, 2, 3, 5, 7, 10, 20];
     colorCounts.forEach((count) => {
         let start = Date.now();
-
-        // 🎨🔓
         let result = colorThief.getPalette(image, count);
-
         let elapsedTime = Date.now() - start;
         paletteHTML += Mustache.to_html(document.getElementById('palette-tpl').innerHTML, {
             count,

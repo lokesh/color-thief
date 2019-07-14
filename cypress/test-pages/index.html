@@ -1,28 +1,20 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
 	<title>Color Thief</title>
-
-  <meta name="description" content="Get the dominant color or color palette from an image.">
-  <meta name="author" content="Lokesh Dhakar">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-
-  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Karla%7CMontserrat:700">
-  <link rel="stylesheet" href="examples/css/screen.css">
-
+    <link rel="stylesheet" href="./screen.css">
 </head>
 <body>
 
-  <div id="example-images"></div>
+    <div id="example-images"></div>
 
     <script id='image-tpl' type='text/x-mustache'>
         {{#.}}
             <div class="image-section" data-image="{{.}}">
                 <h2>{{.}}</h2>
-                <img class="image" src="./examples/img/{{.}}" />
+                <img class="image" src="./img/{{.}}" />
                 <div class="output"></div>
             </div>
         {{/.}}
@@ -56,9 +48,10 @@
         </div>
     </script>
 
-  <script src="src/color-thief.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-  <script src="examples/js/demo.js"></script>
+
+    <script src="/src/color-thief.js"></script>
+    <script src="/node_modules/mustache/mustache.js"></script>
+    <script src="index.js"></script>
 
 </body>
 </html>
