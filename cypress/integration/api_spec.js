@@ -10,7 +10,7 @@ function rgbCount(text) {
 
 describe('getColor()', function() {
 	beforeEach(function() {
-        cy.visit('http://localhost:8080');
+        cy.visit('http://localhost:8080/cypress/test-pages/index.html');
     })
 
     it('returns valid color from black image', function() {
@@ -62,7 +62,7 @@ function testPaletteCount(num) {
 
 describe('getPalette()', function() {
     beforeEach(function() {
-        cy.visit('http://localhost:8080');
+        cy.visit('http://localhost:8080/cypress/test-pages/index.html');
     })
 
     // FULL TEST LIST = [1, 2, 3, 5, 7, 10, 20];
