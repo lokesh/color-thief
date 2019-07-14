@@ -31,7 +31,7 @@
     "devDependencies": {
         "@node-minify/core": "^4.0.5",
         "@node-minify/uglify-es": "^4.0.5",
-        "cypress": "^3.3.1",
+        "cypress": "^3.4.0",
         "eslint": "^5.16.0",
         "http-server": "^0.11.1",
         "mustache": "^3.0.1"
