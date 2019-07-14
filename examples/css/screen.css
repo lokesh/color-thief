@@ -22,7 +22,7 @@
 
 /* Base
  * *----------------------------------------------- */
-/** {
+* {
     box-sizing: border-box;
 }
 
@@ -31,10 +31,10 @@ body {
     padding: 0;
     background: var(--bg-color);
 }
-*/
+
 /* Typography
  * *----------------------------------------------- */
-/*
+
 html {
     font-size: 16px;
     font-family: var(--font);
@@ -64,10 +64,10 @@ code {
     font-family: var(--code-font);
     overflow-wrap: break-word;
 }
-*/
+
 
 /* -- Layout ------------------------------------------------------------------ */
-/*
+
 .image-section {
     border-bottom: 1px solid #ccc;
     padding: 16px 16px 32px 16px;
@@ -92,4 +92,4 @@ code {
 .time {
     color: var(--muted-color);
     font-weight: normal;
-}*/
+}

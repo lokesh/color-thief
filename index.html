@@ -1,0 +1,64 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>Color Thief</title>
+
+  <meta name="description" content="Get the dominant color or color palette from an image.">
+  <meta name="author" content="Lokesh Dhakar">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Karla%7CMontserrat:700">
+  <link rel="stylesheet" href="examples/css/screen.css">
+
+</head>
+<body>
+
+  <div id="example-images"></div>
+
+    <script id='image-tpl' type='text/x-mustache'>
+        {{#.}}
+            <div class="image-section" data-image="{{.}}">
+                <h2>{{.}}</h2>
+                <img class="image" src="./examples/img/{{.}}" />
+                <div class="output"></div>
+            </div>
+        {{/.}}
+    </script>
+
+    <script id="color-tpl" type="text/x-mustache">
+        <div class="color">
+            <h3>getColor(img)</h3>
+            <div class="swatches">
+                <div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>
+            </div>
+            <code>
+                <div class="output-color">{{colorStr}}</div>
+                <div class="time">{{elapsedTime}}ms</div>
+            </code>
+        </div>
+    </script>
+
+    <script id="palette-tpl" type="text/x-mustache">
+        <div class="palette" data-count="{{count}}">
+            <h3>getPalette(img, {{count}})</h3>
+            <div class="swatches">
+                {{#palette}}
+                    <div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>
+                {{/palette}}
+            </div>
+            <code>
+                <div class="output-palette">{{paletteStr}}</div>
+                <div class="time">{{elapsedTime}}ms</div>
+            </code>
+        </div>
+    </script>
+
+  <script src="src/color-thief.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+  <script src="examples/js/demo.js"></script>
+
+</body>
+</html>
