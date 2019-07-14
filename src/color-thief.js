@@ -1,5 +1,5 @@
 /*
- * Color Thief v2.0
+ * Color Thief v2.1.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
  *
  * Thanks

@@ -12,6 +12,8 @@ Run Cypress integration tests in Chrome browser.
 
 ## Making a new release
 
+- Merge `dev` into `master`
+- Pull down `master`
 - Update version number in `src/color-thief.js` and `package.json`
 - Run `npm run build`
 - Push to Github repo
