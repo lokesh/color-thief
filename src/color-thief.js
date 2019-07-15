@@ -1,5 +1,5 @@
 /*
- * Color Thief v2.1.0
+ * Color Thief v2.2.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
  *
  * Thanks
@@ -641,3 +641,5 @@ var MMCQ = (function() {
         quantize: quantize
     };
 })();
+
+export default ColorThief;

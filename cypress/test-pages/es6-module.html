@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Color Thief</title>
+    <link rel="stylesheet" href="./screen.css">
+</head>
+<body>
+
+    <img src="./img/rainbow-horizontal.png" />
+
+    <div id="result"></div>
+
+    <script type="module">
+        import ColorThief from '../../dist/color-thief.mjs';
+
+        const colorThief = new ColorThief();
+
+
+        const img = document.querySelector('img');
+
+        function getColorFromImage(img) {
+            const result = colorThief.getColor(img);
+            document.querySelector('#result').innerText = result;
+        }
+
+        if (img.complete) {
+            getColorFromImage(img);
+        } else {
+            image.addEventListener('load', function() {
+                getColorFromImage(img);
+            });
+        }
+    </script>
+
+
+</body>
+</html>

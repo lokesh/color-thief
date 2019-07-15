@@ -1,6 +1,6 @@
 {
     "name": "colorthief",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "author": {
         "name": "Lokesh Dhakar",
         "email": "lokesh.dhakar@gmail.com",
@@ -22,18 +22,23 @@
         "url": "https://github.com/lokesh/color-thief.git"
     },
     "license": "MIT",
+    "source": "src/color-thief.js",
+    "main": "dist/color-thief.js",
+    "module": "dist/color-thief.mjs",
+    "umd:main": "dist/color-thief.umd.js",
+    "amdName": "ColorThief",
     "scripts": {
-        "build": "node ./build/build.js",
+        "build": "microbundle; node ./build/build.js",
         "dev": "./node_modules/http-server/bin/http-server",
         "test": "./node_modules/.bin/cypress open"
     },
-    "main": "dist/color-thief.min.js",
     "devDependencies": {
         "@node-minify/core": "^4.0.5",
         "@node-minify/uglify-es": "^4.0.5",
-        "cypress": "^3.3.1",
+        "cypress": "^3.4.0",
         "eslint": "^5.16.0",
         "http-server": "^0.11.1",
+        "microbundle": "^0.11.0",
         "mustache": "^3.0.1"
     },
     "engines": {
