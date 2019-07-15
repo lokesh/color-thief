@@ -4,8 +4,14 @@ A script for grabbing the color palette from an image. Uses Javascript and the c
 
 [See a Demo](http://lokeshdhakar.com/projects/color-thief) | [Read more on my blog](http://lokeshdhakar.com/color-thief)
 
-
 ## How to use
+
+### Import
+
+- `/dist/color-thief.umd.js`: UMD module. For simple script tag loading that exposes a global variable or for RequireJS AMD support.
+- `/dist/color-thief.js`: CommonJS module. Entry point for Node.js and Browserify.
+- `/dist/color-thief.mjs`: ES6 module. For modern browsers as well as Webpack and Rollup.
+- `/dist/color-thief.min.js`: Duplicate of `/dist/color-thief.umd.js`. Kept around to maintain backwards compatibility.
 
 ### Get the dominant color from an image
 

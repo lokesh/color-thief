@@ -13,7 +13,7 @@ document.getElementById('example-images').innerHTML = examplesHTML;
 // Once images are loaded, process them
 document.querySelectorAll('.image').forEach((image) => {
     const section = image.closest('.image-section');
-    if (this.complete) {
+    if (image.complete) {
         showColorsForImage(image, section);
     } else {
         image.addEventListener('load', function() {

@@ -1,5 +1,6 @@
 var colorThief = new ColorThief();
 
+
 var images = [
     'black.png',
     'red.png',
