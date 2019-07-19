@@ -43,7 +43,7 @@ CanvasImage.prototype.getImageData = function () {
     return this.context.getImageData(0, 0, this.width, this.height);
 };
 
-let ColorThief = function () {};
+var ColorThief = function () {};
 
 /*
  * getColor(sourceImage[, quality])
