@@ -25,7 +25,7 @@
   with a set of helper functions.
 */
 
-let CanvasImage = function (image) {
+const CanvasImage = function (image) {
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
 
@@ -59,9 +59,9 @@ var ColorThief = function () {};
  *
  * */
 ColorThief.prototype.getColor = function(sourceImage, quality) {
-    let palette       = this.getPalette(sourceImage, 5, quality);
-    let dominantColor = palette[0];
-    return dominantColor;
+	const palette       = this.getPalette(sourceImage, 5, quality);
+
+	return palette[0];
 };
 
 
@@ -92,10 +92,10 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     }
 
     // Create custom CanvasImage object
-    let image      = new CanvasImage(sourceImage);
-    let imageData  = image.getImageData();
-    let pixels     = imageData.data;
-    let pixelCount = image.getPixelCount();
+    const image      = new CanvasImage(sourceImage);
+    const imageData  = image.getImageData();
+    const pixels     = imageData.data;
+    const pixelCount = image.getPixelCount();
 
     // Store the RGB values in an array format suitable for quantize function
     let pixelArray = [];
@@ -115,19 +115,17 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
 
     // Send array to quantize function which clusters values
     // using median cut algorithm
-    let cmap    = MMCQ.quantize(pixelArray, colorCount);
-    let palette = cmap? cmap.palette() : null;
-
-    return palette;
+    const cmap    = MMCQ.quantize(pixelArray, colorCount);
+	
+	return cmap? cmap.palette() : null;
 };
 
 ColorThief.prototype.getColorFromUrl = function(imageUrl, callback, quality) {
-    let sourceImage = document.createElement("img");
-    let thief = this;
+    const sourceImage = document.createElement("img");
+    const thief = this;
     sourceImage.addEventListener('load' , function(){
-        let palette = thief.getPalette(sourceImage, 5, quality);
-        let dominantColor = palette[0];
-        callback(dominantColor, imageUrl);
+        const palette = thief.getPalette(sourceImage, 5, quality);
+        callback(palette[0], imageUrl);
     });
     sourceImage.src = imageUrl
 };
@@ -140,8 +138,7 @@ ColorThief.prototype.getImageData = function(imageUrl, callback) {
     xhr.onload = function() {
         if (this.status == 200) {
             let uInt8Array = new Uint8Array(this.response)
-            let i = uInt8Array.length
-            let binaryString = new Array(i);
+            let binaryString = new Array(uInt8Array.length)
             for (let i = 0; i < uInt8Array.length; i++){
                 binaryString[i] = String.fromCharCode(uInt8Array[i])
             }
@@ -154,13 +151,12 @@ ColorThief.prototype.getImageData = function(imageUrl, callback) {
 };
 
 ColorThief.prototype.getColorAsync = function(imageUrl, callback, quality) {
-    let thief = this;
+    const thief = this;
     this.getImageData(imageUrl, function(imageData){
         let sourceImage = document.createElement("img");
         sourceImage.addEventListener('load' , function(){
-            let palette = thief.getPalette(sourceImage, 5, quality);
-            let dominantColor = palette[0];
-            callback(dominantColor, this);
+            const palette = thief.getPalette(sourceImage, 5, quality);
+            callback(palette[0], this);
         });
         sourceImage.src = imageData;
     });
@@ -643,4 +639,4 @@ let MMCQ = (function() {
     };
 })();
 
-// export default ColorThief;
+export default ColorThief;
