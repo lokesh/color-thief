@@ -28,13 +28,18 @@ function getColor(img, quality) {
 }
 
 function getPalette(img, colorCount = 10, quality = 10) {
+    const options = core.validateOptions({
+        colorCount,
+        quality
+    });
+
     return new Promise((resolve, reject) => {
         loadImg(img)
             .then(imgData => {
                 const pixelCount = imgData.shape[0] * imgData.shape[1];
-                const pixelArray = core.createPixelArray(imgData.data, pixelCount, quality);
+                const pixelArray = core.createPixelArray(imgData.data, pixelCount, options.quality);
 
-                const cmap = quantize(pixelArray, colorCount);
+                const cmap = quantize(pixelArray, options.colorCount);
                 const palette = cmap? cmap.palette() : null;
 
                 resolve(palette);

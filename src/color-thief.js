@@ -31,15 +31,9 @@ import core from './core.js';
 var CanvasImage = function (image) {
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
-
     this.width  = this.canvas.width  = image.width;
     this.height = this.canvas.height = image.height;
-
     this.context.drawImage(image, 0, 0, this.width, this.height);
-};
-
-CanvasImage.prototype.getPixelCount = function () {
-    return this.width * this.height;
 };
 
 CanvasImage.prototype.getImageData = function () {
@@ -86,25 +80,22 @@ ColorThief.prototype.getColor = function(sourceImage, quality = 10) {
  *
  */
 ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
-
-    if (typeof colorCount === 'undefined' || colorCount < 2 || colorCount > 256) {
-        colorCount = 10;
-    }
-    if (typeof quality === 'undefined' || quality < 1) {
-        quality = 10;
-    }
+    const options = core.validateOptions({
+        colorCount,
+        quality
+    });
 
     // Create custom CanvasImage object
     var image      = new CanvasImage(sourceImage);
     var imageData  = image.getImageData();
     var pixels     = imageData.data;
-    var pixelCount = image.getPixelCount();
+    var pixelCount = image.width * image.height;
 
-    const pixelArray = core.createPixelArray(imageData, pixelCount, quality);
+    const pixelArray = core.createPixelArray(imageData.data, pixelCount, options.quality);
 
     // Send array to quantize function which clusters values
     // using median cut algorithm
-    var cmap    = quantize(pixelArray, colorCount);
+    var cmap    = quantize(pixelArray, options.colorCount);
     var palette = cmap? cmap.palette() : null;
 
     return palette;
