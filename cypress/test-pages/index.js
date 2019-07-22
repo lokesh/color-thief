@@ -41,7 +41,7 @@ const showColorsForImage = function(image, section) {
 
     // getPalette(img)
     let paletteHTML = '';
-    let colorCounts = [null, 1, 2, 3, 5, 7, 10, 20];
+    let colorCounts = [2, 3, 5, 7, 10, 20];
     colorCounts.forEach((count) => {
         let start = Date.now();
         let result = colorThief.getPalette(image, count);
