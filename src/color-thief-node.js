@@ -1,9 +1,8 @@
 const getPixels = require('get-pixels');
 const quantize = require('quantize');
+const core = require('./core-node.js');
 
-const ColorThief = function () {};
-
-function readImg(img) {
+function loadImg(img) {
     return new Promise((resolve, reject) => {
         getPixels(img, function(err, data) {
             if(err) {
@@ -13,22 +12,6 @@ function readImg(img) {
             }
         })
     });
-}
-
-function createPixelArray(imgData, quality) {
-    const pixels = imgData.data;
-    const pixelCount = imgData.shape[0] * imgData.shape[1];
-    const pixelArray = [];
-
-    for (let i = 0, offset, r, g, b, a; i < pixelCount; i = i + quality) {
-        offset = i * 4;
-        r = pixels[offset + 0];
-        g = pixels[offset + 1];
-        b = pixels[offset + 2];
-        a = pixels[offset + 3];
-        pixelArray.push([r, g, b]);
-    }
-    return pixelArray;
 }
 
 function getColor(img, quality) {
@@ -46,11 +29,14 @@ function getColor(img, quality) {
 
 function getPalette(img, colorCount = 10, quality = 10) {
     return new Promise((resolve, reject) => {
-        readImg(img)
+        loadImg(img)
             .then(imgData => {
-                const pixelArray = createPixelArray(imgData, quality);
+                const pixelCount = imgData.shape[0] * imgData.shape[1];
+                const pixelArray = core.createPixelArray(imgData.data, pixelCount, quality);
+
                 const cmap = quantize(pixelArray, colorCount);
                 const palette = cmap? cmap.palette() : null;
+
                 resolve(palette);
             })
             .catch(err => {
