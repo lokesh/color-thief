@@ -29,7 +29,8 @@
     "amdName": "ColorThief",
     "scripts": {
         "build": "microbundle; node ./build/build.js",
-        "dev": "./node_modules/http-server/bin/http-server",
+        "watch": "microbundle watch",
+        "dev": " ./node_modules/http-server/bin/http-server",
         "test": "./node_modules/.bin/cypress open"
     },
     "devDependencies": {
@@ -43,5 +44,9 @@
     },
     "engines": {
         "node": ">=10.15.3"
+    },
+    "dependencies": {
+        "get-pixels": "^3.3.2",
+        "quantize": "github:lokesh/quantize"
     }
 }
