@@ -1,6 +1,6 @@
 {
     "name": "colorthief",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "author": {
         "name": "Lokesh Dhakar",
         "email": "lokesh.dhakar@gmail.com",
@@ -29,7 +29,8 @@
     "amdName": "ColorThief",
     "scripts": {
         "build": "microbundle; node ./build/build.js",
-        "dev": "./node_modules/http-server/bin/http-server",
+        "watch": "microbundle watch",
+        "dev": " ./node_modules/http-server/bin/http-server",
         "test": "./node_modules/.bin/cypress open"
     },
     "devDependencies": {
@@ -41,7 +42,8 @@
         "microbundle": "^0.11.0",
         "mustache": "^3.0.1"
     },
-    "engines": {
-        "node": ">=10.15.3"
+    "dependencies": {
+        "get-pixels": "^3.3.2",
+        "quantize": "github:lokesh/quantize"
     }
 }

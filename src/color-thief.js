@@ -1,3 +1,6 @@
+import quantize from '../node_modules/quantize/dist/index.mjs';
+import core from './core.js';
+
 /*
  * Color Thief v2.2.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
@@ -28,15 +31,9 @@
 const CanvasImage = function (image) {
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
-
     this.width  = this.canvas.width  = image.width;
     this.height = this.canvas.height = image.height;
-
     this.context.drawImage(image, 0, 0, this.width, this.height);
-};
-
-CanvasImage.prototype.getPixelCount = function () {
-    return this.width * this.height;
 };
 
 CanvasImage.prototype.getImageData = function () {
@@ -83,41 +80,25 @@ ColorThief.prototype.getColor = function(sourceImage, quality) {
  *
  */
 ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
-
-    if (typeof colorCount === 'undefined' || colorCount < 2 || colorCount > 256) {
-        colorCount = 10;
-    }
-    if (typeof quality === 'undefined' || quality < 1) {
-        quality = 10;
-    }
+    const options = core.validateOptions({
+        colorCount,
+        quality
+    });
 
     // Create custom CanvasImage object
     const image      = new CanvasImage(sourceImage);
     const imageData  = image.getImageData();
     const pixels     = imageData.data;
-    const pixelCount = image.getPixelCount();
+    const pixelCount = image.width * image.height;
 
-    // Store the RGB values in an array format suitable for quantize function
-    let pixelArray = [];
-    for (let i = 0, offset, r, g, b, a; i < pixelCount; i = i + quality) {
-        offset = i * 4;
-        r = pixels[offset + 0];
-        g = pixels[offset + 1];
-        b = pixels[offset + 2];
-        a = pixels[offset + 3];
-        // If pixel is mostly opaque and not white
-        if (a >= 125) {
-            if (!(r > 250 && g > 250 && b > 250)) {
-                pixelArray.push([r, g, b]);
-            }
-        }
-    }
+    const pixelArray = core.createPixelArray(imageData.data, pixelCount, options.quality);
 
     // Send array to quantize function which clusters values
     // using median cut algorithm
-    const cmap    = MMCQ.quantize(pixelArray, colorCount);
-	
-	return cmap? cmap.palette() : null;
+    const cmap    = quantize(pixelArray, options.colorCount);
+    const palette = cmap? cmap.palette() : null;
+
+    return palette;
 };
 
 ColorThief.prototype.getColorFromUrl = function(imageUrl, callback, quality) {

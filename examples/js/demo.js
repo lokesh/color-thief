@@ -39,7 +39,7 @@ const showColorsForImage = function(image, section) {
 
     // getPalette(img)
     let paletteHTML = '';
-    let colorCounts = [2, 9];
+    let colorCounts = [3, 9];
     colorCounts.forEach((count) => {
         let start = Date.now();
 

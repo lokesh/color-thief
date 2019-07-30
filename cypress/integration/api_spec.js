@@ -65,9 +65,6 @@ describe('getPalette()', function() {
         cy.visit('http://localhost:8080/cypress/test-pages/index.html');
     })
 
-    // FULL TEST LIST = [1, 2, 3, 5, 7, 10, 20];
-
-    // Non-breaking tests
-    let testCounts = [5, 7];
+    let testCounts = [2, 3, 5, 7, 10, 20];
     testCounts.forEach((count) => testPaletteCount(count))
 })
