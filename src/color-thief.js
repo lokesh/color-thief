@@ -71,8 +71,6 @@ ColorThief.prototype.getColor = function(sourceImage, quality = 10) {
  * colorCount determines the size of the palette; the number of colors returned. If not set, it
  * defaults to 10.
  *
- * BUGGY: Function does not always return the requested amount of colors. It can be +/- 2.
- *
  * quality is an optional argument. It needs to be an integer. 1 is the highest quality settings.
  * 10 is the default. There is a trade-off between quality and speed. The bigger the number, the
  * faster the palette generation but the greater the likelihood that colors will be missed.
