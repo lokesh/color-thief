@@ -10,17 +10,17 @@ A script for grabbing the color palette from an image. Works in browser and in N
 
 ### Install and import
 _Important: The name of the package is `colorthief`, not `color-thief`._
-```
+```console
 npm i --save colorthief
 ```
-```
+```js
 const ColorThief = require('colorthief');
 ```
 
 ### Get colors
 Both `getColor` and `getPalette` return a `Promise` when used in Node.
 
-```
+```js
 const img = resolve(process.cwd(), 'rainbow.png');
 
 ColorThief.getColor(img)
@@ -38,13 +38,13 @@ ColorThief.getPalette(img, 5)
 ### Install
 
 _Important: The name of the package is `colorthief`, not `color-thief`._
-```
+```console
 npm i --save colorthief
 ```
 
 ### Import and use as a global variable
 
-```
+```html
 <script src="node_modules/colorthief/dist/color-thief.umd.js"></script>
 <script>
     const colorThief = new ColorThief();
@@ -54,11 +54,11 @@ npm i --save colorthief
 
 ### Import and use as an ES6 module
 _index.html_
-```
+```html
 <script type="module" src="app.js"></script>
 ```
 _app.js_
-```
+```js
 import ColorThief from './node_modules/colorthief/dist/color-thief.mjs'
 
 const colorThief = new ColorThief();
