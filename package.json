@@ -28,8 +28,8 @@
     "umd:main": "dist/color-thief.umd.js",
     "amdName": "ColorThief",
     "scripts": {
-        "build": "microbundle; node ./build/build.js",
-        "watch": "microbundle watch",
+        "build": "microbundle --no-sourcemap; node ./build/build.js",
+        "watch": "microbundle watch --no-sourcemap",
         "dev": " ./node_modules/http-server/bin/http-server",
         "test": "mocha; ./node_modules/.bin/cypress run --config video=false",
         "test:browser": "./node_modules/.bin/cypress open",
