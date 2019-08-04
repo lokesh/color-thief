@@ -1,37 +1,79 @@
+
 # Color Thief
 
-A script for grabbing the color palette from an image. Uses Javascript and the canvas tag to make it happen.
+A script for grabbing the color palette from an image. Works in browser and in Node.
 
 [See a Demo](http://lokeshdhakar.com/projects/color-thief) | [Read more on my blog](http://lokeshdhakar.com/color-thief)
 
-## How to use
 
-### Import
+## How to use Color Thief in Node
 
-- `/dist/color-thief.js`: CommonJS module for use in Node.
-- `/dist/color-thief.mjs`: ES6 module for use in Browser. For modern browsers as well as Webpack and Rollup.
-- `/dist/color-thief.umd.js`: UMD module for use in Browser. For simple script tag loading that exposes a global variable or for RequireJS AMD support. _color-thief.min.js_ is a duplicate of this file, kept around to maintain backwards compatibility.
-
-### Get the dominant color from an image
-
-```js
-const colorThief = new ColorThief();
-colorThief.getColor(sourceImage);
+### Install and import
+_Important: The name of the package is `colorthief`, not `color-thief`._
+```
+npm i --save colorthief
+```
+```
+const ColorThief = require('colorthief');
 ```
 
-### Build a color palette from an image
+### Get colors
+Both `getColor` and `getPalette` return a `Promise` when used in Node.
 
-In this example, we build an 8 color palette.
+```
+const img = resolve(process.cwd(), 'rainbow.png');
 
-```js
-const colorThief = new ColorThief();
-colorThief.getPalette(sourceImage, 8);
+ColorThief.getColor(img)
+    .then(color => { console.log(color) })
+    .catch(err => { console.log(err) })
+
+ColorThief.getPalette(img, 5)
+    .then(palette => { console.log(palette) })
+    .catch(err => { console.log(err) })
+ ```
+
+## How to use Color Thief in the Browser
+
+
+### Install
+
+_Important: The name of the package is `colorthief`, not `color-thief`._
+```
+npm i --save colorthief
 ```
 
-### API
+### Import and use as a global variable
 
+```
+<script src="node_modules/colorthief/dist/color-thief.umd.js"></script>
+<script>
+    const colorThief = new ColorThief();
+    const color = colorThief.getColor(document.querySelector('img'));
+</script>
+```
+
+### Import and use as an ES6 module
+_index.html_
+```
+<script type="module" src="app.js"></script>
+```
+_app.js_
+```
+import ColorThief from './node_modules/colorthief/dist/color-thief.mjs'
+
+const colorThief = new ColorThief();
+const result = colorThief.getColor(document.querySelector('img'));
+```
+
+### Import and use with RequireJS
+
+The `/dist/color-thief.umd.js` file uses the UMD (Universal Module Definition) format. This includes RequireJS AMD support.
+
+## API
+
+_Note: Both `getColor` and `getPalette` return a `Promise` when used in Node._
 
 | Method | Return | Description |
 | --- | --- | --- |
-| `getColor(image [, quality])` | `[Number, Number, Number]` | WIP |
-| `getPalette(image [, colorCount, quality]` | `[[Number, Number, Number], ...]` | WIP |
+| `getColor(image [, quality])` | `[Number, Number, Number]` | Gets the dominant color from the image. Color is returned as an array of three integers representing red, green, and blue values. |
+| `getPalette(image [, colorCount, quality]` | `[[Number, Number, Number], ...]` | Gets a palette from the image by clustering similar colors. The palette is returned as an array containing colors, each color itself an array of three integers. |
