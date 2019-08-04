@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const ColorThief = require(resolve(process.cwd(), "dist/color-thief-node.js"));
+const ColorThief = require(resolve(process.cwd(), "dist/color-thief.js"));
 const img = resolve(process.cwd(), 'cypress/test-pages/img/rainbow-vertical.png');
 const chai = require("chai");
 const expect = chai.expect;

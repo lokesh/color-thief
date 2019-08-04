@@ -26,7 +26,7 @@ fs.copyFile(umdPath, legacyPath, (err) => {
 });
 
 const srcNodeRelPath = 'src/color-thief-node.js';
-const distNodeRelPath = 'dist/color-thief-node.js';
+const distNodeRelPath = 'dist/color-thief.js';
 const srcNodePath = resolve(process.cwd(), srcNodeRelPath);
 const distNodePath = resolve(process.cwd(), distNodeRelPath);
 
