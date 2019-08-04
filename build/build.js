@@ -14,10 +14,23 @@ dist/color-thief.min.js and expecting a global var. For this reason we're
 duplicating the UMD compatible file and giving it that name.
 */
 
-const source = resolve(process.cwd(), 'dist/color-thief.umd.js');
-const dest = resolve(process.cwd(), 'dist/color-thief.min.js');
+const umdRelPath = 'dist/color-thief.umd.js';
+const legacyRelPath = 'dist/color-thief.min.js';
 
-fs.copyFile(source, dest, (err) => {
+const umdPath = resolve(process.cwd(), umdRelPath);
+const legacyPath = resolve(process.cwd(), legacyRelPath);
+
+fs.copyFile(umdPath, legacyPath, (err) => {
     if (err) throw err;
-    console.log('source.txt was copied to destination.txt');
+    console.log(`${umdRelPath} copied to ${legacyRelPath}.`);
+});
+
+const srcNodeRelPath = 'src/color-thief-node.js';
+const distNodeRelPath = 'dist/color-thief-node.js';
+const srcNodePath = resolve(process.cwd(), srcNodeRelPath);
+const distNodePath = resolve(process.cwd(), distNodeRelPath);
+
+fs.copyFile(srcNodePath, distNodePath, (err) => {
+    if (err) throw err;
+    console.log(`${srcNodeRelPath} copied to ${distNodeRelPath}.`);
 });
