@@ -8,15 +8,14 @@ A script for grabbing the color palette from an image. Uses Javascript and the c
 
 ### Import
 
-- `/dist/color-thief.umd.js`: UMD module. For simple script tag loading that exposes a global variable or for RequireJS AMD support.
-- `/dist/color-thief.js`: CommonJS module. Entry point for Node.js and Browserify.
-- `/dist/color-thief.mjs`: ES6 module. For modern browsers as well as Webpack and Rollup.
-- `/dist/color-thief.min.js`: Duplicate of `/dist/color-thief.umd.js`. Kept around to maintain backwards compatibility.
+- `/dist/color-thief.js`: CommonJS module for use in Node.
+- `/dist/color-thief.mjs`: ES6 module for use in Browser. For modern browsers as well as Webpack and Rollup.
+- `/dist/color-thief.umd.js`: UMD module for use in Browser. For simple script tag loading that exposes a global variable or for RequireJS AMD support. _color-thief.min.js_ is a duplicate of this file, kept around to maintain backwards compatibility.
 
 ### Get the dominant color from an image
 
 ```js
-var colorThief = new ColorThief();
+const colorThief = new ColorThief();
 colorThief.getColor(sourceImage);
 ```
 
@@ -25,7 +24,7 @@ colorThief.getColor(sourceImage);
 In this example, we build an 8 color palette.
 
 ```js
-var colorThief = new ColorThief();
+const colorThief = new ColorThief();
 colorThief.getPalette(sourceImage, 8);
 ```
 
