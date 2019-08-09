@@ -86,7 +86,6 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     // Create custom CanvasImage object
     var image      = new CanvasImage(sourceImage);
     var imageData  = image.getImageData();
-    var pixels     = imageData.data;
     var pixelCount = image.width * image.height;
 
     const pixelArray = core.createPixelArray(imageData.data, pixelCount, options.quality);
@@ -114,18 +113,18 @@ ColorThief.prototype.getColorFromUrl = function(imageUrl, callback, quality) {
 ColorThief.prototype.getImageData = function(imageUrl, callback) {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', imageUrl, true);
-    xhr.responseType = 'arraybuffer'
+    xhr.responseType = 'arraybuffer';
     xhr.onload = function() {
         if (this.status == 200) {
-            let uInt8Array = new Uint8Array(this.response)
-            i = uInt8Array.length
+            let uInt8Array = new Uint8Array(this.response);
+            i = uInt8Array.length;
             let binaryString = new Array(i);
             for (var i = 0; i < uInt8Array.length; i++){
-                binaryString[i] = String.fromCharCode(uInt8Array[i])
+                binaryString[i] = String.fromCharCode(uInt8Array[i]);
             }
-            let data = binaryString.join('')
-            let base64 = window.btoa(data)
-            callback ("data:image/png;base64,"+base64)
+            let data = binaryString.join('');
+            let base64 = window.btoa(data);
+            callback ('data:image/png;base64,' + base64);
         }
     }
     xhr.send();
