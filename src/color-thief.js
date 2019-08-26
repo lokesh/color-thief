@@ -28,7 +28,7 @@ import core from './core.js';
   with a set of helper functions.
 */
 
-var CanvasImage = function (image) {
+const CanvasImage = function (image) {
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.width  = this.canvas.width  = image.width;
@@ -56,8 +56,8 @@ var ColorThief = function () {};
  *
  * */
 ColorThief.prototype.getColor = function(sourceImage, quality = 10) {
-    var palette       = this.getPalette(sourceImage, 5, quality);
-    var dominantColor = palette[0];
+    const palette       = this.getPalette(sourceImage, 5, quality);
+    const dominantColor = palette[0];
     return dominantColor;
 };
 
@@ -84,26 +84,26 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     });
 
     // Create custom CanvasImage object
-    var image      = new CanvasImage(sourceImage);
-    var imageData  = image.getImageData();
-    var pixelCount = image.width * image.height;
+    const image      = new CanvasImage(sourceImage);
+    const imageData  = image.getImageData();
+    const pixelCount = image.width * image.height;
 
     const pixelArray = core.createPixelArray(imageData.data, pixelCount, options.quality);
 
     // Send array to quantize function which clusters values
     // using median cut algorithm
-    var cmap    = quantize(pixelArray, options.colorCount);
-    var palette = cmap? cmap.palette() : null;
+    const cmap    = quantize(pixelArray, options.colorCount);
+    const palette = cmap? cmap.palette() : null;
 
     return palette;
 };
 
 ColorThief.prototype.getColorFromUrl = function(imageUrl, callback, quality) {
-    let sourceImage = document.createElement("img");
-    var thief = this;
-    sourceImage.addEventListener('load' , function(){
-        var palette = thief.getPalette(sourceImage, 5, quality);
-        var dominantColor = palette[0];
+    const sourceImage = document.createElement("img");
+
+    sourceImage.addEventListener('load' , () => {
+        const palette = this.getPalette(sourceImage, 5, quality);
+        const dominantColor = palette[0];
         callback(dominantColor, imageUrl);
     });
     sourceImage.src = imageUrl
@@ -119,7 +119,7 @@ ColorThief.prototype.getImageData = function(imageUrl, callback) {
             let uInt8Array = new Uint8Array(this.response);
             i = uInt8Array.length;
             let binaryString = new Array(i);
-            for (var i = 0; i < uInt8Array.length; i++){
+            for (let i = 0; i < uInt8Array.length; i++){
                 binaryString[i] = String.fromCharCode(uInt8Array[i]);
             }
             let data = binaryString.join('');
@@ -131,12 +131,12 @@ ColorThief.prototype.getImageData = function(imageUrl, callback) {
 };
 
 ColorThief.prototype.getColorAsync = function(imageUrl, callback, quality) {
-    var thief = this;
+    const thief = this;
     this.getImageData(imageUrl, function(imageData){
-        let sourceImage = document.createElement("img");
+        const sourceImage = document.createElement("img");
         sourceImage.addEventListener('load' , function(){
-            var palette = thief.getPalette(sourceImage, 5, quality);
-            var dominantColor = palette[0];
+            const palette = thief.getPalette(sourceImage, 5, quality);
+            const dominantColor = palette[0];
             callback(dominantColor, this);
         });
         sourceImage.src = imageData;
