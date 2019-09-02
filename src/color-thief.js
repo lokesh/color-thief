@@ -31,8 +31,12 @@ import core from './core.js';
 const CanvasImage = function (image) {
     this.canvas  = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
-    this.width  = this.canvas.width  = image.width;
-    this.height = this.canvas.height = image.height;
+
+    const width = image.width.baseVal ? image.width.baseVal.value : image.width
+    const height = image.height.baseVal ? image.height.baseVal.value : image.height
+
+    this.width  = this.canvas.width  = width;
+    this.height = this.canvas.height = height;
     this.context.drawImage(image, 0, 0, this.width, this.height);
 };
 
