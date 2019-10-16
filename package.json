@@ -48,6 +48,7 @@
         "mustache": "^3.0.1"
     },
     "dependencies": {
+        "file-type": "12.3.0",
         "get-pixels": "^3.3.2",
         "quantize": "github:lokesh/quantize"
     }
