@@ -31,7 +31,7 @@ function validateOptions(options) {
         colorCount = Math.min(colorCount, 20);
     }
 
-    if (typeof quality === 'undefined' || Number.isInteger(quality)) {
+    if (typeof quality === 'undefined' || !Number.isInteger(quality)) {
         quality = 10;
     } else if (quality < 1) {
         quality = 10;
