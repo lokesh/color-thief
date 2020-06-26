@@ -28,7 +28,7 @@
     "umd:main": "dist/color-thief.umd.js",
     "amdName": "ColorThief",
     "scripts": {
-        "build": "microbundle --no-sourcemap; node ./build/build.js",
+        "build": "microbundle --no-sourcemap && node ./build/build.js",
         "watch": "microbundle watch --no-sourcemap",
         "dev": "http-server",
         "test": "mocha && cypress run --config video=false",
