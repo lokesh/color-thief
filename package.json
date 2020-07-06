@@ -1,6 +1,6 @@
 {
     "name": "colorthief",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "author": {
         "name": "Lokesh Dhakar",
         "email": "lokesh.dhakar@gmail.com",
@@ -28,11 +28,11 @@
     "umd:main": "dist/color-thief.umd.js",
     "amdName": "ColorThief",
     "scripts": {
-        "build": "microbundle --no-sourcemap; node ./build/build.js",
+        "build": "microbundle --no-sourcemap && node ./build/build.js",
         "watch": "microbundle watch --no-sourcemap",
-        "dev": " ./node_modules/http-server/bin/http-server",
-        "test": "mocha; ./node_modules/.bin/cypress run --config video=false",
-        "test:browser": "./node_modules/.bin/cypress open",
+        "dev": "http-server",
+        "test": "mocha && cypress run --config video=false",
+        "test:browser": "cypress open",
         "test:node": "mocha"
     },
     "devDependencies": {
