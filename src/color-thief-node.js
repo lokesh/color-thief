@@ -1,4 +1,4 @@
-const getPixels = require('get-pixels');
+const getPixels = require('get-pixels-updated');
 const quantize = require('quantize');
 
 function createPixelArray(imgData, pixelCount, quality) {
