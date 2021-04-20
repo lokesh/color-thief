@@ -36,16 +36,16 @@
         "test:node": "mocha"
     },
     "devDependencies": {
-        "@node-minify/core": "^4.0.5",
-        "@node-minify/uglify-es": "^4.0.5",
-        "chai": "^4.2.0",
+        "@node-minify/core": "^6.2.0",
+        "@node-minify/uglify-es": "^6.2.0",
+        "chai": "^4.3.4",
         "chai-as-promised": "^7.1.1",
-        "cypress": "^3.4.0",
-        "eslint": "^5.16.0",
-        "http-server": "^0.11.1",
-        "microbundle": "^0.11.0",
-        "mocha": "^6.2.0",
-        "mustache": "^3.0.1"
+        "cypress": "^7.1.0",
+        "eslint": "^7.24.0",
+        "http-server": "^0.12.3",
+        "microbundle": "^0.13.0",
+        "mocha": "^8.3.2",
+        "mustache": "^4.2.0"
     },
     "dependencies": {
         "get-pixels": "^3.3.2",
