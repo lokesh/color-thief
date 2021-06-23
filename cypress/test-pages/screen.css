@@ -69,9 +69,9 @@ code {
 /* -- Layout ------------------------------------------------------------------ */
 
 .image-section {
-    border-bottom: 1px solid #ccc;
+    /* border-bottom: 1px solid #ccc; */
     padding: 16px 16px 32px 16px;
-    margin-bottom: 32px;
+    margin-bottom: 800px;
 }
 
 .swatch {
@@ -93,3 +93,132 @@ code {
     color: var(--muted-color);
     font-weight: normal;
 }
+
+
+/* body {
+  background: #222;
+  font-family: "Montserrat", sans-serif;
+  text-align: center;
+  color: #fff;
+} */
+
+.image {
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  left: calc(50vw - 180px);
+  /* top:24px; */
+  width: 360px;
+  height: 780px;
+/*   margin-top: 24px;
+  margin-left: auto;
+  margin-right: auto; */
+  border-radius: 24px;
+  box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.7);
+  /*   0 20px 100px -20px rgba(182, 60, 246, 0.8), */
+}
+.status-bar {
+  position: relative;
+  z-index:100000;
+
+}
+
+.top-fade {
+  width: 100%;
+  height: 240px;
+  position: absolute;
+  top:0px;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.81) 0%, rgba(0, 0, 0, 0.47) 28.83%, rgba(0, 0, 0, 0) 91.11%);
+opacity: 0.4;
+
+}
+.bottom-fade {
+  width: 100%;
+  height: 304px;
+  position: absolute;
+  bottom:0px;
+  border-radius: 0 0 24px 24px;
+background: linear-gradient(360deg, rgba(0, 0, 0, 0.81) 0%, rgba(0, 0, 0, 0.47) 37.84%, rgba(0, 0, 0, 0) 91.11%);
+opacity: 0.9;
+}
+
+.time {
+  position: absolute;
+  top: 92px;
+  font-weight: 300;
+  font-size: 84px;
+  line-height: 90px;
+
+  width: 100%;
+}
+
+.date {
+  position: absolute;
+  top: 184px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+
+  width: 100%;
+}
+
+.block {
+  position: absolute;
+  width: calc(100% - 16px);
+  height: 80px;
+  left: 0px;
+  bottom: 76px;
+
+  /*background: hsla(104, 45%, 39%, 0.4);*/
+  backdrop-filter: blur(24px);
+
+  border-radius: 0 16px 16px 0;
+}
+
+.headline {
+  position: absolute;
+width: 216px;
+height: 34px;
+left: 16px;
+top: 12px;
+text-align: left;
+font-style: normal;
+font-weight: 800;
+font-size: 14px;
+line-height: 17px;
+letter-spacing: 0.2px;
+
+color: #FFFFFF;
+}
+
+.logo {
+  position: absolute;
+width: 42px;
+height: 14px;
+left: 16px;
+top: 54px;
+}
+
+.cta {
+  position: absolute;
+padding: 7px 23px;
+    max-width: 88px;
+left: 240px;
+top: 26px;
+/*background: hsla(104, 45%, 8%, 1);*/
+border-radius: 8px;
+font-style: normal;
+font-weight: bold;
+font-size: 14px;
+line-height: 16px;
+text-transform: uppercase;
+
+color: #FFFFFF;
+}
+
+footer {
+  position: absolute;
+  bottom: -8px;
+}
+
