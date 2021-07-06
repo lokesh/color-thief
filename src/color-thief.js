@@ -33,9 +33,9 @@ const CanvasImage = function (image) {
     this.context = this.canvas.getContext('2d');
     this.width  = this.canvas.width  = image.naturalWidth;
     this.height =  image.naturalHeight;
-    this.canvas.height = image.naturalHeight/2;
-    this.context.drawImage(image, 0, this.height*0.3, this.width, this.height*0.5,
-        0, 0, this.width, this.height*0.5,);
+    this.canvas.height = image.naturalHeight*0.3;
+    this.context.drawImage(image, 0, this.height*0.35, this.width, this.height*0.3,
+        0, 0, this.width, this.height*0.3,);
 };
 
 CanvasImage.prototype.getImageData = function () {
@@ -90,7 +90,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
     const image      = new CanvasImage(sourceImage);
     const imageData  = image.getImageData();
     // console.log("height : " + image.height + "")
-    const pixelCount = image.width * image.height /2;
+    const pixelCount = image.width * image.height *0.3;
 
     const pixelArray = core.createPixelArray(imageData.data, pixelCount, options.quality);
 
