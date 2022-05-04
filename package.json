@@ -1,11 +1,7 @@
 {
-    "name": "colorthief",
-    "version": "2.3.2",
-    "author": {
-        "name": "Lokesh Dhakar",
-        "email": "lokesh.dhakar@gmail.com",
-        "url": "http://lokeshdhakar.com/"
-    },
+    "name": "color-extr-thief",
+    "version": "2.3.4",
+    "author": "Lokesh Dhakar <lokesh.dhakar@gmail.com> (http://lokeshdhakar.com/)",
     "description": "Get the dominant color or color palette from an image.",
     "keywords": [
         "color",
@@ -19,7 +15,7 @@
     "homepage": "http://lokeshdhakar.com/projects/color-thief/",
     "repository": {
         "type": "git",
-        "url": "https://github.com/lokesh/color-thief.git"
+        "url": "git+https://github.com/lokesh/color-thief.git"
     },
     "license": "MIT",
     "source": "src/color-thief.js",
@@ -49,6 +45,13 @@
     },
     "dependencies": {
         "get-pixels": "^3.3.2",
-        "quantize": "github:lokesh/quantize"
+        "quantize": "^1.0.2"
+    },
+    "bugs": {
+        "url": "https://github.com/lokesh/color-thief/issues"
+    },
+    "directories": {
+        "example": "examples",
+        "test": "test"
     }
 }
