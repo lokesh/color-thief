@@ -38,17 +38,17 @@
     "devDependencies": {
         "@node-minify/core": "^6.2.0",
         "@node-minify/uglify-es": "^6.2.0",
-        "chai": "^4.3.4",
+        "chai": "^4.3.6",
         "chai-as-promised": "^7.1.1",
-        "cypress": "^7.1.0",
-        "eslint": "^7.24.0",
-        "http-server": "^0.12.3",
-        "microbundle": "^0.13.0",
-        "mocha": "^8.3.2",
+        "cypress": "^9.7.0",
+        "eslint": "^8.16.0",
+        "http-server": "^14.1.0",
+        "microbundle": "^0.15.0",
+        "mocha": "^10.0.0",
         "mustache": "^4.2.0"
     },
     "dependencies": {
-        "get-pixels": "^3.3.2",
+        "get-pixels": "^3.3.3",
         "quantize": "github:lokesh/quantize"
     }
 }
