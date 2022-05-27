@@ -23,17 +23,30 @@ import core from './core.js';
 
 /*
   CanvasImage Class
-  Class that wraps the html image element and canvas.
+  Class that wraps the html image/canvas/video element and internal canvas.
   It also simplifies some of the canvas context manipulation
   with a set of helper functions.
 */
 
-const CanvasImage = function (image) {
-    this.canvas  = document.createElement('canvas');
-    this.context = this.canvas.getContext('2d');
-    this.width  = this.canvas.width  = image.naturalWidth;
-    this.height = this.canvas.height = image.naturalHeight;
-    this.context.drawImage(image, 0, 0, this.width, this.height);
+const CanvasImage = function (element) {
+    if (element.nodeName === 'CANVAS') {
+        this.canvas = element;
+        this.context = element.getContext('2d');
+        this.width  = element.width;
+        this.height = element.height;
+    } else if (element.nodeName === 'VIDEO') {
+        this.canvas  = document.createElement('canvas');
+        this.context = this.canvas.getContext('2d');
+        this.width  = this.canvas.width  = video.videoWidth;
+        this.height = this.canvas.height = element.videoHeight;
+        this.context.drawImage(element, 0, 0, this.width, this.height);
+    } else {
+        this.canvas  = document.createElement('canvas');
+        this.context = this.canvas.getContext('2d');
+        this.width  = this.canvas.width  = element.naturalWidth;
+        this.height = this.canvas.height = element.naturalHeight;
+        this.context.drawImage(element, 0, 0, this.width, this.height);
+    }
 };
 
 CanvasImage.prototype.getImageData = function () {
