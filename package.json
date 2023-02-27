@@ -40,10 +40,10 @@
         "@node-minify/uglify-es": "^4.0.5",
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
-        "cypress": "^12.6.0",
+        "cypress": "^3.4.0",
         "eslint": "^5.16.0",
         "http-server": "^0.11.1",
-        "microbundle": "^0.15.0",
+        "microbundle": "^0.11.0",
         "mocha": "^6.2.0",
         "mustache": "^3.0.1"
     },
