@@ -32,15 +32,16 @@
         "watch": "microbundle watch --no-sourcemap",
         "dev": " ./node_modules/http-server/bin/http-server",
         "test": "mocha; ./node_modules/.bin/cypress run --config video=false",
-        "test:browser": "./node_modules/.bin/cypress open",
-        "test:node": "mocha"
+        "test:browser": "./node_modules/.bin/cypress run --headed --browser chrome",
+        "test:node": "mocha",
+        "cypress": "./node_modules/.bin/cypress open"
     },
     "devDependencies": {
         "@node-minify/core": "^4.0.5",
         "@node-minify/uglify-es": "^4.0.5",
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
-        "cypress": "^3.4.0",
+        "cypress": "^12.6.0",
         "eslint": "^5.16.0",
         "http-server": "^0.11.1",
         "microbundle": "^0.15.0",
