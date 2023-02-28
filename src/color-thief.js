@@ -2,7 +2,7 @@ import quantize from '../node_modules/@lokesh.dhakar/quantize/dist/index.mjs';
 import core from './core.js';
 
 /*
- * Color Thief v2.3.2
+ * Color Thief v2.4.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
  *
  * Thanks
