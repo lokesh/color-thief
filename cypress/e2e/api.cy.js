@@ -8,8 +8,8 @@ function rgbCount(text) {
     return vals.length / 3
 }
 
-describe('getColor()', function() {
-	before(function() {
+describe('getColor()', { testIsolation: false }, function() {
+    before(function() {
         cy.visit('http://localhost:8080/cypress/test-pages/index.html');
     })
 
@@ -18,7 +18,7 @@ describe('getColor()', function() {
             const count = rgbCount($el.text())
             expect(count).to.equal(1);
         });
-	})
+    })
 
     it('returns valid color from red image', function() {
         cy.get('[data-image="red.png"] .output-color').should(($el) => {
