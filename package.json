@@ -41,9 +41,9 @@
         "chai-as-promised": "^7.1.1",
         "cypress": "^12.6.0",
         "eslint": "^5.16.0",
-        "http-server": "^0.11.1",
+        "http-server": "^14.1.1",
         "microbundle": "^0.15.0",
-        "mocha": "^6.2.0",
+        "mocha": "^10.2.0",
         "mustache": "^3.0.1"
     },
     "dependencies": {
