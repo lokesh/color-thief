@@ -37,8 +37,6 @@
         "cypress": "./node_modules/.bin/cypress open"
     },
     "devDependencies": {
-        "@node-minify/core": "^4.0.5",
-        "@node-minify/uglify-es": "^4.0.5",
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
         "cypress": "^12.6.0",
