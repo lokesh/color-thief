@@ -116,7 +116,7 @@ ColorThief.prototype.getImageData = function(imageUrl, callback) {
     xhr.responseType = 'arraybuffer';
     xhr.onload = function() {
         if (this.status == 200) {
-            let uInt8Array = new Uint8Array(this.response);
+            let uInt8Array = new Uint8ClampedArray(this.response);
             i = uInt8Array.length;
             let binaryString = new Array(i);
             for (let i = 0; i < uInt8Array.length; i++){
