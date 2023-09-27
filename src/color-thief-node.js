@@ -60,7 +60,7 @@ function getColor(img, quality) {
     return new Promise((resolve, reject) => {
         getPalette(img, 5, quality)
             .then(palette => {
-                resolve(palette[0]);
+                resolve(palette?.[0]);
             })
             .catch(err => {
                 reject(err);
