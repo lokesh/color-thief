@@ -18,18 +18,18 @@
         const colorThief = new ColorThief();
 
 
-        const img = document.querySelector('img');
+        const image = document.querySelector('img');
 
         function getColorFromImage(img) {
             const result = colorThief.getColor(img);
             document.querySelector('#result').innerText = result;
         }
 
-        if (img.complete) {
-            getColorFromImage(img);
+        if (image.complete) {
+            getColorFromImage(image);
         } else {
             image.addEventListener('load', function() {
-                getColorFromImage(img);
+                getColorFromImage(image);
             });
         }
     </script>
