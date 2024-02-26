@@ -1,5 +1,6 @@
-const getPixels = require('get-pixels');
+const { getPixels } = require('ndarray-pixels');
 const quantize = require('@lokesh.dhakar/quantize');
+const sharp = require('sharp');
 
 function createPixelArray(imgData, pixelCount, quality) {
     const pixels = imgData;
@@ -27,7 +28,7 @@ function validateOptions(options) {
 
     if (typeof colorCount === 'undefined' || !Number.isInteger(colorCount)) {
         colorCount = 10;
-    } else if (colorCount === 1 ) {
+    } else if (colorCount === 1) {
         throw new Error('colorCount should be between 2 and 20. To get one color, call getColor() instead of getPalette()');
     } else {
         colorCount = Math.max(colorCount, 2);
@@ -44,16 +45,16 @@ function validateOptions(options) {
     }
 }
 
-function loadImg(img) {
+const loadImg = (img) => {
     return new Promise((resolve, reject) => {
-        getPixels(img, function(err, data) {
-            if(err) {
-                reject(err)
-            } else {
-                resolve(data);
-            }
-        })
-    });
+        sharp(img)
+            .toBuffer()
+            .then(buffer => sharp(buffer).metadata()
+                .then(metadata => ({ buffer, format: metadata.format })))
+            .then(({ buffer, format }) => getPixels(buffer, format))
+            .then(resolve)
+            .catch(reject);
+    })
 }
 
 function getColor(img, quality) {
@@ -82,7 +83,7 @@ function getPalette(img, colorCount = 10, quality = 10) {
                 const pixelArray = createPixelArray(imgData.data, pixelCount, options.quality);
 
                 const cmap = quantize(pixelArray, options.colorCount);
-                const palette = cmap? cmap.palette() : null;
+                const palette = cmap ? cmap.palette() : null;
 
                 resolve(palette);
             })
