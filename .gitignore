@@ -16,3 +16,5 @@ rsync-exclude
 node_modules
 
 .idea
+
+built

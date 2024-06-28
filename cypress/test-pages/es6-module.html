@@ -28,7 +28,7 @@
         if (img.complete) {
             getColorFromImage(img);
         } else {
-            image.addEventListener('load', function() {
+            img.addEventListener('load', function() {
                 getColorFromImage(img);
             });
         }

@@ -1,5 +1,6 @@
-var fs = require('fs');
-const { resolve } = require('path');
+/* eslint-disable no-undef */
+import { copyFile } from 'fs';
+import path from 'path';
 
 /*
 color-thief.umd.js duplicated as color-thief.min.js for legacy support
@@ -17,20 +18,20 @@ duplicating the UMD compatible file and giving it that name.
 const umdRelPath = 'dist/color-thief.umd.js';
 const legacyRelPath = 'dist/color-thief.min.js';
 
-const umdPath = resolve(process.cwd(), umdRelPath);
-const legacyPath = resolve(process.cwd(), legacyRelPath);
+const umdPath = path.join( path.resolve( path.dirname( '' ) ), umdRelPath );
+const legacyPath = path.join( path.resolve( path.dirname( '' ) ), legacyRelPath );
 
-fs.copyFile(umdPath, legacyPath, (err) => {
-    if (err) throw err;
-    console.log(`${umdRelPath} copied to ${legacyRelPath}.`);
-});
+copyFile( umdPath, legacyPath, ( err ) => {
+    if ( err ) throw err;
+    console.log( `${ umdRelPath } copied to ${ legacyRelPath }.` );
+} );
 
-const srcNodeRelPath = 'src/color-thief-node.js';
+const srcNodeRelPath = 'built/color-thief-node.js';
 const distNodeRelPath = 'dist/color-thief.js';
-const srcNodePath = resolve(process.cwd(), srcNodeRelPath);
-const distNodePath = resolve(process.cwd(), distNodeRelPath);
+const srcNodePath = path.join( path.resolve( path.dirname( '' ) ), srcNodeRelPath );
+const distNodePath = path.join( path.resolve( path.dirname( '' ) ), distNodeRelPath );
 
-fs.copyFile(srcNodePath, distNodePath, (err) => {
-    if (err) throw err;
-    console.log(`${srcNodeRelPath} copied to ${distNodeRelPath}.`);
-});
+copyFile( srcNodePath, distNodePath, ( err ) => {
+    if ( err ) throw err;
+    console.log( `${ srcNodeRelPath } copied to ${ distNodeRelPath }.` );
+} );
