@@ -1,12 +1,12 @@
 {
-    "name": "colorthief",
-    "version": "2.4.0",
+    "name": "@janishutz/colorthief",
+    "version": "3.0",
     "author": {
-        "name": "Lokesh Dhakar",
-        "email": "lokesh.dhakar@gmail.com",
-        "url": "http://lokeshdhakar.com/"
+        "name": "Janis Hutz",
+        "email": "development@janishutz.com",
+        "url": "https://janishutz.com"
     },
-    "description": "Get the dominant color or color palette from an image.",
+    "description": "Get the dominant color or color palette from an image. Now including TypeScript",
     "keywords": [
         "color",
         "palette",
@@ -17,10 +17,10 @@
         "canvas"
     ],
     "type": "module",
-    "homepage": "http://lokeshdhakar.com/projects/color-thief/",
+    "homepage": "https://lokeshdhakar.com/projects/color-thief/",
     "repository": {
         "type": "git",
-        "url": "https://github.com/lokesh/color-thief.git"
+        "url": "https://github.com/janishutz/color-thief.git"
     },
     "license": "MIT",
     "source": "src/color-thief.ts",

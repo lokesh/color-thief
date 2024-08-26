@@ -1,13 +1,35 @@
 
-# Color Thief
+<div id="title" align="center">
+    <h1>ColorThief</h1>
+</div>
+
+<div id="badges" align="center">
+    <img alt="Project License" src="https://img.shields.io/github/license/janishutz/color-thief.svg">
+    <img alt="GitHub Repo size" src="https://img.shields.io/github/repo-size/janishutz/color-thief.svg">
+    <img alt="GitHub Repo issues" src="https://img.shields.io/github/issues-pr-raw/janishutz/color-thief">
+    <img alt="Top Languages" src="https://img.shields.io/github/languages/top/janishutz/color-thief">
+    <img alt="GitHub Repo filecount" src="https://img.shields.io/github/directory-file-count/janishutz/color-thief.svg">
+    <br>
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/janishutz/color-thief">
+    <img alt="GitHub watchers" src="https://img.shields.io/github/watchers/janishutz/color-thief">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/janishutz/color-thief">
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/janishutz/color-thief">
+    <br>
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/janishutz/color-thief/total?label=Downloads (total)">
+    <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/downloads/janishutz/color-thief/latest/total?label=Downloads (latest)">
+    <img alt="Latest release" src="https://img.shields.io/github/release/janishutz/color-thief.svg">
+    <img alt="App Version" src="https://img.shields.io/github/package-json/v/janishutz/color-thief.svg?label=Development Version">
+</div>
 
 Grab the color palette from an image using just Javascript.Works in the browser and in Node.
 
-### View the [demo page](https://lokeshdhakar.com/projects/color-thief/) for examples, API docs, and more.
+Full TypeScript implementation of the package originally created by [@lokesh.dhakar](https://github.com/lokesh/colorthief)
+
+**View the [demo page](https://janishutz.com/projects/color-thief/) for examples, API docs, and more.**
 
 ---
 
-## Contributing
+# Contributing
 
 ### Project structure
 
