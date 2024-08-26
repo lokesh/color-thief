@@ -25,7 +25,7 @@ Grab the color palette from an image using just Javascript.Works in the browser 
 
 Full TypeScript implementation of the package originally created by [@lokesh.dhakar](https://github.com/lokesh/colorthief)
 
-**View the [demo page](https://janishutz.com/projects/color-thief/) for examples, API docs, and more.**
+**View the [demo page](https://lokeshdhakar.com/projects/color-thief/) for examples, API docs, and more.**
 
 ---
 
