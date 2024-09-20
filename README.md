@@ -27,6 +27,13 @@ Full TypeScript implementation of the package originally created by [@lokesh.dha
 
 **View the [demo page](https://lokeshdhakar.com/projects/color-thief/) for examples, API docs, and more.**
 
+# Installation
+Install this package from NPM or download specific files from the releases page!
+
+```
+npm i @janishutz/color-thief
+```
+
 ---
 
 # Contributing
