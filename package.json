@@ -1,12 +1,12 @@
 {
-    "name": "colorthief",
-    "version": "2.4.0",
+    "name": "@janishutz/colorthief",
+    "version": "3.0.1",
     "author": {
-        "name": "Lokesh Dhakar",
-        "email": "lokesh.dhakar@gmail.com",
-        "url": "http://lokeshdhakar.com/"
+        "name": "Janis Hutz",
+        "email": "development@janishutz.com",
+        "url": "https://janishutz.com"
     },
-    "description": "Get the dominant color or color palette from an image.",
+    "description": "Get the dominant color or color palette from an image. Now including TypeScript",
     "keywords": [
         "color",
         "palette",
@@ -16,40 +16,50 @@
         "photo",
         "canvas"
     ],
-    "homepage": "http://lokeshdhakar.com/projects/color-thief/",
+    "type": "module",
+    "homepage": "https://lokeshdhakar.com/projects/color-thief/",
     "repository": {
         "type": "git",
-        "url": "https://github.com/lokesh/color-thief.git"
+        "url": "https://github.com/janishutz/color-thief.git"
     },
     "license": "MIT",
-    "source": "src/color-thief.js",
-    "main": "dist/color-thief.js",
-    "module": "dist/color-thief.mjs",
+    "source": "src/color-thief.ts",
+    "main": "dist/color-thief-node.cjs",
+    "browser": {
+        "dist/color-thief.mjs": "dist/color-thief.mjs",
+        "dist/color-thief.js": "dist/color-thief.js"
+    },
+    "module": "dist/color-thief-node.mjs",
     "umd:main": "dist/color-thief.umd.js",
     "amdName": "ColorThief",
     "scripts": {
-        "build": "microbundle --no-sourcemap && node ./build/build.js",
+        "build": "tsc --declaration && microbundle build --no-sourcemap built/*.js && node ./build/build.mjs",
         "watch": "microbundle watch --no-sourcemap",
         "dev": "http-server",
         "test": "mocha && cypress run --config video=false",
-        "test:browser": "./node_modules/.bin/cypress run --headed --browser chrome",
+        "test:browser": "./node_modules/.bin/cypress run --headed",
         "test:node": "mocha",
-        "cypress": "./node_modules/.bin/cypress open"
+        "cypress": "./node_modules/.bin/cypress open",
+        "lint": "eslint ./src/*"
     },
     "devDependencies": {
-        "@node-minify/core": "^4.0.5",
-        "@node-minify/uglify-es": "^4.0.5",
-        "chai": "^4.2.0",
-        "chai-as-promised": "^7.1.1",
-        "cypress": "^12.6.0",
-        "eslint": "^5.16.0",
-        "http-server": "^0.11.1",
-        "microbundle": "^0.15.0",
-        "mocha": "^6.2.0",
-        "mustache": "^3.0.1"
+        "@eslint/js": "^9.5.0",
+        "@stylistic/eslint-plugin": "^2.3.0",
+        "@types/eslint__js": "^8.42.3",
+        "chai": "^5.1.1",
+        "chai-as-promised": "^8.0.0",
+        "cypress": "^13.12.0",
+        "eslint": "^8.57.0",
+        "http-server": "^14.1.1",
+        "microbundle": "^0.15.1",
+        "mocha": "^10.5.2",
+        "mustache": "^4.2.0",
+        "typescript": "^5.5.2",
+        "typescript-eslint": "^7.14.1"
     },
     "dependencies": {
         "@lokesh.dhakar/quantize": "^1.3.0",
-        "get-pixels": "^3.3.2"
+        "ndarray-pixels": "^4.1.0",
+        "sharp": "^0.33.4"
     }
 }
