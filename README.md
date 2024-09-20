@@ -34,6 +34,8 @@ Install this package from NPM or download specific files from the releases page!
 npm i @janishutz/color-thief
 ```
 
+[NPM page](https://npmjs.com/package/@janishutz/colorthief)
+
 ---
 
 # Contributing
