@@ -39,7 +39,7 @@
     "devDependencies": {
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
-        "cypress": "^12.6.0",
+        "cypress": "^13.15.0",
         "eslint": "^5.16.0",
         "http-server": "^14.1.1",
         "microbundle": "^0.15.0",
@@ -49,6 +49,7 @@
     "dependencies": {
         "@lokesh.dhakar/quantize": "^1.4.0",
         "file-type": "^16.5.3",
-        "get-pixels": "^3.3.2"
+        "ndarray-pixels": "^4.1.0",
+        "sharp": "^0.33.5"
     }
 }
