@@ -1,4 +1,5 @@
-const getPixels = require('get-pixels');
+const { getPixels } = require('ndarray-pixels');
+const sharp = require('sharp');
 const quantize = require('@lokesh.dhakar/quantize');
 const FileType = require('file-type');
 
@@ -37,14 +38,17 @@ function validateOptions(options) {
     return { colorCount, quality };
 }
 
-function loadImg(img) {
+const loadImg = (img) => {
     const type = Buffer.isBuffer(img) ? FileType.fromBuffer(img).mime : null
     return new Promise((resolve, reject) => {
-        getPixels(img, type, (err, data) => {
-            if (err) reject(err);
-            else resolve(data);
-        });
-    });
+        sharp(img)
+        .toBuffer()
+        .then(buffer => sharp(buffer).metadata()
+            .then(metadata => ({ buffer, format: metadata.format })))
+        .then(({ buffer, format }) => getPixels(buffer, format))
+        .then(resolve)
+        .catch(reject);
+    })
 }
 
 function getColor(img, quality) {

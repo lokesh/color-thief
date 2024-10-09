@@ -32,7 +32,7 @@ There are two sets of tests:
 To run both the browser and Node tests:
 
 - `npm run dev` to start local server.
-- `npm run test`
+- `npm run test` then run tests in a separate process
 
 To run just the browser tests with the Cypress UI:
 
