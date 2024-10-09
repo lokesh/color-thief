@@ -56,7 +56,9 @@ To run just the Node tests:
 - Merge `dev` into `master`
 - Pull down `master`
 - Update version number in `src/color-thief.js` and `package.json`
+- Delete `package-lock.json` and then install deps
 - Run `npm run build`
+- Confirm tests pass `npm run dev` and `npm run test`
 - Commit and push built files back up to `master`
 - Create a new Github release along with tag. Naming convention for both ```v2.8.1```
 - `npm publish`
