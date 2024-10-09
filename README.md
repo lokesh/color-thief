@@ -21,12 +21,13 @@ Grab the color palette from an image using just Javascript.Works in the browser 
 + `test/` - Node integration tests. Uses Chai.
 + `index.html` - Example page.
 
+
 ### Running tests
 
 There are two sets of tests:
 
 1. Browser tests run with [Cypress](https://www.cypress.io)
-2. Node tests run with [Karma](https://karma-runner.github.io/latest/index.html) and utilizing [Mocha](https://mochajs.org/)
+2. Node tests run with [Karma](https://karma-runner.github.io/latest/index.html) and [Mocha](https://mochajs.org/)
 
 To run both the browser and Node tests:
 
@@ -37,6 +38,8 @@ To run just the browser tests with the Cypress UI:
 
 - `npm run dev` to start local server
 - `npm run test:browser`
+or
+- `npm run cypress` to view the Cypress UI
 
 To run just the Node tests:
 
