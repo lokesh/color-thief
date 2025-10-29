@@ -48,8 +48,6 @@
     },
     "dependencies": {
         "@lokesh.dhakar/quantize": "^1.4.0",
-        "file-type": "^16.5.3",
-        "ndarray-pixels": "^4.1.0",
-        "sharp": "^0.33.5"
+        "file-type": "^16.5.3"
     }
 }

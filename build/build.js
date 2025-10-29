@@ -1,5 +1,5 @@
-var fs = require('fs');
-const { resolve } = require('path');
+var fs = require("fs");
+const { resolve } = require("path");
 
 /*
 color-thief.umd.js duplicated as color-thief.min.js for legacy support
@@ -14,8 +14,8 @@ dist/color-thief.min.js and expecting a global var. For this reason we're
 duplicating the UMD compatible file and giving it that name.
 */
 
-const umdRelPath = 'dist/color-thief.umd.js';
-const legacyRelPath = 'dist/color-thief.min.js';
+const umdRelPath = "dist/color-thief.umd.js";
+const legacyRelPath = "dist/color-thief.min.js";
 
 const umdPath = resolve(process.cwd(), umdRelPath);
 const legacyPath = resolve(process.cwd(), legacyRelPath);
@@ -25,8 +25,8 @@ fs.copyFile(umdPath, legacyPath, (err) => {
     console.log(`${umdRelPath} copied to ${legacyRelPath}.`);
 });
 
-const srcNodeRelPath = 'src/color-thief-node.js';
-const distNodeRelPath = 'dist/color-thief.js';
+const srcNodeRelPath = "src/color-thief.js";
+const distNodeRelPath = "dist/color-thief.js";
 const srcNodePath = resolve(process.cwd(), srcNodeRelPath);
 const distNodePath = resolve(process.cwd(), distNodeRelPath);
 
