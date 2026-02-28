@@ -1,6 +1,7 @@
 {
     "name": "colorthief",
-    "version": "2.7.0",
+    "version": "3.0.0",
+    "type": "module",
     "author": {
         "name": "Lokesh Dhakar",
         "email": "lokesh.dhakar@gmail.com",
@@ -14,7 +15,9 @@
         "image",
         "picture",
         "photo",
-        "canvas"
+        "canvas",
+        "oklch",
+        "swatch"
     ],
     "homepage": "http://lokeshdhakar.com/projects/color-thief/",
     "repository": {
@@ -26,34 +29,89 @@
         "dist/",
         "src/"
     ],
-    "source": "src/color-thief.js",
-    "main": "dist/color-thief.js",
-    "types": "dist/color-thief-node.d.ts",
-    "module": "dist/color-thief.mjs",
-    "umd:main": "dist/color-thief.umd.js",
-    "amdName": "ColorThief",
+    "exports": {
+        ".": {
+            "browser": {
+                "import": {
+                    "types": "./dist/types/index.d.ts",
+                    "default": "./dist/browser/index.js"
+                },
+                "require": {
+                    "types": "./dist/types/index.d.cts",
+                    "default": "./dist/browser/index.cjs"
+                }
+            },
+            "node": {
+                "import": {
+                    "types": "./dist/types/index.d.ts",
+                    "default": "./dist/node/index.js"
+                },
+                "require": {
+                    "types": "./dist/types/index.d.cts",
+                    "default": "./dist/node/index.cjs"
+                }
+            },
+            "default": "./dist/browser/index.js"
+        },
+        "./internals": {
+            "browser": {
+                "import": {
+                    "types": "./dist/types/internals.d.ts",
+                    "default": "./dist/browser/internals.js"
+                },
+                "require": {
+                    "types": "./dist/types/internals.d.cts",
+                    "default": "./dist/browser/internals.cjs"
+                }
+            },
+            "node": {
+                "import": {
+                    "types": "./dist/types/internals.d.ts",
+                    "default": "./dist/node/internals.js"
+                },
+                "require": {
+                    "types": "./dist/types/internals.d.cts",
+                    "default": "./dist/node/internals.cjs"
+                }
+            },
+            "default": "./dist/browser/internals.js"
+        }
+    },
+    "main": "./dist/node/index.cjs",
+    "module": "./dist/browser/index.js",
+    "types": "./dist/types/index.d.ts",
     "scripts": {
         "prepublishOnly": "npm run build",
-        "build": "microbundle --no-sourcemap && node ./build/build.js",
-        "watch": "microbundle watch --no-sourcemap",
+        "build": "tsup",
+        "watch": "tsup --watch",
         "dev": "http-server",
         "test": "mocha && cypress run --config video=false",
-        "test:browser": "./node_modules/.bin/cypress run --headed --browser chrome",
         "test:node": "mocha",
-        "cypress": "./node_modules/.bin/cypress open"
+        "test:browser": "./node_modules/.bin/cypress run --headed --browser chrome",
+        "cypress": "./node_modules/.bin/cypress open",
+        "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
+        "@types/node": "^20.11.0",
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
         "cypress": "^13.15.0",
         "http-server": "^14.1.1",
-        "microbundle": "^0.15.0",
         "mocha": "^10.2.0",
-        "mustache": "^3.0.1"
+        "mustache": "^3.0.1",
+        "sharp": "^0.34.5",
+        "tsup": "^8.0.0",
+        "typescript": "^5.3.0"
     },
     "dependencies": {
-        "@lokesh.dhakar/quantize": "^1.4.0",
-        "ndarray-pixels": "^4.1.0",
-        "sharp": "^0.33.5"
+        "@lokesh.dhakar/quantize": "^1.4.0"
+    },
+    "peerDependencies": {
+        "sharp": ">=0.33.0"
+    },
+    "peerDependenciesMeta": {
+        "sharp": {
+            "optional": true
+        }
     }
 }

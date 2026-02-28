@@ -1,63 +1,1105 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Color Thief v3 — Examples</title>
+    <style>
+        /* ------------------------------------------------------------------ */
+        /* Variables                                                           */
+        /* ------------------------------------------------------------------ */
+        :root {
+            --sans: 'Helvetica Neue', Helvetica, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Fira Code', Menlo, Consolas, 'Liberation Mono', monospace;
+            --text: #111;
+            --text-2: #444;
+            --text-3: #888;
+            --bg: #fff;
+            --surface: #f6f6f6;
+            --border: #e0e0e0;
+            --radius: 8px;
+            --container: 860px;
+        }
 
-	<title>Color Thief</title>
+        /* ------------------------------------------------------------------ */
+        /* Reset & base                                                        */
+        /* ------------------------------------------------------------------ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <meta name="description" content="Get the dominant color or color palette from an image.">
-  <meta name="author" content="Lokesh Dhakar">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+        body {
+            font-family: var(--sans);
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-  <link rel="stylesheet" href="examples/css/screen.css">
+        img { display: block; max-width: 100%; }
 
+        /* ------------------------------------------------------------------ */
+        /* Typography                                                          */
+        /* ------------------------------------------------------------------ */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            font-family: var(--mono);
+        }
+
+        h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-3);
+        }
+
+        p { color: var(--text-2); }
+
+        code, pre { font-family: var(--mono); }
+
+        /* ------------------------------------------------------------------ */
+        /* Layout                                                              */
+        /* ------------------------------------------------------------------ */
+        .container {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Header                                                              */
+        /* ------------------------------------------------------------------ */
+        .header {
+            padding: 80px 0 60px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header p {
+            margin-top: 8px;
+            font-size: 1.1rem;
+        }
+
+        .version {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.5em;
+            font-weight: 500;
+            vertical-align: super;
+            color: var(--text-3);
+            margin-left: 2px;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Sections                                                            */
+        /* ------------------------------------------------------------------ */
+        .section {
+            padding: 56px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section:last-child { border-bottom: none; }
+
+        .section-num {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-3);
+            background: var(--surface);
+            padding: 2px 10px;
+            border-radius: 99px;
+            margin-bottom: 12px;
+        }
+
+        .section h2 { margin-bottom: 6px; }
+
+        .section > p {
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Code blocks                                                         */
+        /* ------------------------------------------------------------------ */
+        .code-block {
+            background: var(--surface);
+            border-left: 3px solid var(--border);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.65;
+            color: var(--text-2);
+        }
+
+        .code-block code {
+            white-space: pre;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Output areas                                                        */
+        /* ------------------------------------------------------------------ */
+        .output {
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .output.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Demo images                                                         */
+        /* ------------------------------------------------------------------ */
+        .demo-img {
+            width: 100%;
+            max-width: 240px;
+            border-radius: var(--radius);
+            object-fit: cover;
+        }
+
+        .demo-img-sm {
+            width: 100%;
+            max-width: 180px;
+            border-radius: var(--radius);
+            object-fit: cover;
+        }
+
+        .source-img {
+            width: 100%;
+            max-width: 240px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Swatches                                                            */
+        /* ------------------------------------------------------------------ */
+        .swatch {
+            display: inline-block;
+            border-radius: 6px;
+            position: relative;
+            cursor: default;
+            transition: transform 0.15s ease;
+        }
+
+        .swatch:hover { transform: scale(1.08); }
+
+        .swatch-lg {
+            width: 64px;
+            height: 40px;
+        }
+
+        .swatch-md {
+            width: 48px;
+            height: 32px;
+        }
+
+        .swatch-sm {
+            width: 36px;
+            height: 24px;
+        }
+
+        .swatch[data-hex]::after {
+            content: attr(data-hex);
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--text-3);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.15s;
+            pointer-events: none;
+        }
+
+        .swatch:hover[data-hex]::after { opacity: 1; }
+
+        .swatch-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-bottom: 20px;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Dominant color cards                                                 */
+        /* ------------------------------------------------------------------ */
+        .dominant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .dominant-card { display: flex; flex-direction: column; gap: 12px; }
+
+        .dominant-result {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dominant-meta {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text-2);
+            line-height: 1.7;
+        }
+
+        .dominant-meta .hex { font-weight: 600; color: var(--text); }
+
+        .timing {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text-3);
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Property table                                                      */
+        /* ------------------------------------------------------------------ */
+        .prop-table {
+            width: 100%;
+            max-width: 560px;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .prop-table th {
+            text-align: left;
+            font-weight: 500;
+            font-family: var(--mono);
+            color: var(--text-3);
+            padding: 8px 16px 8px 0;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .prop-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .prop-table td:first-child {
+            font-family: var(--mono);
+            font-weight: 500;
+            padding-right: 24px;
+            white-space: nowrap;
+            color: var(--text-2);
+        }
+
+        .prop-table td:last-child {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+        }
+
+        .prop-table tr:last-child td { border-bottom: none; }
+
+        .prop-swatch {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Swatch role cards                                                   */
+        /* ------------------------------------------------------------------ */
+        .swatch-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .swatch-card {
+            border-radius: var(--radius);
+            padding: 20px 16px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .swatch-card-empty {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swatch-card .role {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .swatch-card .hex-label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        .swatch-card-empty .role {
+            font-size: 0.7rem;
+            color: var(--text-3);
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Comparison layouts                                                   */
+        /* ------------------------------------------------------------------ */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 600px) {
+            .comparison { grid-template-columns: 1fr; }
+        }
+
+        .comparison-col h3 { margin-bottom: 12px; }
+
+        /* ------------------------------------------------------------------ */
+        /* Quality rows                                                        */
+        /* ------------------------------------------------------------------ */
+        .quality-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+        }
+
+        .quality-row:not(:last-child) {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .quality-label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 500;
+            min-width: 100px;
+            color: var(--text-2);
+        }
+
+        .quality-swatches { display: flex; gap: 6px; flex: 1; flex-wrap: wrap; }
+
+        /* ------------------------------------------------------------------ */
+        /* Async comparison                                                    */
+        /* ------------------------------------------------------------------ */
+        .async-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .async-row:last-child { border-bottom: none; }
+
+        .async-label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 500;
+            min-width: 140px;
+            color: var(--text-2);
+        }
+
+        .async-swatches { display: flex; gap: 6px; flex: 1; flex-wrap: wrap; }
+
+        /* ------------------------------------------------------------------ */
+        /* Progressive                                                         */
+        /* ------------------------------------------------------------------ */
+        .progress-track {
+            height: 6px;
+            background: var(--surface);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            border-radius: 99px;
+            background: var(--text);
+            transition: width 0.3s ease, background 0.3s ease;
+        }
+
+        .progress-label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text-3);
+            margin-bottom: 6px;
+        }
+
+        .progressive-stage {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .progressive-stage:last-child { border-bottom: none; }
+
+        .progressive-stage .stage-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stage-badge {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: var(--surface);
+            padding: 2px 8px;
+            border-radius: 99px;
+            color: var(--text-3);
+        }
+
+        .stage-badge.final {
+            background: var(--text);
+            color: #fff;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Error box                                                           */
+        /* ------------------------------------------------------------------ */
+        .error-box {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            line-height: 1.6;
+        }
+
+        .error-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Create-color demo                                                   */
+        /* ------------------------------------------------------------------ */
+        .color-preview {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .color-preview-swatch {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .color-preview-hex {
+            font-family: var(--mono);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Footer                                                              */
+        /* ------------------------------------------------------------------ */
+        .footer {
+            padding: 40px 0 60px;
+            text-align: center;
+        }
+
+        .footer a {
+            color: var(--text-3);
+            text-decoration: none;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1px;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .footer a:hover { color: var(--text); border-color: var(--text); }
+
+        /* ------------------------------------------------------------------ */
+        /* Responsive                                                          */
+        /* ------------------------------------------------------------------ */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.75rem; }
+            .header { padding: 48px 0 40px; }
+            .section { padding: 40px 0; }
+            .dominant-grid { grid-template-columns: 1fr; }
+            .swatch-cards { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
 </head>
 <body>
 
-  <div id="example-images"></div>
-
-    <script id='image-tpl' type='text/x-mustache'>
-        {{#.}}
-            <div class="image-section" data-image="{{.}}">
-                <h2>{{.}}</h2>
-                <img class="image" src="./examples/img/{{.}}" />
-                <div class="output"></div>
-            </div>
-        {{/.}}
-    </script>
-
-    <script id="color-tpl" type="text/x-mustache">
-        <div class="color">
-            <h3>getColor(img)</h3>
-            <div class="swatches">
-                <div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>
-            </div>
-            <code>
-                <div class="output-color">{{colorStr}}</div>
-                <div class="time">{{elapsedTime}}ms</div>
-            </code>
+    <!-- ================================================================== -->
+    <!-- Header                                                              -->
+    <!-- ================================================================== -->
+    <header class="header">
+        <div class="container">
+            <h1>Color Thief <span class="version">v3</span></h1>
+            <p>Extract dominant colors and palettes from images. Every example on this page runs live.</p>
         </div>
-    </script>
+    </header>
 
-    <script id="palette-tpl" type="text/x-mustache">
-        <div class="palette" data-count="{{count}}">
-            <h3>getPalette(img, {{count}})</h3>
-            <div class="swatches">
-                {{#palette}}
-                    <div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>
-                {{/palette}}
+    <main class="container">
+
+        <!-- ============================================================== -->
+        <!-- 01. getColorSync                                                -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">01</span>
+            <h2>getColorSync()</h2>
+            <p>The simplest way to use Color Thief. Extract the single dominant color from an image, synchronously.</p>
+
+            <div class="code-block"><code>const color = getColorSync(img);
+color.hex();       // '#e84393'
+color.textColor;   // '#000000'</code></div>
+
+            <div class="output" id="out-dominant">
+                <div class="dominant-grid">
+                    <div class="dominant-card">
+                        <img class="demo-img" id="img1" src="examples/img/image-1.jpg" alt="Example 1">
+                        <div class="dominant-result" id="dom-result-1"></div>
+                    </div>
+                    <div class="dominant-card">
+                        <img class="demo-img" id="img2" src="examples/img/image-2.jpg" alt="Example 2">
+                        <div class="dominant-result" id="dom-result-2"></div>
+                    </div>
+                    <div class="dominant-card">
+                        <img class="demo-img" id="img3" src="examples/img/image-3.jpg" alt="Example 3">
+                        <div class="dominant-result" id="dom-result-3"></div>
+                    </div>
+                </div>
             </div>
-            <code>
-                <div class="output-palette">{{paletteStr}}</div>
-                <div class="time">{{elapsedTime}}ms</div>
-            </code>
-        </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 02. getPaletteSync                                              -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">02</span>
+            <h2>getPaletteSync()</h2>
+            <p>Extract a multi-color palette. Each color in the palette is a full Color object.</p>
+
+            <div class="code-block"><code>const palette = getPaletteSync(img, { colorCount: 8 });
+palette.forEach(c => console.log(c.hex()));</code></div>
+
+            <div class="output" id="out-palette">
+                <img class="source-img" src="examples/img/image-1.jpg" alt="Source image">
+                <div class="swatch-row" id="palette-swatches"></div>
+                <div class="timing" id="palette-timing"></div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 03. Color Object                                                -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">03</span>
+            <h2>Color Object</h2>
+            <p>Every extracted color is a rich object with format conversions, accessibility metadata, and contrast ratios.</p>
+
+            <div class="code-block"><code>const color = getColorSync(img);
+
+color.rgb()        // { r, g, b }
+color.hex()        // '#rrggbb'
+color.hsl()        // { h, s, l }
+color.oklch()      // { l, c, h }
+color.array()      // [r, g, b]
+color.toString()   // '#rrggbb' — works in template literals
+color.textColor    // '#ffffff' or '#000000'
+color.isDark       // true/false
+color.isLight      // true/false
+color.contrast     // { white, black, foreground }</code></div>
+
+            <div class="output" id="out-color-obj">
+                <img class="source-img" src="examples/img/image-1.jpg" alt="Source image">
+                <div class="color-preview" id="color-preview"></div>
+                <table class="prop-table" id="prop-table"></table>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 04. getSwatchesSync                                             -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">04</span>
+            <h2>getSwatchesSync()</h2>
+            <p>Classify palette colors into six semantic roles: Vibrant, Muted, DarkVibrant, DarkMuted, LightVibrant, LightMuted. Each swatch includes text color recommendations.</p>
+
+            <div class="code-block"><code>const swatches = getSwatchesSync(img);
+swatches.Vibrant?.color.hex();          // '#e84393'
+swatches.DarkMuted?.titleTextColor.hex(); // '#ffffff'</code></div>
+
+            <div class="output" id="out-swatches">
+                <img class="source-img" src="examples/img/image-2.jpg" alt="Source image">
+                <div class="swatch-cards" id="swatch-cards"></div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 05. OKLCH vs RGB                                                -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">05</span>
+            <h2>OKLCH vs RGB Quantization</h2>
+            <p>OKLCH quantization produces more perceptually uniform palettes. Colors that "feel" evenly spaced to the human eye.</p>
+
+            <div class="code-block"><code>// Default — quantize in sRGB
+const rgb = getPaletteSync(img, { colorCount: 8 });
+
+// Perceptual — quantize in OKLCH
+const oklch = getPaletteSync(img, { colorCount: 8, colorSpace: 'oklch' });</code></div>
+
+            <div class="output" id="out-oklch">
+                <img class="source-img" src="examples/img/image-3.jpg" alt="Source image">
+                <div class="comparison">
+                    <div class="comparison-col">
+                        <h3>RGB (default)</h3>
+                        <div class="swatch-row" id="oklch-rgb"></div>
+                    </div>
+                    <div class="comparison-col">
+                        <h3>OKLCH</h3>
+                        <div class="swatch-row" id="oklch-oklch"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 06. Quality comparison                                          -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">06</span>
+            <h2>Quality Settings</h2>
+            <p>The <code>quality</code> option controls how many pixels are sampled. Lower values sample more pixels (slower, more accurate). Default is 10.</p>
+
+            <div class="code-block"><code>getPaletteSync(img, { quality: 1 });   // Every pixel
+getPaletteSync(img, { quality: 10 });  // Every 10th pixel (default)
+getPaletteSync(img, { quality: 50 });  // Every 50th pixel</code></div>
+
+            <div class="output" id="out-quality">
+                <img class="source-img" src="examples/img/image-1.jpg" alt="Source image">
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 07. Async API & Workers                                         -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">07</span>
+            <h2>Async API &amp; Web Workers</h2>
+            <p>The async API works on both browser and Node.js. With <code>worker: true</code>, quantization runs off the main thread.</p>
+
+            <div class="code-block"><code>// Async (works in browser and Node.js)
+const palette = await getPalette(img, { colorCount: 6 });
+
+// Offload to Web Worker (browser only)
+const palette = await getPalette(img, { colorCount: 6, worker: true });</code></div>
+
+            <div class="output" id="out-async">
+                <img class="source-img" src="examples/img/image-1.jpg" alt="Source image">
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 08. Progressive extraction                                      -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">08</span>
+            <h2>getPaletteProgressive()</h2>
+            <p>Progressively extract a palette in 3 passes. Show a rough result instantly, then refine it. Useful for large images where full extraction takes time.</p>
+
+            <div class="code-block"><code>for await (const { palette, progress, done } of getPaletteProgressive(img)) {
+    updateUI(palette, progress);
+    // progress: 0.06 → 0.25 → 1.0
+}</code></div>
+
+            <div class="output" id="out-progressive">
+                <img class="source-img" src="examples/img/image-2.jpg" alt="Source image">
+                <div class="progress-track">
+                    <div class="progress-fill" id="prog-fill"></div>
+                </div>
+                <div id="prog-stages"></div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 09. AbortController                                             -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">09</span>
+            <h2>AbortController</h2>
+            <p>Cancel in-flight extractions with a standard AbortSignal. Useful when the user navigates away before extraction completes.</p>
+
+            <div class="code-block"><code>const controller = new AbortController();
+controller.abort(); // cancel immediately
+
+try {
+    await getColor(img, { signal: controller.signal });
+} catch (e) {
+    console.log(e.name); // 'AbortError'
+}</code></div>
+
+            <div class="output" id="out-abort">
+                <img class="source-img" src="examples/img/image-1.jpg" alt="Source image">
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 10. createColor                                                 -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">10</span>
+            <h2>createColor()</h2>
+            <p>Build a Color object manually from RGB values. Useful for creating colors programmatically or working with known values.</p>
+
+            <div class="code-block"><code>const color = createColor(232, 67, 147, 1);
+color.hex();       // '#e84393'
+color.isDark;      // false
+color.textColor;   // '#000000'
+`${color}`;        // '#e84393' — toString() returns hex</code></div>
+
+            <div class="output" id="out-create">
+                <div class="color-preview" id="create-preview"></div>
+                <table class="prop-table" id="create-table"></table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <a href="https://github.com/lokesh/color-thief">github.com/lokesh/color-thief</a>
+    </footer>
+
+    <!-- ================================================================== -->
+    <!-- Library + Demo Script                                               -->
+    <!-- ================================================================== -->
+    <script src="dist/umd/color-thief.global.js"></script>
+    <script>
+    (async () => {
+        const {
+            getColorSync,
+            getPaletteSync,
+            getSwatchesSync,
+            getColor,
+            getPalette,
+            getPaletteProgressive,
+            createColor,
+        } = ColorThief;
+
+        // ------------------------------------------------------------------
+        // Helpers
+        // ------------------------------------------------------------------
+
+        function waitForImage(img) {
+            return new Promise((resolve, reject) => {
+                if (img.complete && img.naturalWidth) resolve(img);
+                else {
+                    img.addEventListener('load', () => resolve(img));
+                    img.addEventListener('error', reject);
+                }
+            });
+        }
+
+        function timed(fn) {
+            const t0 = performance.now();
+            const result = fn();
+            return { result, ms: (performance.now() - t0).toFixed(1) };
+        }
+
+        async function timedAsync(fn) {
+            const t0 = performance.now();
+            const result = await fn();
+            return { result, ms: (performance.now() - t0).toFixed(1) };
+        }
+
+        function show(id) {
+            document.getElementById(id).classList.add('visible');
+        }
+
+        function swatchHTML(color, size = 'md') {
+            return `<div class="swatch swatch-${size}" style="background:${color.hex()}" data-hex="${color.hex()}"></div>`;
+        }
+
+        function renderColorTable(color, tableId) {
+            const { r, g, b } = color.rgb();
+            const hsl = color.hsl();
+            const oklch = color.oklch();
+            const rows = [
+                ['.rgb()', `{ r: ${r}, g: ${g}, b: ${b} }`],
+                ['.hex()', color.hex()],
+                ['.hsl()', `{ h: ${hsl.h}, s: ${hsl.s}, l: ${hsl.l} }`],
+                ['.oklch()', `{ l: ${oklch.l.toFixed(3)}, c: ${oklch.c.toFixed(3)}, h: ${oklch.h.toFixed(1)} }`],
+                ['.array()', `[${color.array().join(', ')}]`],
+                ['.toString()', `"${color.toString()}"`],
+                ['.textColor', `<span class="prop-swatch" style="background:${color.textColor}"></span>${color.textColor}`],
+                ['.isDark', String(color.isDark)],
+                ['.isLight', String(color.isLight)],
+                ['.population', String(color.population)],
+                ['.contrast.white', color.contrast.white.toFixed(2)],
+                ['.contrast.black', color.contrast.black.toFixed(2)],
+                ['.contrast.foreground', `<span class="prop-swatch" style="background:${color.contrast.foreground.hex()}"></span>${color.contrast.foreground.hex()}`],
+            ];
+
+            document.getElementById(tableId).innerHTML =
+                '<thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>' +
+                rows.map(([prop, val]) => `<tr><td>${prop}</td><td>${val}</td></tr>`).join('') +
+                '</tbody>';
+        }
+
+        // ------------------------------------------------------------------
+        // Wait for images
+        // ------------------------------------------------------------------
+        const img1 = document.getElementById('img1');
+        const img2 = document.getElementById('img2');
+        const img3 = document.getElementById('img3');
+
+        await Promise.all([waitForImage(img1), waitForImage(img2), waitForImage(img3)]);
+
+        // ------------------------------------------------------------------
+        // 01. getColorSync — Dominant Color
+        // ------------------------------------------------------------------
+        {
+            [
+                [img1, 'dom-result-1'],
+                [img2, 'dom-result-2'],
+                [img3, 'dom-result-3'],
+            ].forEach(([img, id]) => {
+                const { result: color, ms } = timed(() => getColorSync(img));
+                if (!color) return;
+                const { r, g, b } = color.rgb();
+                document.getElementById(id).innerHTML =
+                    swatchHTML(color, 'lg') +
+                    `<div class="dominant-meta">
+                        <span class="hex">${color.hex()}</span><br>
+                        rgb(${r}, ${g}, ${b})<br>
+                        <span class="timing">${ms}ms</span>
+                    </div>`;
+            });
+            show('out-dominant');
+        }
+
+        // ------------------------------------------------------------------
+        // 02. getPaletteSync — Palette
+        // ------------------------------------------------------------------
+        {
+            const { result: palette, ms } = timed(() => getPaletteSync(img1, { colorCount: 8 }));
+            if (palette) {
+                document.getElementById('palette-swatches').innerHTML =
+                    palette.map(c => swatchHTML(c, 'lg')).join('');
+                document.getElementById('palette-timing').textContent = `${ms}ms`;
+            }
+            show('out-palette');
+        }
+
+        // ------------------------------------------------------------------
+        // 03. Color Object
+        // ------------------------------------------------------------------
+        {
+            const color = getColorSync(img1);
+            if (color) {
+                document.getElementById('color-preview').innerHTML =
+                    `<div class="color-preview-swatch" style="background:${color.hex()};color:${color.textColor}">Aa</div>
+                     <div class="color-preview-hex">${color.hex()}</div>`;
+                renderColorTable(color, 'prop-table');
+            }
+            show('out-color-obj');
+        }
+
+        // ------------------------------------------------------------------
+        // 04. Semantic Swatches
+        // ------------------------------------------------------------------
+        {
+            const { result: swatches, ms } = timed(() => getSwatchesSync(img2));
+            const roles = ['Vibrant', 'Muted', 'DarkVibrant', 'DarkMuted', 'LightVibrant', 'LightMuted'];
+            document.getElementById('swatch-cards').innerHTML = roles.map(role => {
+                const s = swatches[role];
+                if (!s) {
+                    return `<div class="swatch-card swatch-card-empty"><span class="role">${role}</span></div>`;
+                }
+                return `<div class="swatch-card" style="background:${s.color.hex()}">
+                    <span class="role" style="color:${s.titleTextColor.hex()}">${role}</span>
+                    <span class="hex-label" style="color:${s.bodyTextColor.hex()}">${s.color.hex()}</span>
+                </div>`;
+            }).join('');
+            show('out-swatches');
+        }
+
+        // ------------------------------------------------------------------
+        // 05. OKLCH vs RGB
+        // ------------------------------------------------------------------
+        {
+            const rgb = getPaletteSync(img3, { colorCount: 8 });
+            const oklch = getPaletteSync(img3, { colorCount: 8, colorSpace: 'oklch' });
+            if (rgb) {
+                document.getElementById('oklch-rgb').innerHTML = rgb.map(c => swatchHTML(c, 'lg')).join('');
+            }
+            if (oklch) {
+                document.getElementById('oklch-oklch').innerHTML = oklch.map(c => swatchHTML(c, 'lg')).join('');
+            }
+            show('out-oklch');
+        }
+
+        // ------------------------------------------------------------------
+        // 06. Quality
+        // ------------------------------------------------------------------
+        {
+            const quals = [1, 10, 50];
+            const container = document.getElementById('out-quality');
+            container.insertAdjacentHTML('beforeend', quals.map(q => {
+                const { result: pal, ms } = timed(() => getPaletteSync(img1, { colorCount: 6, quality: q }));
+                return `<div class="quality-row">
+                    <div class="quality-label">quality: ${q} <span class="timing">${ms}ms</span></div>
+                    <div class="quality-swatches">${pal ? pal.map(c => swatchHTML(c, 'md')).join('') : ''}</div>
+                </div>`;
+            }).join(''));
+            show('out-quality');
+        }
+
+        // ------------------------------------------------------------------
+        // 07. Async + Workers
+        // ------------------------------------------------------------------
+        {
+            const container = document.getElementById('out-async');
+            const rows = [];
+
+            // Sync
+            const sync = timed(() => getPaletteSync(img1, { colorCount: 6 }));
+            rows.push({
+                label: 'Sync',
+                palette: sync.result,
+                ms: sync.ms,
+            });
+
+            // Async
+            const async_ = await timedAsync(() => getPalette(img1, { colorCount: 6 }));
+            rows.push({
+                label: 'Async',
+                palette: async_.result,
+                ms: async_.ms,
+            });
+
+            // Worker
+            try {
+                const worker = await timedAsync(() => getPalette(img1, { colorCount: 6, worker: true }));
+                rows.push({
+                    label: 'Async + Worker',
+                    palette: worker.result,
+                    ms: worker.ms,
+                });
+            } catch (e) {
+                rows.push({
+                    label: 'Async + Worker',
+                    palette: null,
+                    ms: 'unsupported',
+                });
+            }
+
+            container.insertAdjacentHTML('beforeend', rows.map(({ label, palette, ms }) =>
+                `<div class="async-row">
+                    <div class="async-label">${label} <span class="timing">${ms}ms</span></div>
+                    <div class="async-swatches">${palette ? palette.map(c => swatchHTML(c, 'sm')).join('') : '<span class="timing">Not available</span>'}</div>
+                </div>`
+            ).join(''));
+            show('out-async');
+        }
+
+        // ------------------------------------------------------------------
+        // 08. Progressive
+        // ------------------------------------------------------------------
+        {
+            const fill = document.getElementById('prog-fill');
+            const stages = document.getElementById('prog-stages');
+            let stageIdx = 0;
+            const labels = ['Rough (16x skip)', 'Medium (4x skip)', 'Final (full quality)'];
+
+            for await (const { palette, progress, done } of getPaletteProgressive(img2, { colorCount: 6 })) {
+                fill.style.width = `${progress * 100}%`;
+                if (done) fill.style.background = '#16a34a';
+
+                const badgeClass = done ? 'stage-badge final' : 'stage-badge';
+                const html = `<div class="progressive-stage">
+                    <div class="stage-header">
+                        <span class="${badgeClass}">${labels[stageIdx]}</span>
+                        <span class="timing">${(progress * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="swatch-row">${palette.map(c => swatchHTML(c, 'md')).join('')}</div>
+                </div>`;
+
+                stages.innerHTML += html;
+                stageIdx++;
+            }
+            show('out-progressive');
+        }
+
+        // ------------------------------------------------------------------
+        // 09. AbortController
+        // ------------------------------------------------------------------
+        {
+            const controller = new AbortController();
+            controller.abort();
+
+            try {
+                await getColor(img1, { signal: controller.signal });
+                document.getElementById('out-abort').insertAdjacentHTML('beforeend',
+                    '<div class="error-box">Expected an error, but the call succeeded.</div>');
+            } catch (e) {
+                document.getElementById('out-abort').insertAdjacentHTML('beforeend',
+                    `<div class="error-box">
+                        <strong>Caught error:</strong>
+                        ${e.name || 'Error'}: ${e.message || 'The operation was aborted.'}
+                    </div>`);
+            }
+            show('out-abort');
+        }
+
+        // ------------------------------------------------------------------
+        // 10. createColor
+        // ------------------------------------------------------------------
+        {
+            const color = createColor(232, 67, 147, 1);
+            document.getElementById('create-preview').innerHTML =
+                `<div class="color-preview-swatch" style="background:${color.hex()};color:${color.textColor}">Aa</div>
+                 <div class="color-preview-hex">${color.hex()}</div>`;
+            renderColorTable(color, 'create-table');
+            show('out-create');
+        }
+
+    })();
     </script>
-
-  <script src="dist/color-thief.umd.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-  <script src="examples/js/demo.js"></script>
-
 </body>
 </html>

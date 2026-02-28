@@ -18,3 +18,4 @@ dist
 
 .idea
 CLAUDE.md
+*.tsbuildinfo
