@@ -1,2 +1,2 @@
-spec: test/**/*.js
+spec: test/**/*.{js,cjs}
 timeout: 10000

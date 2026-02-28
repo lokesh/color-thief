@@ -577,10 +577,39 @@
     <main class="container">
 
         <!-- ============================================================== -->
-        <!-- 01. getColorSync                                                -->
+        <!-- 01. Loading the Library                                        -->
         <!-- ============================================================== -->
         <section class="section">
             <span class="section-num">01</span>
+            <h2>Loading the Library</h2>
+            <p>Color Thief works in browsers and Node.js. Pick the method that fits your setup.</p>
+
+            <h3>Install</h3>
+            <div class="code-block"><code>npm install colorthief</code></div>
+
+            <h3>ESM (bundlers &amp; Node.js)</h3>
+            <div class="code-block"><code>import { getColorSync, getPaletteSync } from 'colorthief';</code></div>
+
+            <h3>CommonJS (Node.js)</h3>
+            <div class="code-block"><code>const { getColor, getPalette } = require('colorthief');</code></div>
+
+            <h3>Script tag (no build step)</h3>
+            <div class="code-block"><code>&lt;script src="https://unpkg.com/colorthief@3/dist/umd/color-thief.global.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    const color = ColorThief.getColorSync(img);
+&lt;/script&gt;</code></div>
+
+            <h3>ES module in the browser (no bundler)</h3>
+            <div class="code-block"><code>&lt;script type="module"&gt;
+    import { getColorSync } from 'https://unpkg.com/colorthief@3/dist/index.js';
+&lt;/script&gt;</code></div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 02. getColorSync                                                -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">02</span>
             <h2>getColorSync()</h2>
             <p>The simplest way to use Color Thief. Extract the single dominant color from an image, synchronously.</p>
 
@@ -607,10 +636,10 @@ color.textColor;   // '#000000'</code></div>
         </section>
 
         <!-- ============================================================== -->
-        <!-- 02. getPaletteSync                                              -->
+        <!-- 03. getPaletteSync                                              -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">02</span>
+            <span class="section-num">03</span>
             <h2>getPaletteSync()</h2>
             <p>Extract a multi-color palette. Each color in the palette is a full Color object.</p>
 
@@ -625,10 +654,10 @@ palette.forEach(c => console.log(c.hex()));</code></div>
         </section>
 
         <!-- ============================================================== -->
-        <!-- 03. Color Object                                                -->
+        <!-- 04. Color Object                                                -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">03</span>
+            <span class="section-num">04</span>
             <h2>Color Object</h2>
             <p>Every extracted color is a rich object with format conversions, accessibility metadata, and contrast ratios.</p>
 
@@ -653,10 +682,10 @@ color.contrast     // { white, black, foreground }</code></div>
         </section>
 
         <!-- ============================================================== -->
-        <!-- 04. getSwatchesSync                                             -->
+        <!-- 05. getSwatchesSync                                             -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">04</span>
+            <span class="section-num">05</span>
             <h2>getSwatchesSync()</h2>
             <p>Classify palette colors into six semantic roles: Vibrant, Muted, DarkVibrant, DarkMuted, LightVibrant, LightMuted. Each swatch includes text color recommendations.</p>
 
@@ -671,10 +700,10 @@ swatches.DarkMuted?.titleTextColor.hex(); // '#ffffff'</code></div>
         </section>
 
         <!-- ============================================================== -->
-        <!-- 05. OKLCH vs RGB                                                -->
+        <!-- 06. OKLCH vs RGB                                                -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">05</span>
+            <span class="section-num">06</span>
             <h2>OKLCH vs RGB Quantization</h2>
             <p>OKLCH quantization produces more perceptually uniform palettes. Colors that "feel" evenly spaced to the human eye.</p>
 
@@ -700,10 +729,10 @@ const oklch = getPaletteSync(img, { colorCount: 8, colorSpace: 'oklch' });</code
         </section>
 
         <!-- ============================================================== -->
-        <!-- 06. Quality comparison                                          -->
+        <!-- 07. Quality comparison                                          -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">06</span>
+            <span class="section-num">07</span>
             <h2>Quality Settings</h2>
             <p>The <code>quality</code> option controls how many pixels are sampled. Lower values sample more pixels (slower, more accurate). Default is 10.</p>
 
@@ -717,10 +746,10 @@ getPaletteSync(img, { quality: 50 });  // Every 50th pixel</code></div>
         </section>
 
         <!-- ============================================================== -->
-        <!-- 07. Async API & Workers                                         -->
+        <!-- 08. Async API & Workers                                         -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">07</span>
+            <span class="section-num">08</span>
             <h2>Async API &amp; Web Workers</h2>
             <p>The async API works on both browser and Node.js. With <code>worker: true</code>, quantization runs off the main thread.</p>
 
@@ -736,10 +765,10 @@ const palette = await getPalette(img, { colorCount: 6, worker: true });</code></
         </section>
 
         <!-- ============================================================== -->
-        <!-- 08. Progressive extraction                                      -->
+        <!-- 09. Progressive extraction                                      -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">08</span>
+            <span class="section-num">09</span>
             <h2>getPaletteProgressive()</h2>
             <p>Progressively extract a palette in 3 passes. Show a rough result instantly, then refine it. Useful for large images where full extraction takes time.</p>
 
@@ -758,10 +787,10 @@ const palette = await getPalette(img, { colorCount: 6, worker: true });</code></
         </section>
 
         <!-- ============================================================== -->
-        <!-- 09. AbortController                                             -->
+        <!-- 10. AbortController                                             -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">09</span>
+            <span class="section-num">10</span>
             <h2>AbortController</h2>
             <p>Cancel in-flight extractions with a standard AbortSignal. Useful when the user navigates away before extraction completes.</p>
 
@@ -780,10 +809,10 @@ try {
         </section>
 
         <!-- ============================================================== -->
-        <!-- 10. createColor                                                 -->
+        <!-- 11. createColor                                                 -->
         <!-- ============================================================== -->
         <section class="section">
-            <span class="section-num">10</span>
+            <span class="section-num">11</span>
             <h2>createColor()</h2>
             <p>Build a Color object manually from RGB values. Useful for creating colors programmatically or working with known values.</p>
 
@@ -891,7 +920,7 @@ color.textColor;   // '#000000'
         await Promise.all([waitForImage(img1), waitForImage(img2), waitForImage(img3)]);
 
         // ------------------------------------------------------------------
-        // 01. getColorSync — Dominant Color
+        // 02. getColorSync — Dominant Color
         // ------------------------------------------------------------------
         {
             [
@@ -914,7 +943,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 02. getPaletteSync — Palette
+        // 03. getPaletteSync — Palette
         // ------------------------------------------------------------------
         {
             const { result: palette, ms } = timed(() => getPaletteSync(img1, { colorCount: 8 }));
@@ -927,7 +956,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 03. Color Object
+        // 04. Color Object
         // ------------------------------------------------------------------
         {
             const color = getColorSync(img1);
@@ -941,7 +970,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 04. Semantic Swatches
+        // 05. Semantic Swatches
         // ------------------------------------------------------------------
         {
             const { result: swatches, ms } = timed(() => getSwatchesSync(img2));
@@ -960,7 +989,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 05. OKLCH vs RGB
+        // 06. OKLCH vs RGB
         // ------------------------------------------------------------------
         {
             const rgb = getPaletteSync(img3, { colorCount: 8 });
@@ -975,7 +1004,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 06. Quality
+        // 07. Quality
         // ------------------------------------------------------------------
         {
             const quals = [1, 10, 50];
@@ -991,7 +1020,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 07. Async + Workers
+        // 08. Async + Workers
         // ------------------------------------------------------------------
         {
             const container = document.getElementById('out-async');
@@ -1039,7 +1068,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 08. Progressive
+        // 09. Progressive
         // ------------------------------------------------------------------
         {
             const fill = document.getElementById('prog-fill');
@@ -1067,7 +1096,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 09. AbortController
+        // 10. AbortController
         // ------------------------------------------------------------------
         {
             const controller = new AbortController();
@@ -1088,7 +1117,7 @@ color.textColor;   // '#000000'
         }
 
         // ------------------------------------------------------------------
-        // 10. createColor
+        // 11. createColor
         // ------------------------------------------------------------------
         {
             const color = createColor(232, 67, 147, 1);

@@ -1,6 +1,3 @@
-var colorThief = new ColorThief();
-
-
 var images = [
     'black.png',
     'red.png',
@@ -17,27 +14,29 @@ document.getElementById('example-images').innerHTML = examplesHTML;
 // Run Color Thief functions and display results below image.
 // We also log execution time of functions for display.
 const showColorsForImage = function(image, section) {
-    // getColor(img)
+    // getColorSync(img)
     let start = Date.now();
-    let result = colorThief.getColor(image);
+    let result = ColorThief.getColorSync(image);
     let elapsedTime = Date.now() - start;
+    const rgb = result ? result.array() : null;
     const colorHTML = Mustache.to_html(document.getElementById('color-tpl').innerHTML, {
-        color: result,
-        colorStr: result ? result.toString() : 'null',
+        color: rgb,
+        colorStr: rgb ? rgb.toString() : 'null',
         elapsedTime
     })
 
-    // getPalette(img)
+    // getPaletteSync(img, { colorCount })
     let paletteHTML = '';
     let colorCounts = [2, 3, 5, 7, 10, 20];
     colorCounts.forEach((count) => {
         let start = Date.now();
-        let result = colorThief.getPalette(image, count);
+        let result = ColorThief.getPaletteSync(image, { colorCount: count });
         let elapsedTime = Date.now() - start;
+        const rgbPalette = result ? result.map(c => c.array()) : null;
         paletteHTML += Mustache.to_html(document.getElementById('palette-tpl').innerHTML, {
             count,
-            palette: result,
-            paletteStr: result ? result.toString() : 'null',
+            palette: rgbPalette,
+            paletteStr: rgbPalette ? rgbPalette.toString() : 'null',
             elapsedTime
         })
     });

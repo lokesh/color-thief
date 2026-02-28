@@ -8,7 +8,7 @@ function rgbCount(text) {
     return vals.length / 3
 }
 
-describe('getColor()', { testIsolation: false }, function() {
+describe('getColorSync()', { testIsolation: false }, function() {
     before(function() {
         cy.visit('http://localhost:8080/cypress/test-pages/index.html');
     })
@@ -66,7 +66,7 @@ function testPaletteCount(num) {
     })
 }
 
-describe('getPalette()', function() {
+describe('getPaletteSync()', function() {
     beforeEach(function() {
         cy.visit('http://localhost:8080/cypress/test-pages/index.html');
     })

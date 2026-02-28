@@ -31,54 +31,28 @@
     ],
     "exports": {
         ".": {
-            "browser": {
-                "import": {
-                    "types": "./dist/types/index.d.ts",
-                    "default": "./dist/browser/index.js"
-                },
-                "require": {
-                    "types": "./dist/types/index.d.cts",
-                    "default": "./dist/browser/index.cjs"
-                }
+            "import": {
+                "types": "./dist/types/index.d.ts",
+                "default": "./dist/index.js"
             },
-            "node": {
-                "import": {
-                    "types": "./dist/types/index.d.ts",
-                    "default": "./dist/node/index.js"
-                },
-                "require": {
-                    "types": "./dist/types/index.d.cts",
-                    "default": "./dist/node/index.cjs"
-                }
-            },
-            "default": "./dist/browser/index.js"
+            "require": {
+                "types": "./dist/types/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
         },
         "./internals": {
-            "browser": {
-                "import": {
-                    "types": "./dist/types/internals.d.ts",
-                    "default": "./dist/browser/internals.js"
-                },
-                "require": {
-                    "types": "./dist/types/internals.d.cts",
-                    "default": "./dist/browser/internals.cjs"
-                }
+            "import": {
+                "types": "./dist/types/internals.d.ts",
+                "default": "./dist/internals.js"
             },
-            "node": {
-                "import": {
-                    "types": "./dist/types/internals.d.ts",
-                    "default": "./dist/node/internals.js"
-                },
-                "require": {
-                    "types": "./dist/types/internals.d.cts",
-                    "default": "./dist/node/internals.cjs"
-                }
-            },
-            "default": "./dist/browser/internals.js"
+            "require": {
+                "types": "./dist/types/internals.d.cts",
+                "default": "./dist/internals.cjs"
+            }
         }
     },
-    "main": "./dist/node/index.cjs",
-    "module": "./dist/browser/index.js",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
     "types": "./dist/types/index.d.ts",
     "scripts": {
         "prepublishOnly": "npm run build",
@@ -102,9 +76,6 @@
         "sharp": "^0.34.5",
         "tsup": "^8.0.0",
         "typescript": "^5.3.0"
-    },
-    "dependencies": {
-        "@lokesh.dhakar/quantize": "^1.4.0"
     },
     "peerDependencies": {
         "sharp": ">=0.33.0"

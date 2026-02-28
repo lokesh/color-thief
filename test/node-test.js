@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
-import { getColor, getPalette, getSwatches, getPaletteProgressive, createColor } from '../dist/node/index.js';
-import { rgbToOklch, oklchToRgb } from '../dist/node/internals.js';
+import { getColor, getPalette, getSwatches, getPaletteProgressive, createColor } from '../dist/index.js';
+import { rgbToOklch, oklchToRgb } from '../dist/internals.js';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
