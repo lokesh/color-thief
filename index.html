@@ -560,6 +560,90 @@
             .dominant-grid { grid-template-columns: 1fr; }
             .swatch-cards { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* ------------------------------------------------------------------ */
+        /* Observe / video glow                                                */
+        /* ------------------------------------------------------------------ */
+        .video-glow-wrap {
+            position: relative;
+            border-radius: var(--radius);
+            max-width: 320px;
+            margin-bottom: 36px;
+        }
+
+        .video-glow-wrap::before {
+            content: '';
+            position: absolute;
+            left: -20%;
+            top: -20%;
+            width: 110%;
+            height: 110%;
+            inset: 4px;
+            border-radius: inherit;
+            background: var(--glow-color, transparent);
+            filter: blur(36px) saturate(1.8);
+            opacity: 1;
+            z-index: 0;
+            transition: background 1s ease;
+        }
+
+        .video-glow-wrap video {
+            position: relative;
+            display: block;
+            width: 100%;
+            border-radius: inherit;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .video-play-btn {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.25s ease;
+        }
+
+        .video-play-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .observe-dominant {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            min-height: 48px;
+        }
+
+        .observe-dominant-swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            flex-shrink: 0;
+        }
+
+        .observe-dominant-meta {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .observe-label {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-3);
+            margin-bottom: 6px;
+        }
     </style>
 </head>
 <body>
@@ -831,6 +915,43 @@ color.textColor;   // '#000000'
             </div>
         </section>
 
+        <!-- ============================================================== -->
+        <!-- 12. observe — Live Extraction                                   -->
+        <!-- ============================================================== -->
+        <section class="section">
+            <span class="section-num">12</span>
+            <h2>observe()</h2>
+            <p>Reactively watch a source and get palette updates whenever it changes. Works with <code>&lt;video&gt;</code>, <code>&lt;canvas&gt;</code>, and <code>&lt;img&gt;</code> elements. For video, extraction runs on each animation frame (throttled) while playing, and on seek. For canvas, it polls via rAF. For images, it uses a MutationObserver to detect <code>src</code> changes.</p>
+
+            <div class="code-block"><code>const controller = observe(videoElement, {
+    throttle: 200,    // ms between updates
+    colorCount: 5,
+    onChange(palette) {
+        const dominant = palette[0];
+        document.body.style.background = dominant.css();
+    },
+});
+
+controller.stop(); // clean up</code></div>
+
+            <div class="output" id="out-observe" style="margin-top:48px">
+                <div>
+                    <div class="video-glow-wrap" id="video-glow-wrap">
+                        <video id="observe-video" src="examples/video/colors.mp4" muted loop playsinline></video>
+                        <button class="video-play-btn" id="video-play-btn" aria-label="Play video">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="rgba(0,0,0,0.5)"/><polygon points="19,14 19,34 36,24" fill="#fff"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="observe-label">Dominant</div>
+                    <div class="observe-dominant" id="observe-dominant"></div>
+                </div>
+
+            </div>
+        </section>
+
     </main>
 
     <footer class="footer">
@@ -851,6 +972,7 @@ color.textColor;   // '#000000'
             getPalette,
             getPaletteProgressive,
             createColor,
+            observe,
         } = ColorThief;
 
         // ------------------------------------------------------------------
@@ -1133,6 +1255,57 @@ color.textColor;   // '#000000'
                  <div class="color-preview-hex">${color.hex()}</div>`;
             renderColorTable(color, 'create-table');
             show('out-create');
+        }
+
+        // ------------------------------------------------------------------
+        // 12. observe — Live Extraction
+        // ------------------------------------------------------------------
+        {
+            const video = document.getElementById('observe-video');
+            const glowWrap = document.getElementById('video-glow-wrap');
+            const playBtn = document.getElementById('video-play-btn');
+            const dominantEl = document.getElementById('observe-dominant');
+
+            // Wait for the video to have enough data
+            await new Promise((resolve) => {
+                if (video.readyState >= 2) return resolve();
+                video.addEventListener('loadeddata', resolve, { once: true });
+            });
+
+            // Start observing — dominant color updates live while video plays
+            const controller = observe(video, {
+                throttle: 200,
+                colorCount: 5,
+                onChange(palette) {
+                    const dominant = palette[0];
+
+                    // Update backlit glow
+                    glowWrap.style.setProperty('--glow-color', dominant.css());
+
+                    // Dominant color display
+                    dominantEl.innerHTML =
+                        `<div class="observe-dominant-swatch" style="background:${dominant.hex()}"></div>` +
+                        `<div class="observe-dominant-meta">` +
+                            `<strong style="color:${dominant.hex()}">${dominant.hex()}</strong>` +
+                        `</div>`;
+                },
+            });
+
+            // Toggle play/pause on click
+            function togglePlay() {
+                if (video.paused) {
+                    video.play();
+                    playBtn.classList.add('hidden');
+                } else {
+                    video.pause();
+                    playBtn.classList.remove('hidden');
+                }
+            }
+
+            playBtn.addEventListener('click', togglePlay);
+            video.addEventListener('click', togglePlay);
+
+            show('out-observe');
         }
 
     })();

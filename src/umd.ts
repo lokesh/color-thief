@@ -23,4 +23,6 @@ export {
     getSwatchesSync,
 } from './sync.js';
 
+export { observe } from './observe.js';
+
 export { createColor } from './color.js';

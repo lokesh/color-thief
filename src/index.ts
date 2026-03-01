@@ -19,6 +19,12 @@ export {
 } from './sync.js';
 
 // ---------------------------------------------------------------------------
+// Live extraction (browser only)
+// ---------------------------------------------------------------------------
+export { observe } from './observe.js';
+export type { ObservableSource, ObserveOptions, ObserveController } from './observe.js';
+
+// ---------------------------------------------------------------------------
 // Color factory
 // ---------------------------------------------------------------------------
 export { createColor } from './color.js';

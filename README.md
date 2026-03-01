@@ -44,6 +44,7 @@ swatches.Vibrant?.color.hex();
 - **TypeScript** — full type definitions included
 - **Browser + Node.js** — same API, both platforms
 - **Sync & async** — synchronous browser API, async for Node.js and Web Workers
+- **Live extraction** — `observe()` watches video, canvas, or img elements and emits palette updates reactively
 - **Web Workers** — offload quantization off the main thread with `worker: true`
 - **Progressive extraction** — 3-pass refinement for instant rough results
 - **OKLCH quantization** — perceptually uniform palettes via `colorSpace: 'oklch'`
@@ -64,6 +65,7 @@ swatches.Vibrant?.color.hex();
 | `getPalette(source, options?)` | Color palette (async, browser + Node.js) |
 | `getSwatches(source, options?)` | Semantic swatches (async, browser + Node.js) |
 | `getPaletteProgressive(source, options?)` | 3-pass progressive palette (async generator) |
+| `observe(source, options)` | Watch a source and emit palette updates (browser only) |
 | `createColor(r, g, b, population)` | Build a Color object from RGB values |
 
 ### Options
@@ -107,6 +109,26 @@ const palette = getPaletteSync(img, { colorCount: 5 });
 ```
 
 Accepts `HTMLImageElement`, `HTMLCanvasElement`, `HTMLVideoElement`, `ImageData`, `ImageBitmap`, and `OffscreenCanvas`.
+
+### Live extraction with observe()
+
+```js
+import { observe } from 'colorthief';
+
+// Watch a video and update ambient lighting as it plays
+const controller = observe(videoElement, {
+    throttle: 200,    // ms between updates
+    colorCount: 5,
+    onChange(palette) {
+        updateAmbientBackground(palette);
+    },
+});
+
+// Stop when done
+controller.stop();
+```
+
+Works with `<video>`, `<canvas>`, and `<img>` elements. For images, it uses a MutationObserver to detect `src` changes. For video and canvas, it polls using requestAnimationFrame with throttle.
 
 ## Node.js
 
