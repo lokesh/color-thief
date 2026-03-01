@@ -1,4 +1,4 @@
-import type { RGB, HSL, OKLCH, Color, ContrastInfo } from './types.js';
+import type { RGB, HSL, OKLCH, Color, ContrastInfo, CssColorFormat } from './types.js';
 import { rgbToOklch } from './color-space.js';
 
 // ---------------------------------------------------------------------------
@@ -60,17 +60,19 @@ class ColorImpl implements Color {
     private readonly _g: number;
     private readonly _b: number;
     readonly population: number;
+    readonly proportion: number;
 
     private _hsl: HSL | undefined;
     private _oklch: OKLCH | undefined;
     private _luminance: number | undefined;
     private _contrast: ContrastInfo | undefined;
 
-    constructor(r: number, g: number, b: number, population: number) {
+    constructor(r: number, g: number, b: number, population: number, proportion: number) {
         this._r = r;
         this._g = g;
         this._b = b;
         this.population = population;
+        this.proportion = proportion;
     }
 
     rgb(): RGB {
@@ -94,6 +96,22 @@ class ColorImpl implements Color {
             this._oklch = rgbToOklch(this._r, this._g, this._b);
         }
         return this._oklch;
+    }
+
+    css(format: CssColorFormat = 'rgb'): string {
+        switch (format) {
+            case 'hsl': {
+                const { h, s, l } = this.hsl();
+                return `hsl(${h}, ${s}%, ${l}%)`;
+            }
+            case 'oklch': {
+                const { l, c, h } = this.oklch();
+                return `oklch(${l.toFixed(3)} ${c.toFixed(3)} ${h.toFixed(1)})`;
+            }
+            case 'rgb':
+            default:
+                return `rgb(${this._r}, ${this._g}, ${this._b})`;
+        }
     }
 
     array(): [number, number, number] {
@@ -129,8 +147,8 @@ class ColorImpl implements Color {
             const white = contrastRatio(lum, 1); // white luminance = 1
             const black = contrastRatio(lum, 0); // black luminance = 0
             const foreground = this.isDark
-                ? createColor(255, 255, 255, 0)
-                : createColor(0, 0, 0, 0);
+                ? createColor(255, 255, 255, 0, 0)
+                : createColor(0, 0, 0, 0, 0);
             this._contrast = {
                 white: Math.round(white * 100) / 100,
                 black: Math.round(black * 100) / 100,
@@ -145,12 +163,13 @@ class ColorImpl implements Color {
 // Factory
 // ---------------------------------------------------------------------------
 
-/** Create a Color object from RGB components and population count. */
+/** Create a Color object from RGB components, population count, and proportion. */
 export function createColor(
     r: number,
     g: number,
     b: number,
     population: number,
+    proportion: number = 0,
 ): Color {
-    return new ColorImpl(r, g, b, population);
+    return new ColorImpl(r, g, b, population, proportion);
 }

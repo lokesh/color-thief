@@ -88,6 +88,9 @@ export interface ContrastInfo {
     foreground: Color;
 }
 
+/** Supported CSS color formats. */
+export type CssColorFormat = 'rgb' | 'hsl' | 'oklch';
+
 /** A rich color extracted from an image. */
 export interface Color {
     /** RGB components. */
@@ -98,6 +101,8 @@ export interface Color {
     hsl(): HSL;
     /** OKLCH components. */
     oklch(): OKLCH;
+    /** CSS color string. @default 'rgb' */
+    css(format?: CssColorFormat): string;
     /** RGB tuple [r, g, b]. */
     array(): [number, number, number];
     /** Hex string. Allows Color to be used directly in template literals and string contexts. */
@@ -112,6 +117,8 @@ export interface Color {
     readonly contrast: ContrastInfo;
     /** Relative population count from the quantizer. */
     readonly population: number;
+    /** Proportion of total pixels represented by this color (0–1). */
+    readonly proportion: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -166,8 +173,10 @@ export interface Quantizer {
 export type BrowserSource =
     | HTMLImageElement
     | HTMLCanvasElement
+    | HTMLVideoElement
     | ImageData
-    | ImageBitmap;
+    | ImageBitmap
+    | OffscreenCanvas;
 
 /** Node.js image source types. */
 export type NodeSource = string | Buffer;

@@ -121,11 +121,17 @@ function loadPixelsSync(source: BrowserSource) {
     if (typeof ImageData !== 'undefined' && source instanceof ImageData) {
         return { data: source.data, width: source.width, height: source.height };
     }
+    if (typeof HTMLVideoElement !== 'undefined' && source instanceof HTMLVideoElement) {
+        return loadFromVideo(source);
+    }
     if (typeof ImageBitmap !== 'undefined' && source instanceof ImageBitmap) {
         return loadFromImageBitmap(source);
     }
+    if (typeof OffscreenCanvas !== 'undefined' && source instanceof OffscreenCanvas) {
+        return loadFromOffscreenCanvas(source);
+    }
     throw new Error(
-        'Unsupported source type. Expected HTMLImageElement, HTMLCanvasElement, ImageData, or ImageBitmap.',
+        'Unsupported source type. Expected HTMLImageElement, HTMLCanvasElement, HTMLVideoElement, ImageData, ImageBitmap, or OffscreenCanvas.',
     );
 }
 
@@ -162,6 +168,40 @@ function loadFromImage(img: HTMLImageElement) {
 
 function loadFromCanvas(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d')!;
+    const { width, height } = canvas;
+    const imageData = ctx.getImageData(0, 0, width, height);
+    return { data: imageData.data, width, height };
+}
+
+function loadFromVideo(video: HTMLVideoElement) {
+    if (video.readyState < 2) {
+        throw new Error(
+            'Video is not ready. Wait for the "loadeddata" or "canplay" event before calling getColorSync/getPaletteSync.',
+        );
+    }
+    const width = video.videoWidth;
+    const height = video.videoHeight;
+    if (!width || !height) {
+        throw new Error(
+            'Video has no dimensions. It may not have loaded successfully.',
+        );
+    }
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d')!;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.drawImage(video, 0, 0, width, height);
+    const imageData = ctx.getImageData(0, 0, width, height);
+    return { data: imageData.data, width, height };
+}
+
+function loadFromOffscreenCanvas(canvas: OffscreenCanvas) {
+    const ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+    if (!ctx) {
+        throw new Error(
+            'Could not get 2D context from OffscreenCanvas.',
+        );
+    }
     const { width, height } = canvas;
     const imageData = ctx.getImageData(0, 0, width, height);
     return { data: imageData.data, width, height };

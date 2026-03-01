@@ -200,12 +200,13 @@ export function extractPalette(
     }
 
     if (quantized.length > 0) {
+        const totalPopulation = quantized.reduce((sum, q) => sum + q.population, 0);
         return quantized.map(({ color: [r, g, b], population }) =>
-            createColor(r, g, b, population),
+            createColor(r, g, b, population, totalPopulation > 0 ? population / totalPopulation : 0),
         );
     }
 
     // Fallback: average all pixels
     const fallback = computeFallbackColor(data, pixelCount, opts.quality);
-    return fallback ? [createColor(fallback[0], fallback[1], fallback[2], 1)] : null;
+    return fallback ? [createColor(fallback[0], fallback[1], fallback[2], 1, 1)] : null;
 }

@@ -22,10 +22,12 @@ function isColorObject(c) {
         typeof c.hex === 'function' &&
         typeof c.hsl === 'function' &&
         typeof c.oklch === 'function' &&
+        typeof c.css === 'function' &&
         typeof c.array === 'function' &&
         typeof c.isDark === 'boolean' &&
         typeof c.isLight === 'boolean' &&
-        typeof c.population === 'number'
+        typeof c.population === 'number' &&
+        typeof c.proportion === 'number'
     );
 }
 
@@ -167,6 +169,17 @@ describe('getPalette()', function() {
     it('rejects for non-existent file', async function() {
         await expect(getPalette('/non/existent/file.png')).to.be.rejected;
     });
+
+    it('palette colors have proportion summing to ~1', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: 5 });
+        const totalProportion = palette.reduce((sum, c) => sum + c.proportion, 0);
+        expect(totalProportion).to.be.closeTo(1, 0.01);
+        palette.forEach(c => {
+            expect(c.proportion).to.be.a('number');
+            expect(c.proportion).to.be.greaterThan(0);
+            expect(c.proportion).to.be.at.most(1);
+        });
+    });
 });
 
 
@@ -252,6 +265,31 @@ describe('Color object', function() {
 
     it('population is stored', function() {
         expect(createColor(0, 0, 0, 42).population).to.equal(42);
+    });
+
+    it('proportion defaults to 0', function() {
+        expect(createColor(0, 0, 0, 42).proportion).to.equal(0);
+    });
+
+    it('css() returns rgb string by default', function() {
+        const c = createColor(255, 128, 0, 1);
+        expect(c.css()).to.equal('rgb(255, 128, 0)');
+    });
+
+    it("css('rgb') returns rgb string", function() {
+        const c = createColor(255, 128, 0, 1);
+        expect(c.css('rgb')).to.equal('rgb(255, 128, 0)');
+    });
+
+    it("css('hsl') returns hsl string", function() {
+        const c = createColor(255, 0, 0, 1);
+        expect(c.css('hsl')).to.equal('hsl(0, 100%, 50%)');
+    });
+
+    it("css('oklch') returns oklch string", function() {
+        const c = createColor(255, 0, 0, 1);
+        const result = c.css('oklch');
+        expect(result).to.match(/^oklch\(\d+\.\d+ \d+\.\d+ \d+\.\d+\)$/);
     });
 
     it('toString() returns hex string', function() {

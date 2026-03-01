@@ -35,6 +35,7 @@ export type {
     ExtractionOptions,
     ContrastInfo,
     Color,
+    CssColorFormat,
     SwatchRole,
     Swatch,
     SwatchMap,

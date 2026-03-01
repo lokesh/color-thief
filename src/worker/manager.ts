@@ -32,8 +32,10 @@ function getOrCreateWorker(): Worker {
         if (error) {
             entry.reject(new Error(error));
         } else {
-            const colors = (palette as Array<{ color: [number, number, number]; population: number }>)
-                .map(({ color: [r, g, b], population }) => createColor(r, g, b, population));
+            const raw = palette as Array<{ color: [number, number, number]; population: number }>;
+            const totalPopulation = raw.reduce((sum: number, q: { population: number }) => sum + q.population, 0);
+            const colors = raw.map(({ color: [r, g, b], population }) =>
+                createColor(r, g, b, population, totalPopulation > 0 ? population / totalPopulation : 0));
             entry.resolve(colors);
         }
     };

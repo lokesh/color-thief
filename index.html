@@ -667,12 +667,15 @@ color.rgb()        // { r, g, b }
 color.hex()        // '#rrggbb'
 color.hsl()        // { h, s, l }
 color.oklch()      // { l, c, h }
+color.css()        // 'rgb(255, 128, 0)' — also 'hsl' and 'oklch'
 color.array()      // [r, g, b]
 color.toString()   // '#rrggbb' — works in template literals
 color.textColor    // '#ffffff' or '#000000'
 color.isDark       // true/false
 color.isLight      // true/false
-color.contrast     // { white, black, foreground }</code></div>
+color.contrast     // { white, black, foreground }
+color.population   // raw pixel count
+color.proportion   // 0–1 share of total</code></div>
 
             <div class="output" id="out-color-obj">
                 <img class="source-img" src="examples/img/image-1.jpg" alt="Source image">
@@ -893,12 +896,16 @@ color.textColor;   // '#000000'
                 ['.hex()', color.hex()],
                 ['.hsl()', `{ h: ${hsl.h}, s: ${hsl.s}, l: ${hsl.l} }`],
                 ['.oklch()', `{ l: ${oklch.l.toFixed(3)}, c: ${oklch.c.toFixed(3)}, h: ${oklch.h.toFixed(1)} }`],
+                [".css('rgb')", color.css('rgb')],
+                [".css('hsl')", color.css('hsl')],
+                [".css('oklch')", color.css('oklch')],
                 ['.array()', `[${color.array().join(', ')}]`],
                 ['.toString()', `"${color.toString()}"`],
                 ['.textColor', `<span class="prop-swatch" style="background:${color.textColor}"></span>${color.textColor}`],
                 ['.isDark', String(color.isDark)],
                 ['.isLight', String(color.isLight)],
                 ['.population', String(color.population)],
+                ['.proportion', color.proportion.toFixed(4)],
                 ['.contrast.white', color.contrast.white.toFixed(2)],
                 ['.contrast.black', color.contrast.black.toFixed(2)],
                 ['.contrast.foreground', `<span class="prop-swatch" style="background:${color.contrast.foreground.hex()}"></span>${color.contrast.foreground.hex()}`],
