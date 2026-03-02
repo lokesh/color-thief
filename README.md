@@ -159,6 +159,26 @@ npm run test:browser   # Browser tests (requires npm run dev)
 npm run dev            # Start local server on port 8080
 ```
 
+## Releasing
+
+```bash
+# 1. Make sure you're on the v3 branch with a clean working tree
+git status
+
+# 2. Run the full test suite
+npm run build
+npm run test:node
+npm run test:browser   # requires npm run dev in another terminal
+
+# 3. Preview what will be published
+npm pack --dry-run
+
+# 4. Tag and publish
+npm version <major|minor|patch>   # bumps version, creates git tag
+npm publish                       # builds via prepublishOnly, then publishes
+git push && git push --tags
+```
+
 ## License
 
 [MIT](LICENSE) - Lokesh Dhakar

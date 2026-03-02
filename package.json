@@ -7,7 +7,7 @@
         "email": "lokesh.dhakar@gmail.com",
         "url": "http://lokeshdhakar.com/"
     },
-    "description": "Get the dominant color or color palette from an image.",
+    "description": "Extract dominant colors and palettes from images — TypeScript, OKLCH, semantic swatches, live video extraction.",
     "keywords": [
         "color",
         "palette",

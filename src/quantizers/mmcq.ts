@@ -316,13 +316,12 @@ function iterate(pq: PQueue<VBox>, target: number, histo: Uint32Array): void {
 
     while (niters < MAX_ITERATIONS) {
         if (ncolors >= target) return;
-        if (niters++ > MAX_ITERATIONS) return;
+        niters++;
 
         const vbox = pq.pop();
 
         if (!vbox.count()) {
             pq.push(vbox);
-            niters++;
             continue;
         }
 
