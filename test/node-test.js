@@ -1,198 +1,431 @@
-const { resolve } = require('path');
-const { readFileSync } = require('fs');
-const ColorThief = require(resolve(process.cwd(), "dist/color-thief.js"));
-const chai = require("chai");
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
+import { getColor, getPalette, getSwatches, getPaletteProgressive, createColor } from '../dist/index.js';
+import { rgbToOklch, oklchToRgb } from '../dist/internals.js';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+
 const expect = chai.expect;
-chai.use(require("chai-as-promised"));
+chai.use(chaiAsPromised);
 
 const imgDir = resolve(process.cwd(), 'cypress/test-pages/img');
 const imgPath = (name) => resolve(imgDir, name);
 
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function isColorObject(c) {
+    return (
+        c !== null &&
+        typeof c.rgb === 'function' &&
+        typeof c.hex === 'function' &&
+        typeof c.hsl === 'function' &&
+        typeof c.oklch === 'function' &&
+        typeof c.css === 'function' &&
+        typeof c.array === 'function' &&
+        typeof c.isDark === 'boolean' &&
+        typeof c.isLight === 'boolean' &&
+        typeof c.population === 'number' &&
+        typeof c.proportion === 'number'
+    );
+}
+
 function isValidRGB(color) {
-    return Array.isArray(color)
-        && color.length === 3
-        && color.every(v => Number.isInteger(v) && v >= 0 && v <= 255);
+    const { r, g, b } = color.rgb();
+    return [r, g, b].every(v => Number.isInteger(v) && v >= 0 && v <= 255);
 }
 
-function isCloseTo(actual, expected, tolerance = 15) {
-    return actual.every((v, i) => Math.abs(v - expected[i]) <= tolerance);
+function isCloseTo(color, expected, tolerance = 15) {
+    const arr = color.array();
+    return arr.every((v, i) => Math.abs(v - expected[i]) <= tolerance);
 }
 
+
+// ===========================================================================
+// getColor()
+// ===========================================================================
 
 describe('getColor()', function() {
-    it('returns valid RGB from file path', function() {
-        return ColorThief.getColor(imgPath('rainbow-vertical.png')).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-        });
+    it('returns a Color object from file path', async function() {
+        const color = await getColor(imgPath('rainbow-vertical.png'));
+        expect(isColorObject(color)).to.be.true;
+        expect(isValidRGB(color)).to.be.true;
     });
 
-    it('returns valid RGB from Buffer', function() {
+    it('returns a Color object from Buffer', async function() {
         const buffer = readFileSync(imgPath('rainbow-vertical.png'));
-        return ColorThief.getColor(buffer).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-        });
+        const color = await getColor(buffer);
+        expect(isColorObject(color)).to.be.true;
+        expect(isValidRGB(color)).to.be.true;
     });
 
-    it('returns near-black for black.png', function() {
-        return ColorThief.getColor(imgPath('black.png')).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-            expect(isCloseTo(color, [0, 0, 0])).to.be.true;
-        });
+    it('returns near-black for black.png', async function() {
+        const color = await getColor(imgPath('black.png'));
+        expect(isColorObject(color)).to.be.true;
+        expect(isCloseTo(color, [0, 0, 0])).to.be.true;
     });
 
-    it('returns near-red for red.png', function() {
-        return ColorThief.getColor(imgPath('red.png')).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-            expect(isCloseTo(color, [255, 0, 0])).to.be.true;
-        });
+    it('returns near-red for red.png', async function() {
+        const color = await getColor(imgPath('red.png'));
+        expect(isColorObject(color)).to.be.true;
+        expect(isCloseTo(color, [255, 0, 0])).to.be.true;
     });
 
-    it('returns valid RGB for white.png', function() {
-        return ColorThief.getColor(imgPath('white.png')).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-            expect(isCloseTo(color, [255, 255, 255])).to.be.true;
-        });
+    it('returns valid Color for white.png', async function() {
+        const color = await getColor(imgPath('white.png'));
+        expect(isColorObject(color)).to.be.true;
+        expect(isCloseTo(color, [255, 255, 255])).to.be.true;
     });
 
-    it('returns valid RGB for transparent.png', function() {
-        return ColorThief.getColor(imgPath('transparent.png')).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-        });
+    it('returns valid Color for transparent.png', async function() {
+        const color = await getColor(imgPath('transparent.png'));
+        expect(isColorObject(color)).to.be.true;
     });
 
-    it('respects quality parameter (quality=1)', function() {
-        return ColorThief.getColor(imgPath('rainbow-vertical.png'), 1).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-        });
+    it('respects quality option (quality=1)', async function() {
+        const color = await getColor(imgPath('rainbow-vertical.png'), { quality: 1 });
+        expect(isColorObject(color)).to.be.true;
     });
 
-    it('respects quality parameter (quality=100)', function() {
-        return ColorThief.getColor(imgPath('rainbow-vertical.png'), 100).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-        });
+    it('respects quality option (quality=100)', async function() {
+        const color = await getColor(imgPath('rainbow-vertical.png'), { quality: 100 });
+        expect(isColorObject(color)).to.be.true;
     });
 
-    it('rejects for non-existent file path', function() {
-        return expect(ColorThief.getColor('/non/existent/file.png')).to.be.rejected;
+    it('rejects for non-existent file path', async function() {
+        await expect(getColor('/non/existent/file.png')).to.be.rejected;
     });
 });
 
+
+// ===========================================================================
+// getPalette()
+// ===========================================================================
 
 describe('getPalette()', function() {
-    it('returns 10 colors with default colorCount', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png')).then(palette => {
-            expect(palette).to.have.lengthOf(10);
-            palette.forEach(color => expect(isValidRGB(color)).to.be.true);
+    it('returns 10 colors with default colorCount', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'));
+        expect(palette).to.have.lengthOf(10);
+        palette.forEach(c => {
+            expect(isColorObject(c)).to.be.true;
+            expect(isValidRGB(c)).to.be.true;
         });
     });
 
-    it('returns 2 colors (boundary min)', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), 2).then(palette => {
-            expect(palette).to.have.lengthOf(2);
-        });
+    it('returns 2 colors (boundary min)', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: 2 });
+        expect(palette).to.have.lengthOf(2);
     });
 
-    it('returns 20 colors (boundary max)', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), 20).then(palette => {
-            expect(palette).to.have.lengthOf(20);
-        });
+    it('returns 20 colors (boundary max)', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: 20 });
+        expect(palette).to.have.lengthOf(20);
     });
 
-    it('clamps colorCount=0 to 2', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), 0).then(palette => {
-            expect(palette).to.have.lengthOf(2);
-        });
+    it('clamps colorCount=0 to 2', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: 0 });
+        expect(palette).to.have.lengthOf(2);
     });
 
-    it('clamps colorCount=-1 to 2', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), -1).then(palette => {
-            expect(palette).to.have.lengthOf(2);
-        });
+    it('clamps colorCount=-1 to 2', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: -1 });
+        expect(palette).to.have.lengthOf(2);
     });
 
-    it('clamps colorCount=21 to 20', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), 21).then(palette => {
-            expect(palette).to.have.lengthOf(20);
-        });
+    it('clamps colorCount=21 to 20', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: 21 });
+        expect(palette).to.have.lengthOf(20);
     });
 
-    it('throws when colorCount=1', function() {
-        expect(() => ColorThief.getPalette(imgPath('rainbow-vertical.png'), 1)).to.throw();
+    it('rejects when colorCount=1', async function() {
+        await expect(getPalette(imgPath('rainbow-vertical.png'), { colorCount: 1 })).to.be.rejected;
     });
 
-    it('defaults non-integer colorCount (5.5) to 10', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), 5.5).then(palette => {
-            expect(palette).to.have.lengthOf(10);
-        });
+    it('defaults non-integer colorCount (5.5) to 10', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: 5.5 });
+        expect(palette).to.have.lengthOf(10);
     });
 
-    it('returns valid palette for white.png', function() {
-        return ColorThief.getPalette(imgPath('white.png')).then(palette => {
-            expect(palette).to.be.an('array').that.is.not.empty;
-            palette.forEach(color => expect(isValidRGB(color)).to.be.true);
-        });
+    it('returns valid palette for white.png', async function() {
+        const palette = await getPalette(imgPath('white.png'));
+        expect(palette).to.be.an('array').that.is.not.empty;
+        palette.forEach(c => expect(isColorObject(c)).to.be.true);
     });
 
-    it('returns valid palette for transparent.png', function() {
-        return ColorThief.getPalette(imgPath('transparent.png')).then(palette => {
-            expect(palette).to.be.an('array').that.is.not.empty;
-            palette.forEach(color => expect(isValidRGB(color)).to.be.true);
-        });
+    it('returns valid palette for transparent.png', async function() {
+        const palette = await getPalette(imgPath('transparent.png'));
+        expect(palette).to.be.an('array').that.is.not.empty;
+        palette.forEach(c => expect(isColorObject(c)).to.be.true);
     });
 
-    it('works with Buffer input', function() {
+    it('works with Buffer input', async function() {
         const buffer = readFileSync(imgPath('rainbow-vertical.png'));
-        return ColorThief.getPalette(buffer, 5).then(palette => {
-            expect(palette).to.have.lengthOf(5);
-            palette.forEach(color => expect(isValidRGB(color)).to.be.true);
-        });
+        const palette = await getPalette(buffer, { colorCount: 5 });
+        expect(palette).to.have.lengthOf(5);
+        palette.forEach(c => expect(isColorObject(c)).to.be.true);
     });
 
-    it('rejects for non-existent file', function() {
-        return expect(ColorThief.getPalette('/non/existent/file.png')).to.be.rejected;
+    it('rejects for non-existent file', async function() {
+        await expect(getPalette('/non/existent/file.png')).to.be.rejected;
+    });
+
+    it('palette colors have proportion summing to ~1', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: 5 });
+        const totalProportion = palette.reduce((sum, c) => sum + c.proportion, 0);
+        expect(totalProportion).to.be.closeTo(1, 0.01);
+        palette.forEach(c => {
+            expect(c.proportion).to.be.a('number');
+            expect(c.proportion).to.be.greaterThan(0);
+            expect(c.proportion).to.be.at.most(1);
+        });
     });
 });
 
 
-describe('Options object API', function() {
-    it('getColor accepts options object', function() {
-        return ColorThief.getColor(imgPath('rainbow-vertical.png'), { quality: 1 }).then(color => {
-            expect(isValidRGB(color)).to.be.true;
+// ===========================================================================
+// Color object
+// ===========================================================================
+
+describe('Color object', function() {
+    it('rgb() returns {r, g, b}', function() {
+        const c = createColor(255, 128, 0, 1);
+        const { r, g, b } = c.rgb();
+        expect(r).to.equal(255);
+        expect(g).to.equal(128);
+        expect(b).to.equal(0);
+    });
+
+    it('hex() returns lowercase hex string', function() {
+        const c = createColor(255, 128, 0, 1);
+        expect(c.hex()).to.equal('#ff8000');
+    });
+
+    it('hex() pads zeros correctly', function() {
+        const c = createColor(0, 0, 0, 1);
+        expect(c.hex()).to.equal('#000000');
+    });
+
+    it('array() returns [r, g, b]', function() {
+        const c = createColor(10, 20, 30, 1);
+        expect(c.array()).to.deep.equal([10, 20, 30]);
+    });
+
+    it('hsl() returns {h, s, l}', function() {
+        const c = createColor(255, 0, 0, 1);
+        const hsl = c.hsl();
+        expect(hsl.h).to.equal(0);
+        expect(hsl.s).to.equal(100);
+        expect(hsl.l).to.equal(50);
+    });
+
+    it('oklch() returns {l, c, h}', function() {
+        const c = createColor(255, 0, 0, 1);
+        const oklch = c.oklch();
+        expect(oklch.l).to.be.a('number');
+        expect(oklch.c).to.be.a('number');
+        expect(oklch.h).to.be.a('number');
+        expect(oklch.l).to.be.greaterThan(0);
+        expect(oklch.c).to.be.greaterThan(0);
+    });
+
+    it('isDark is true for black', function() {
+        expect(createColor(0, 0, 0, 1).isDark).to.be.true;
+    });
+
+    it('isLight is true for white', function() {
+        expect(createColor(255, 255, 255, 1).isLight).to.be.true;
+    });
+
+    it('isDark is true for dark red', function() {
+        expect(createColor(128, 0, 0, 1).isDark).to.be.true;
+    });
+
+    it('isLight is true for light yellow', function() {
+        expect(createColor(255, 255, 128, 1).isLight).to.be.true;
+    });
+
+    it('contrast has white and black ratios', function() {
+        const c = createColor(128, 128, 128, 1);
+        expect(c.contrast.white).to.be.a('number');
+        expect(c.contrast.black).to.be.a('number');
+        expect(c.contrast.white).to.be.greaterThan(1);
+        expect(c.contrast.black).to.be.greaterThan(1);
+    });
+
+    it('contrast foreground is white for dark colors', function() {
+        const c = createColor(0, 0, 0, 1);
+        expect(c.contrast.foreground.array()).to.deep.equal([255, 255, 255]);
+    });
+
+    it('contrast foreground is black for light colors', function() {
+        const c = createColor(255, 255, 255, 1);
+        expect(c.contrast.foreground.array()).to.deep.equal([0, 0, 0]);
+    });
+
+    it('population is stored', function() {
+        expect(createColor(0, 0, 0, 42).population).to.equal(42);
+    });
+
+    it('proportion defaults to 0', function() {
+        expect(createColor(0, 0, 0, 42).proportion).to.equal(0);
+    });
+
+    it('css() returns rgb string by default', function() {
+        const c = createColor(255, 128, 0, 1);
+        expect(c.css()).to.equal('rgb(255, 128, 0)');
+    });
+
+    it("css('rgb') returns rgb string", function() {
+        const c = createColor(255, 128, 0, 1);
+        expect(c.css('rgb')).to.equal('rgb(255, 128, 0)');
+    });
+
+    it("css('hsl') returns hsl string", function() {
+        const c = createColor(255, 0, 0, 1);
+        expect(c.css('hsl')).to.equal('hsl(0, 100%, 50%)');
+    });
+
+    it("css('oklch') returns oklch string", function() {
+        const c = createColor(255, 0, 0, 1);
+        const result = c.css('oklch');
+        expect(result).to.match(/^oklch\(\d+\.\d+ \d+\.\d+ \d+\.\d+\)$/);
+    });
+
+    it('toString() returns hex string', function() {
+        const c = createColor(255, 128, 0, 1);
+        expect(c.toString()).to.equal('#ff8000');
+        expect(`${c}`).to.equal('#ff8000');
+        expect('' + c).to.equal('#ff8000');
+    });
+
+    it('textColor is #ffffff for dark colors', function() {
+        expect(createColor(0, 0, 0, 1).textColor).to.equal('#ffffff');
+        expect(createColor(128, 0, 0, 1).textColor).to.equal('#ffffff');
+    });
+
+    it('textColor is #000000 for light colors', function() {
+        expect(createColor(255, 255, 255, 1).textColor).to.equal('#000000');
+        expect(createColor(255, 255, 128, 1).textColor).to.equal('#000000');
+    });
+});
+
+
+// ===========================================================================
+// Color space conversions
+// ===========================================================================
+
+describe('Color space round-trip', function() {
+    const TEST_COLORS = [
+        [255, 0, 0],
+        [0, 255, 0],
+        [0, 0, 255],
+        [128, 128, 128],
+        [255, 255, 0],
+        [0, 255, 255],
+        [255, 0, 255],
+        [0, 0, 0],
+        [255, 255, 255],
+    ];
+
+    TEST_COLORS.forEach(([r, g, b]) => {
+        it(`RGB(${r},${g},${b}) → OKLCH → RGB within ±1`, function() {
+            const oklch = rgbToOklch(r, g, b);
+            const [r2, g2, b2] = oklchToRgb(oklch.l, oklch.c, oklch.h);
+            expect(Math.abs(r - r2)).to.be.at.most(1);
+            expect(Math.abs(g - g2)).to.be.at.most(1);
+            expect(Math.abs(b - b2)).to.be.at.most(1);
+        });
+    });
+});
+
+
+// ===========================================================================
+// getSwatches()
+// ===========================================================================
+
+describe('getSwatches()', function() {
+    it('returns a SwatchMap with all 6 roles', async function() {
+        const swatches = await getSwatches(imgPath('rainbow-vertical.png'));
+        const roles = ['Vibrant', 'Muted', 'DarkVibrant', 'DarkMuted', 'LightVibrant', 'LightMuted'];
+        roles.forEach(role => {
+            expect(swatches).to.have.property(role);
         });
     });
 
-    it('getPalette accepts options object', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), { colorCount: 5, quality: 10 }).then(palette => {
-            expect(palette).to.have.lengthOf(5);
-            palette.forEach(color => expect(isValidRGB(color)).to.be.true);
+    it('each swatch has expected structure', async function() {
+        const swatches = await getSwatches(imgPath('rainbow-vertical.png'));
+        for (const [, swatch] of Object.entries(swatches)) {
+            if (swatch !== null) {
+                expect(isColorObject(swatch.color)).to.be.true;
+                expect(swatch.role).to.be.a('string');
+                expect(isColorObject(swatch.titleTextColor)).to.be.true;
+                expect(isColorObject(swatch.bodyTextColor)).to.be.true;
+            }
+        }
+    });
+});
+
+
+// ===========================================================================
+// OKLCH color space option
+// ===========================================================================
+
+describe('OKLCH color space', function() {
+    it('getPalette with colorSpace: oklch returns valid colors', async function() {
+        const palette = await getPalette(imgPath('rainbow-vertical.png'), {
+            colorCount: 5,
+            colorSpace: 'oklch',
+        });
+        expect(palette).to.have.lengthOf(5);
+        palette.forEach(c => {
+            expect(isColorObject(c)).to.be.true;
+            expect(isValidRGB(c)).to.be.true;
         });
     });
+});
 
-    it('ignoreWhite: false includes white pixels', function() {
-        return ColorThief.getPalette(imgPath('white.png'), { ignoreWhite: false }).then(palette => {
-            expect(palette).to.be.an('array').that.is.not.empty;
-            palette.forEach(color => expect(isValidRGB(color)).to.be.true);
-        });
+
+// ===========================================================================
+// AbortController
+// ===========================================================================
+
+describe('AbortController', function() {
+    it('rejects when signal is already aborted', async function() {
+        const controller = new AbortController();
+        controller.abort();
+        await expect(
+            getColor(imgPath('rainbow-vertical.png'), { signal: controller.signal })
+        ).to.be.rejected;
+    });
+});
+
+
+// ===========================================================================
+// Progressive extraction
+// ===========================================================================
+
+describe('getPaletteProgressive()', function() {
+    it('yields 3 results with increasing progress', async function() {
+        const results = [];
+        for await (const result of getPaletteProgressive(imgPath('rainbow-vertical.png'), { colorCount: 5 })) {
+            results.push(result);
+        }
+        expect(results).to.have.lengthOf(3);
+        expect(results[0].progress).to.be.closeTo(0.06, 0.01);
+        expect(results[1].progress).to.be.closeTo(0.25, 0.01);
+        expect(results[2].progress).to.equal(1.0);
+        expect(results[2].done).to.be.true;
+        expect(results[0].done).to.be.false;
     });
 
-    it('alphaThreshold controls transparency filtering', function() {
-        // With alphaThreshold: 0, no pixels are filtered by transparency
-        return ColorThief.getColor(imgPath('rainbow-vertical.png'), { alphaThreshold: 0 }).then(color => {
-            expect(isValidRGB(color)).to.be.true;
-        });
-    });
-
-    it('minSaturation filters low-saturation pixels', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), { colorCount: 5, minSaturation: 0.2 }).then(palette => {
-            expect(palette).to.have.lengthOf(5);
-            palette.forEach(color => expect(isValidRGB(color)).to.be.true);
-        });
-    });
-
-    it('positional args still work after options support added', function() {
-        return ColorThief.getPalette(imgPath('rainbow-vertical.png'), 5, 10).then(palette => {
-            expect(palette).to.have.lengthOf(5);
-            palette.forEach(color => expect(isValidRGB(color)).to.be.true);
-        });
+    it('final pass returns Color objects', async function() {
+        const results = [];
+        for await (const result of getPaletteProgressive(imgPath('rainbow-vertical.png'), { colorCount: 5 })) {
+            results.push(result);
+        }
+        const final = results[results.length - 1];
+        expect(final.palette).to.have.lengthOf(5);
+        final.palette.forEach(c => expect(isColorObject(c)).to.be.true);
     });
 });

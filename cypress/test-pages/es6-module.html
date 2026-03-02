@@ -13,16 +13,13 @@
     <div id="result"></div>
 
     <script type="module">
-        import ColorThief from '../../dist/color-thief.mjs';
-
-        const colorThief = new ColorThief();
-
+        import { getColorSync } from '../../dist/index.js';
 
         const image = document.querySelector('img');
 
         function getColorFromImage(img) {
-            const result = colorThief.getColor(img);
-            document.querySelector('#result').innerText = result;
+            const result = getColorSync(img);
+            document.querySelector('#result').innerText = result ? result.array().toString() : 'null';
         }
 
         if (image.complete) {

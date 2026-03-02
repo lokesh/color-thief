@@ -1,12 +1,13 @@
 {
     "name": "colorthief",
-    "version": "2.7.0",
+    "version": "3.0.0",
+    "type": "module",
     "author": {
         "name": "Lokesh Dhakar",
         "email": "lokesh.dhakar@gmail.com",
         "url": "http://lokeshdhakar.com/"
     },
-    "description": "Get the dominant color or color palette from an image.",
+    "description": "Extract dominant colors and palettes from images — TypeScript, OKLCH, semantic swatches, live video extraction.",
     "keywords": [
         "color",
         "palette",
@@ -14,7 +15,9 @@
         "image",
         "picture",
         "photo",
-        "canvas"
+        "canvas",
+        "oklch",
+        "swatch"
     ],
     "homepage": "http://lokeshdhakar.com/projects/color-thief/",
     "repository": {
@@ -26,34 +29,60 @@
         "dist/",
         "src/"
     ],
-    "source": "src/color-thief.js",
-    "main": "dist/color-thief.js",
-    "types": "dist/color-thief-node.d.ts",
-    "module": "dist/color-thief.mjs",
-    "umd:main": "dist/color-thief.umd.js",
-    "amdName": "ColorThief",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/types/index.d.ts",
+                "default": "./dist/index.js"
+            },
+            "require": {
+                "types": "./dist/types/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
+        },
+        "./internals": {
+            "import": {
+                "types": "./dist/types/internals.d.ts",
+                "default": "./dist/internals.js"
+            },
+            "require": {
+                "types": "./dist/types/internals.d.cts",
+                "default": "./dist/internals.cjs"
+            }
+        }
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/types/index.d.ts",
     "scripts": {
         "prepublishOnly": "npm run build",
-        "build": "microbundle --no-sourcemap && node ./build/build.js",
-        "watch": "microbundle watch --no-sourcemap",
+        "build": "tsup",
+        "watch": "tsup --watch",
         "dev": "http-server",
         "test": "mocha && cypress run --config video=false",
-        "test:browser": "./node_modules/.bin/cypress run --headed --browser chrome",
         "test:node": "mocha",
-        "cypress": "./node_modules/.bin/cypress open"
+        "test:browser": "./node_modules/.bin/cypress run --headed --browser chrome",
+        "cypress": "./node_modules/.bin/cypress open",
+        "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
+        "@types/node": "^20.11.0",
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
         "cypress": "^13.15.0",
         "http-server": "^14.1.1",
-        "microbundle": "^0.15.0",
         "mocha": "^10.2.0",
-        "mustache": "^3.0.1"
+        "mustache": "^3.0.1",
+        "sharp": "^0.34.5",
+        "tsup": "^8.0.0",
+        "typescript": "^5.3.0"
     },
-    "dependencies": {
-        "@lokesh.dhakar/quantize": "^1.4.0",
-        "ndarray-pixels": "^4.1.0",
-        "sharp": "^0.33.5"
+    "peerDependencies": {
+        "sharp": ">=0.33.0"
+    },
+    "peerDependenciesMeta": {
+        "sharp": {
+            "optional": true
+        }
     }
 }
