@@ -22,11 +22,11 @@
     "homepage": "http://lokeshdhakar.com/projects/color-thief/",
     "repository": {
         "type": "git",
-        "url": "https://github.com/lokesh/color-thief.git"
+        "url": "git+https://github.com/lokesh/color-thief.git"
     },
     "license": "MIT",
     "bin": {
-        "colorthief": "./dist/cli.js"
+        "colorthief": "dist/cli.js"
     },
     "files": [
         "dist/",
@@ -84,8 +84,8 @@
         "dev": "http-server",
         "test": "mocha && cypress run --config video=false",
         "test:node": "mocha",
-        "test:browser": "./node_modules/.bin/cypress run --headed --browser chrome",
-        "cypress": "./node_modules/.bin/cypress open",
+        "test:browser": "cypress run --headed --browser chrome",
+        "cypress": "cypress open",
         "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
