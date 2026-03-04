@@ -28,7 +28,7 @@ export interface ObserveOptions extends FilterOptions {
     colorCount?: number;
     /** Sampling quality (1 = highest). @default 10 */
     quality?: number;
-    /** Color space for quantization. @default 'rgb' */
+    /** Color space for quantization. @default 'oklch' */
     colorSpace?: ColorSpace;
     /** Called whenever a new palette is extracted. */
     onChange: (palette: Color[]) => void;

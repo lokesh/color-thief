@@ -74,7 +74,7 @@ swatches.Vibrant?.color.hex();
 |---|---|---|
 | `colorCount` | `10` | Number of palette colors (2–20) |
 | `quality` | `10` | Sampling rate (1 = every pixel, 10 = every 10th) |
-| `colorSpace` | `'rgb'` | Quantization space: `'rgb'` or `'oklch'` |
+| `colorSpace` | `'oklch'` | Quantization space: `'rgb'` or `'oklch'` |
 | `worker` | `false` | Offload to Web Worker (browser only) |
 | `signal` | — | `AbortSignal` to cancel extraction |
 | `ignoreWhite` | `true` | Skip white pixels |
