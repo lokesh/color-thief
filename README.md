@@ -162,7 +162,7 @@ npm run dev            # Start local server on port 8080
 ## Releasing
 
 ```bash
-# 1. Make sure you're on the v3 branch with a clean working tree
+# 1. Make sure you're on master with a clean working tree
 git status
 
 # 2. Run the full test suite
