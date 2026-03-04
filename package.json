@@ -31,6 +31,16 @@
     ],
     "exports": {
         ".": {
+            "browser": {
+                "import": {
+                    "types": "./dist/types/index.d.ts",
+                    "default": "./dist/index.browser.js"
+                },
+                "require": {
+                    "types": "./dist/types/index.d.cts",
+                    "default": "./dist/index.browser.cjs"
+                }
+            },
             "import": {
                 "types": "./dist/types/index.d.ts",
                 "default": "./dist/index.js"
@@ -41,6 +51,16 @@
             }
         },
         "./internals": {
+            "browser": {
+                "import": {
+                    "types": "./dist/types/internals.browser.d.ts",
+                    "default": "./dist/internals.browser.js"
+                },
+                "require": {
+                    "types": "./dist/types/internals.browser.d.cts",
+                    "default": "./dist/internals.browser.cjs"
+                }
+            },
             "import": {
                 "types": "./dist/types/internals.d.ts",
                 "default": "./dist/internals.js"

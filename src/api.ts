@@ -12,6 +12,7 @@ import { validateOptions, extractPalette } from './pipeline.js';
 import { extractProgressive } from './progressive.js';
 import { classifySwatches } from './swatches.js';
 import { MmcqQuantizer } from './quantizers/mmcq.js';
+import { resolveDefaultLoader } from './resolve-loader.js';
 
 // ---------------------------------------------------------------------------
 // Global configuration
@@ -46,18 +47,7 @@ export function configure(opts: {
 async function getLoader(perCall?: PixelLoader<ImageSource>): Promise<PixelLoader<ImageSource>> {
     if (perCall) return perCall;
     if (globalLoader) return globalLoader;
-
-    const isBrowser =
-        typeof window !== 'undefined' && typeof document !== 'undefined';
-
-    if (isBrowser) {
-        const { BrowserPixelLoader } = await import('./loaders/browser.js');
-        globalLoader = new BrowserPixelLoader() as PixelLoader<ImageSource>;
-    } else {
-        const { NodePixelLoader } = await import('./loaders/node.js');
-        globalLoader = new NodePixelLoader() as PixelLoader<ImageSource>;
-    }
-
+    globalLoader = await resolveDefaultLoader();
     return globalLoader;
 }
 
