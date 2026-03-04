@@ -25,6 +25,9 @@
         "url": "https://github.com/lokesh/color-thief.git"
     },
     "license": "MIT",
+    "bin": {
+        "colorthief": "./dist/cli.js"
+    },
     "files": [
         "dist/",
         "src/"
