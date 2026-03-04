@@ -52,6 +52,7 @@ swatches.Vibrant?.color.hex();
 - **Rich Color objects** — `.hex()`, `.rgb()`, `.hsl()`, `.oklch()`, `.css()`, contrast ratios, text color recommendations
 - **WCAG contrast** — `color.contrast.white`, `color.contrast.black`, `color.contrast.foreground`
 - **AbortSignal** — cancel in-flight extractions
+- **CLI** — `colorthief photo.jpg` with JSON, CSS, and ANSI output
 - **Zero runtime dependencies**
 
 ## API at a Glance
@@ -142,6 +143,53 @@ const palette = await getPalette(Buffer.from(data), { colorCount: 5 });
 ```
 
 Accepts file paths and Buffers. Uses [sharp](https://sharp.pixelplumbing.com/) for image decoding.
+
+## CLI
+
+```bash
+# Dominant color
+colorthief photo.jpg
+
+# Color palette
+colorthief palette photo.jpg
+
+# Semantic swatches
+colorthief swatches photo.jpg
+```
+
+### Output formats
+
+```bash
+# Default: ANSI color swatches
+colorthief photo.jpg
+# ▇▇ #e84393
+
+# JSON with full color data
+colorthief photo.jpg --json
+
+# CSS custom properties
+colorthief palette photo.jpg --css
+# :root {
+#     --color-1: #e84393;
+#     --color-2: #6c5ce7;
+# }
+```
+
+### Options
+
+```bash
+colorthief palette photo.jpg --count 5        # Number of colors (2-20)
+colorthief photo.jpg --quality 1              # Sampling quality (1=best)
+colorthief photo.jpg --color-space rgb        # Color space (rgb or oklch)
+```
+
+Stdin is supported — use `-` or pipe directly:
+
+```bash
+cat photo.jpg | colorthief -
+```
+
+Multiple files are supported. Output is prefixed with filenames, and `--json` wraps results in an object keyed by filename.
 
 ## Links
 

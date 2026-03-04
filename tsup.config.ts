@@ -71,6 +71,17 @@ export default defineConfig([
             ];
         },
     },
+    // CLI
+    {
+        entry: { cli: 'src/cli.ts' },
+        outDir: 'dist',
+        format: ['esm'],
+        splitting: false,
+        dts: false,
+        sourcemap: false,
+        external: ['sharp'],
+        banner: { js: '#!/usr/bin/env node' },
+    },
     // Type declarations
     {
         entry: {
