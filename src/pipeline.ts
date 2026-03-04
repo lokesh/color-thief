@@ -57,7 +57,7 @@ export function validateOptions(options: ExtractionOptions): ValidatedOptions {
         typeof options.minSaturation === 'number'
             ? Math.max(0, Math.min(1, options.minSaturation))
             : 0;
-    const colorSpace = options.colorSpace ?? 'rgb';
+    const colorSpace = options.colorSpace ?? 'oklch';
 
     return {
         colorCount,
