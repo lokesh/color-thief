@@ -146,29 +146,40 @@ Accepts file paths and Buffers. Uses [sharp](https://sharp.pixelplumbing.com/) f
 
 ## CLI
 
+### Quick start
+
+```bash
+npx colorthief-cli photo.jpg
+```
+
+The `colorthief-cli` package bundles everything needed (including sharp for image
+decoding), so it works immediately with no extra setup.
+
+### Commands
+
 ```bash
 # Dominant color
-colorthief photo.jpg
+colorthief-cli photo.jpg
 
 # Color palette
-colorthief palette photo.jpg
+colorthief-cli palette photo.jpg
 
 # Semantic swatches
-colorthief swatches photo.jpg
+colorthief-cli swatches photo.jpg
 ```
 
 ### Output formats
 
 ```bash
 # Default: ANSI color swatches
-colorthief photo.jpg
+colorthief-cli photo.jpg
 # ▇▇ #e84393
 
 # JSON with full color data
-colorthief photo.jpg --json
+colorthief-cli photo.jpg --json
 
 # CSS custom properties
-colorthief palette photo.jpg --css
+colorthief-cli palette photo.jpg --css
 # :root {
 #     --color-1: #e84393;
 #     --color-2: #6c5ce7;
@@ -178,18 +189,22 @@ colorthief palette photo.jpg --css
 ### Options
 
 ```bash
-colorthief palette photo.jpg --count 5        # Number of colors (2-20)
-colorthief photo.jpg --quality 1              # Sampling quality (1=best)
-colorthief photo.jpg --color-space rgb        # Color space (rgb or oklch)
+colorthief-cli palette photo.jpg --count 5        # Number of colors (2-20)
+colorthief-cli photo.jpg --quality 1              # Sampling quality (1=best)
+colorthief-cli photo.jpg --color-space rgb        # Color space (rgb or oklch)
 ```
 
 Stdin is supported — use `-` or pipe directly:
 
 ```bash
-cat photo.jpg | colorthief -
+cat photo.jpg | colorthief-cli -
 ```
 
-Multiple files are supported. Output is prefixed with filenames, and `--json` wraps results in an object keyed by filename.
+Multiple files are supported. Output is prefixed with filenames, and `--json` wraps
+results in an object keyed by filename.
+
+> **Note:** If you already have `colorthief` and `sharp` installed in a project, you
+> can also use `colorthief` directly as the command name (without the `-cli` suffix).
 
 ## Links
 

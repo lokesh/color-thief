@@ -72,6 +72,9 @@
                 "types": "./dist/types/internals.d.cts",
                 "default": "./dist/internals.cjs"
             }
+        },
+        "./cli": {
+            "import": "./dist/cli.js"
         }
     },
     "main": "./dist/index.cjs",
