@@ -60,22 +60,22 @@ describe('getColor()', function() {
         expect(isValidRGB(color)).to.be.true;
     });
 
-    it('returns near-black for black.png', async function() {
+    it('returns perfect black for black.png', async function() {
         const color = await getColor(imgPath('black.png'));
         expect(isColorObject(color)).to.be.true;
-        expect(isCloseTo(color, [0, 0, 0])).to.be.true;
+        expect(color.array()).to.deep.equal([0, 0, 0]);
     });
 
-    it('returns near-red for red.png', async function() {
+    it('returns perfect red for red.png', async function() {
         const color = await getColor(imgPath('red.png'));
         expect(isColorObject(color)).to.be.true;
-        expect(isCloseTo(color, [255, 0, 0])).to.be.true;
+        expect(color.array()).to.deep.equal([255, 0, 0]);
     });
 
-    it('returns valid Color for white.png', async function() {
+    it('returns perfect white for white.png', async function() {
         const color = await getColor(imgPath('white.png'));
         expect(isColorObject(color)).to.be.true;
-        expect(isCloseTo(color, [255, 255, 255])).to.be.true;
+        expect(color.array()).to.deep.equal([255, 255, 255]);
     });
 
     it('returns valid Color for transparent.png', async function() {
