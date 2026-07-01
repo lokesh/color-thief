@@ -76,6 +76,7 @@ swatches.Vibrant?.color.hex();
 | `colorCount` | `10` | Number of palette colors (2–20) |
 | `quality` | `10` | Sampling rate (1 = every pixel, 10 = every 10th) |
 | `colorSpace` | `'oklch'` | Quantization space: `'rgb'` or `'oklch'` |
+| `gamut` | `'srgb'` | Output gamut: `'srgb'`, `'display-p3'`, or `'auto'` (browser only) |
 | `worker` | `false` | Offload to Web Worker (browser only) |
 | `signal` | — | `AbortSignal` to cancel extraction |
 | `ignoreWhite` | `true` | Skip white pixels |
@@ -88,8 +89,9 @@ swatches.Vibrant?.color.hex();
 | `.hex()` | `'#ff8000'` |
 | `.hsl()` | `{ h, s, l }` |
 | `.oklch()` | `{ l, c, h }` |
-| `.css(format?)` | `'rgb(255, 128, 0)'`, `'hsl(…)'`, or `'oklch(…)'` |
+| `.css(format?)` | `'rgb(255, 128, 0)'`, `'hsl(…)'`, or `'oklch(…)'` — a P3 color's default `.css()` is `color(display-p3 …)` |
 | `.array()` | `[r, g, b]` |
+| `.gamut` | `'srgb'` or `'display-p3'` |
 | `.toString()` | Hex string (works in template literals) |
 | `.textColor` | `'#ffffff'` or `'#000000'` |
 | `.isDark` / `.isLight` | Boolean |
@@ -110,6 +112,23 @@ const palette = getPaletteSync(img, { colorCount: 5 });
 ```
 
 Accepts `HTMLImageElement`, `HTMLCanvasElement`, `HTMLVideoElement`, `ImageData`, `ImageBitmap`, and `OffscreenCanvas`.
+
+### Wide-gamut (Display P3)
+
+By default colors are read and reported in sRGB. For P3-tagged / wide-gamut images, pass `gamut` to preserve the extra saturation:
+
+```js
+// Force P3: read the image through a P3 canvas, report P3 colors
+const palette = await getPalette(img, { gamut: 'display-p3' });
+palette[0].css();            // 'color(display-p3 0.92 0.2 0.14)'
+palette[0].gamut;            // 'display-p3'
+
+// Auto: report P3 only when the image actually uses out-of-sRGB colors,
+// otherwise behave exactly like sRGB
+const auto = await getPalette(img, { gamut: 'auto' });
+```
+
+`.rgb()`, `.array()`, and `.hex()` always return **sRGB** (gamut-mapped when the color is P3), so existing `rgb(...)` strings keep working. The wide-gamut values live in `.css()` and `.oklch()`; use `.rgb('display-p3')` for the raw P3 components. Falls back to sRGB where P3 canvas support is unavailable. Node output is sRGB for now.
 
 ### Live extraction with observe()
 

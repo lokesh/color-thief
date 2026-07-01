@@ -79,7 +79,7 @@ async function loadPixels(
 ): Promise<PixelData> {
     checkAborted(options?.signal);
     const loader = await getLoader(options?.loader);
-    return loader.load(source, options?.signal);
+    return loader.load(source, options?.signal, options?.gamut ?? 'srgb');
 }
 
 // ---------------------------------------------------------------------------
@@ -127,15 +127,23 @@ export async function getPalette(
             './worker/manager.js'
         );
         if (isWorkerSupported()) {
-            const { data, width, height } = await loadPixels(source, options);
-            const { createPixelArray } = await import('./pipeline.js');
-            const pixelArray = createPixelArray(data, width * height, opts.quality, {
+            const pixels = await loadPixels(source, options);
+            const { createPixelArray, resolveOutputGamut } = await import('./pipeline.js');
+            const pixelArray = createPixelArray(pixels.data, pixels.width * pixels.height, opts.quality, {
                 ignoreWhite: opts.ignoreWhite,
                 whiteThreshold: opts.whiteThreshold,
                 alphaThreshold: opts.alphaThreshold,
                 minSaturation: opts.minSaturation,
             });
-            return extractInWorker(pixelArray, opts.colorCount, options?.signal);
+            const nativeGamut = pixels.colorSpace ?? 'srgb';
+            const outputGamut = resolveOutputGamut(pixelArray, nativeGamut, opts.gamut);
+            return extractInWorker(
+                pixelArray,
+                opts.colorCount,
+                options?.signal,
+                nativeGamut,
+                outputGamut,
+            );
         }
         // Fall through to main thread if workers not supported
     }
@@ -153,6 +161,7 @@ export async function getPalette(
         pixels.height,
         opts,
         quantizer,
+        pixels.colorSpace ?? 'srgb',
     );
 }
 
@@ -203,5 +212,6 @@ export async function* getPaletteProgressive(
         opts,
         quantizer,
         options?.signal,
+        pixels.colorSpace ?? 'srgb',
     );
 }

@@ -1,4 +1,4 @@
-import type { NodeSource, PixelData, PixelLoader } from '../types.js';
+import type { Gamut, NodeSource, PixelData, PixelLoader } from '../types.js';
 
 /** Custom decoder signature for pluggable Node decoders. */
 export type NodeImageDecoder = (
@@ -24,12 +24,16 @@ export class NodePixelLoader implements PixelLoader<NodeSource> {
         this.decoder = options?.decoder ?? defaultSharpDecoder;
     }
 
-    async load(source: NodeSource): Promise<PixelData> {
+    // NOTE: `gamut` is accepted for API parity but Node output is sRGB for now.
+    // Wide-gamut (P3) decoding via sharp's ICC pipeline is planned for a
+    // follow-up; until then Node always returns sRGB pixels.
+    async load(source: NodeSource, _signal?: AbortSignal, _gamut: Gamut | 'auto' = 'srgb'): Promise<PixelData> {
         const result = await this.decoder(source);
         return {
             data: result.data,
             width: result.width,
             height: result.height,
+            colorSpace: 'srgb',
         };
     }
 }

@@ -2,6 +2,7 @@ import type {
     Color,
     ExtractionOptions,
     FilterOptions,
+    Gamut,
     PixelBuffer,
     Quantizer,
 } from './types.js';
@@ -9,6 +10,8 @@ import { createColor } from './color.js';
 import {
     pixelsRgbToOklchScaled,
     paletteOklchScaledToRgb,
+    isOutOfSrgbGamut,
+    p3ToSrgb,
 } from './color-space.js';
 
 // ---------------------------------------------------------------------------
@@ -23,6 +26,7 @@ export interface ValidatedOptions {
     alphaThreshold: number;
     minSaturation: number;
     colorSpace: 'rgb' | 'oklch';
+    gamut: Gamut | 'auto';
 }
 
 export function validateOptions(options: ExtractionOptions): ValidatedOptions {
@@ -58,6 +62,7 @@ export function validateOptions(options: ExtractionOptions): ValidatedOptions {
             ? Math.max(0, Math.min(1, options.minSaturation))
             : 0;
     const colorSpace = options.colorSpace ?? 'oklch';
+    const gamut = options.gamut ?? 'srgb';
 
     return {
         colorCount,
@@ -67,7 +72,35 @@ export function validateOptions(options: ExtractionOptions): ValidatedOptions {
         alphaThreshold,
         minSaturation,
         colorSpace,
+        gamut,
     };
+}
+
+// ---------------------------------------------------------------------------
+// Gamut resolution
+// ---------------------------------------------------------------------------
+
+/**
+ * Decide the output gamut for a set of sampled pixels.
+ * - sRGB pixels can only produce sRGB output.
+ * - Explicit `'display-p3'` always reports P3.
+ * - `'auto'` reports P3 only if some sampled pixel exceeds the sRGB gamut.
+ */
+export function resolveOutputGamut(
+    pixelArray: Array<[number, number, number]>,
+    nativeGamut: Gamut,
+    requested: Gamut | 'auto',
+): Gamut {
+    // An explicit sRGB request always wins (map P3 pixels down if needed).
+    if (requested === 'srgb') return 'srgb';
+    // sRGB pixels can never carry wide-gamut information.
+    if (nativeGamut !== 'display-p3') return 'srgb';
+    if (requested === 'auto') {
+        return pixelArray.some(([r, g, b]) => isOutOfSrgbGamut(r, g, b))
+            ? 'display-p3'
+            : 'srgb';
+    }
+    return 'display-p3';
 }
 
 // ---------------------------------------------------------------------------
@@ -162,6 +195,7 @@ export function extractPalette(
     height: number,
     opts: ValidatedOptions,
     quantizer: Quantizer,
+    pixelColorSpace: Gamut = 'srgb',
 ): Color[] | null {
     const pixelCount = width * height;
     const filterOptions: FilterOptions = {
@@ -187,6 +221,13 @@ export function extractPalette(
             alphaThreshold: 0,
         });
     }
+
+    // Resolve the output gamut, then map each color from the pixels' native
+    // gamut into it (only P3→sRGB is a non-identity conversion).
+    const nativeGamut: Gamut = pixelColorSpace;
+    const outputGamut = resolveOutputGamut(pixelArray, nativeGamut, opts.gamut);
+    const toOutput = (c: [number, number, number]): [number, number, number] =>
+        nativeGamut === outputGamut ? c : p3ToSrgb(c[0], c[1], c[2]);
 
     let quantized: Array<{ color: [number, number, number]; population: number }>;
 
@@ -221,9 +262,10 @@ export function extractPalette(
     }
     // OKLCH quantization path
     else if (opts.colorSpace === 'oklch') {
-        const scaled = pixelsRgbToOklchScaled(pixelArray);
+        const scaled = pixelsRgbToOklchScaled(pixelArray, nativeGamut);
         quantized = paletteOklchScaledToRgb(
             quantizer.quantize(scaled, opts.colorCount),
+            nativeGamut,
         );
     } else {
         quantized = quantizer.quantize(pixelArray, opts.colorCount);
@@ -231,12 +273,22 @@ export function extractPalette(
 
     if (quantized.length > 0) {
         const totalPopulation = quantized.reduce((sum, q) => sum + q.population, 0);
-        return quantized.map(({ color: [r, g, b], population }) =>
-            createColor(r, g, b, population, totalPopulation > 0 ? population / totalPopulation : 0),
-        );
+        return quantized.map(({ color, population }) => {
+            const [r, g, b] = toOutput(color);
+            return createColor(
+                r,
+                g,
+                b,
+                population,
+                totalPopulation > 0 ? population / totalPopulation : 0,
+                outputGamut,
+            );
+        });
     }
 
     // Fallback: average all pixels
     const fallback = computeFallbackColor(data, pixelCount, opts.quality);
-    return fallback ? [createColor(fallback[0], fallback[1], fallback[2], 1, 1)] : null;
+    if (!fallback) return null;
+    const [r, g, b] = toOutput(fallback);
+    return [createColor(r, g, b, 1, 1, outputGamut)];
 }

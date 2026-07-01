@@ -1,5 +1,6 @@
-import type { Color } from '../types.js';
+import type { Color, Gamut } from '../types.js';
 import { createColor } from '../color.js';
+import { p3ToSrgb } from '../color-space.js';
 import { WORKER_SOURCE } from './worker-script.js';
 
 let worker: Worker | null = null;
@@ -7,7 +8,12 @@ let blobUrl: string | null = null;
 let nextId = 0;
 const pending = new Map<
     number,
-    { resolve: (value: Color[]) => void; reject: (reason: unknown) => void }
+    {
+        resolve: (value: Color[]) => void;
+        reject: (reason: unknown) => void;
+        nativeGamut: Gamut;
+        outputGamut: Gamut;
+    }
 >();
 
 /** Check whether the current environment supports Web Workers. */
@@ -33,9 +39,20 @@ function getOrCreateWorker(): Worker {
             entry.reject(new Error(error));
         } else {
             const raw = palette as Array<{ color: [number, number, number]; population: number }>;
+            const { nativeGamut, outputGamut } = entry;
             const totalPopulation = raw.reduce((sum: number, q: { population: number }) => sum + q.population, 0);
-            const colors = raw.map(({ color: [r, g, b], population }) =>
-                createColor(r, g, b, population, totalPopulation > 0 ? population / totalPopulation : 0));
+            const colors = raw.map(({ color, population }) => {
+                const [r, g, b] =
+                    nativeGamut === outputGamut ? color : p3ToSrgb(color[0], color[1], color[2]);
+                return createColor(
+                    r,
+                    g,
+                    b,
+                    population,
+                    totalPopulation > 0 ? population / totalPopulation : 0,
+                    outputGamut,
+                );
+            });
             entry.resolve(colors);
         }
     };
@@ -59,6 +76,8 @@ export function extractInWorker(
     pixels: Array<[number, number, number]>,
     maxColors: number,
     signal?: AbortSignal,
+    nativeGamut: Gamut = 'srgb',
+    outputGamut: Gamut = 'srgb',
 ): Promise<Color[]> {
     return new Promise<Color[]>((resolve, reject) => {
         if (signal?.aborted) {
@@ -67,7 +86,7 @@ export function extractInWorker(
         }
 
         const id = nextId++;
-        pending.set(id, { resolve, reject });
+        pending.set(id, { resolve, reject, nativeGamut, outputGamut });
 
         const onAbort = () => {
             pending.delete(id);

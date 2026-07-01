@@ -1,7 +1,21 @@
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { getColor, getPalette, getSwatches, getPaletteProgressive, createColor } from '../dist/index.js';
-import { rgbToOklch, oklchToRgb } from '../dist/internals.js';
+import {
+    rgbToOklch,
+    oklchToRgb,
+    srgbToLinear,
+    linearToSrgb,
+    p3ToSrgb,
+    srgbToP3,
+    isOutOfSrgbGamut,
+    relativeLuminance,
+    resolveOutputGamut,
+    extractPalette,
+    validateOptions,
+    MmcqQuantizer,
+    createNodeLoader,
+} from '../dist/internals.js';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -427,5 +441,278 @@ describe('getPaletteProgressive()', function() {
         const final = results[results.length - 1];
         expect(final.palette).to.have.lengthOf(5);
         final.palette.forEach(c => expect(isColorObject(c)).to.be.true);
+    });
+});
+
+// ===========================================================================
+// Wide-gamut (Display P3) support
+// ===========================================================================
+
+describe('gamut math', function() {
+    it('srgb → p3 → srgb round-trips for in-gamut colors', function() {
+        // Tolerance is a few LSBs: the intermediate P3 value is re-quantized to
+        // 8-bit, so a double round-trip legitimately loses a little precision.
+        const samples = [[255, 0, 0], [0, 255, 0], [0, 0, 255], [128, 128, 128], [200, 100, 50]];
+        for (const [r, g, b] of samples) {
+            const [pr, pg, pb] = srgbToP3(r, g, b);
+            const [sr, sg, sb] = p3ToSrgb(pr, pg, pb);
+            expect(Math.abs(sr - r)).to.be.at.most(4);
+            expect(Math.abs(sg - g)).to.be.at.most(4);
+            expect(Math.abs(sb - b)).to.be.at.most(4);
+        }
+    });
+
+    it('isOutOfSrgbGamut: pure P3 primaries are outside sRGB', function() {
+        expect(isOutOfSrgbGamut(255, 0, 0)).to.be.true;
+        expect(isOutOfSrgbGamut(0, 255, 0)).to.be.true;
+    });
+
+    it('isOutOfSrgbGamut: neutrals and white stay in gamut', function() {
+        expect(isOutOfSrgbGamut(128, 128, 128)).to.be.false;
+        expect(isOutOfSrgbGamut(255, 255, 255)).to.be.false;
+        expect(isOutOfSrgbGamut(0, 0, 0)).to.be.false;
+    });
+
+    it('P3 red has higher OKLCH chroma than sRGB red', function() {
+        const srgb = rgbToOklch(255, 0, 0, 'srgb');
+        const p3 = rgbToOklch(255, 0, 0, 'display-p3');
+        expect(p3.c).to.be.greaterThan(srgb.c);
+    });
+
+    it('OKLCH round-trips in the P3 gamut within ±1', function() {
+        for (const [r, g, b] of [[255, 0, 0], [0, 200, 120], [40, 80, 220]]) {
+            const { l, c, h } = rgbToOklch(r, g, b, 'display-p3');
+            const [r2, g2, b2] = oklchToRgb(l, c, h, 'display-p3');
+            expect(Math.abs(r2 - r)).to.be.at.most(1);
+            expect(Math.abs(g2 - g)).to.be.at.most(1);
+            expect(Math.abs(b2 - b)).to.be.at.most(1);
+        }
+    });
+
+    it('relativeLuminance of white is ~1 in both gamuts', function() {
+        expect(relativeLuminance(255, 255, 255, 'srgb')).to.be.closeTo(1, 0.001);
+        expect(relativeLuminance(255, 255, 255, 'display-p3')).to.be.closeTo(1, 0.02);
+    });
+});
+
+describe('resolveOutputGamut()', function() {
+    it('sRGB pixels always resolve to sRGB', function() {
+        expect(resolveOutputGamut([[255, 0, 0]], 'srgb', 'auto')).to.equal('srgb');
+        expect(resolveOutputGamut([[255, 0, 0]], 'srgb', 'display-p3')).to.equal('srgb');
+    });
+
+    it('explicit display-p3 keeps P3 output', function() {
+        expect(resolveOutputGamut([[128, 128, 128]], 'display-p3', 'display-p3')).to.equal('display-p3');
+    });
+
+    it('auto upgrades to P3 only when a pixel is out of sRGB gamut', function() {
+        expect(resolveOutputGamut([[255, 0, 0]], 'display-p3', 'auto')).to.equal('display-p3');
+        expect(resolveOutputGamut([[128, 128, 128]], 'display-p3', 'auto')).to.equal('srgb');
+    });
+});
+
+describe('P3 Color object', function() {
+    it('reports its gamut', function() {
+        expect(createColor(255, 0, 0, 1, 0.5, 'display-p3').gamut).to.equal('display-p3');
+        expect(createColor(255, 0, 0, 1, 0.5).gamut).to.equal('srgb');
+    });
+
+    it('css() emits color(display-p3 ...) for P3 colors', function() {
+        const c = createColor(255, 0, 0, 1, 0.5, 'display-p3');
+        expect(c.css()).to.equal('color(display-p3 1 0 0)');
+    });
+
+    it('css(rgb) and default css stay sRGB for sRGB colors', function() {
+        const c = createColor(255, 0, 0, 1, 0.5);
+        expect(c.css()).to.equal('rgb(255, 0, 0)');
+        expect(c.css('rgb')).to.equal('rgb(255, 0, 0)');
+    });
+
+    it('hex()/array()/rgb() gamut-map P3 to safe sRGB values', function() {
+        const c = createColor(255, 0, 0, 1, 0.5, 'display-p3');
+        const [r, g, b] = c.array();
+        expect([r, g, b].every((v) => Number.isInteger(v) && v >= 0 && v <= 255)).to.be.true;
+        expect(c.hex()).to.match(/^#[0-9a-f]{6}$/);
+        // Default rgb() is sRGB-mapped; raw P3 available via rgb('display-p3').
+        expect(c.rgb('display-p3')).to.deep.equal({ r: 255, g: 0, b: 0 });
+    });
+
+    it('oklch() reflects the wider P3 chroma', function() {
+        const p3 = createColor(255, 0, 0, 1, 0.5, 'display-p3');
+        const srgb = createColor(255, 0, 0, 1, 0.5);
+        expect(p3.oklch().c).to.be.greaterThan(srgb.oklch().c);
+    });
+});
+
+// ===========================================================================
+// Pipeline gamut integration (extractPalette with synthetic P3 buffers)
+// ===========================================================================
+
+/** Build an RGBA buffer from RGB triplets (alpha defaults to 255). */
+function rgbaBuffer(pixels) {
+    const data = new Uint8ClampedArray(pixels.length * 4);
+    pixels.forEach(([r, g, b, a = 255], i) => {
+        data[i * 4] = r;
+        data[i * 4 + 1] = g;
+        data[i * 4 + 2] = b;
+        data[i * 4 + 3] = a;
+    });
+    return data;
+}
+
+describe('extractPalette() gamut integration', function() {
+    let quantizer;
+    before(async function() {
+        quantizer = new MmcqQuantizer();
+        await quantizer.init();
+    });
+
+    function run(pixels, gamut, pixelColorSpace, colorCount = 2) {
+        const data = rgbaBuffer(pixels);
+        const opts = validateOptions({ gamut, colorCount, quality: 1 });
+        return extractPalette(data, pixels.length, 1, opts, quantizer, pixelColorSpace);
+    }
+
+    it('explicit display-p3 tags colors P3 and preserves saturation', function() {
+        const palette = run(Array(16).fill([255, 0, 0]), 'display-p3', 'display-p3');
+        expect(palette[0].gamut).to.equal('display-p3');
+        expect(palette[0].css()).to.match(/^color\(display-p3 /);
+        expect(palette[0].rgb('display-p3').r).to.be.greaterThan(250);
+    });
+
+    it("auto upgrades to P3 when pixels are out of sRGB gamut", function() {
+        const palette = run(Array(16).fill([255, 0, 0]), 'auto', 'display-p3');
+        expect(palette[0].gamut).to.equal('display-p3');
+    });
+
+    it('auto stays sRGB when P3 pixels are all within sRGB gamut', function() {
+        const palette = run(Array(16).fill([128, 128, 128]), 'auto', 'display-p3');
+        expect(palette[0].gamut).to.equal('srgb');
+        expect(isCloseTo(palette[0], [128, 128, 128], 3)).to.be.true;
+    });
+
+    it('explicit srgb request maps P3 pixels down to sRGB', function() {
+        // Guards the resolveOutputGamut fix: an explicit sRGB request wins even
+        // when the pixels are P3-encoded.
+        const palette = run(Array(16).fill([255, 0, 0]), 'srgb', 'display-p3');
+        expect(palette[0].gamut).to.equal('srgb');
+        const [r, g, b] = palette[0].array();
+        expect(r).to.be.greaterThan(240);
+        expect(g).to.be.at.most(20);
+        expect(b).to.be.at.most(20);
+    });
+
+    it('sRGB pixels stay sRGB by default', function() {
+        const palette = run(Array(16).fill([10, 120, 200]), 'srgb', 'srgb');
+        expect(palette[0].gamut).to.equal('srgb');
+        expect(isCloseTo(palette[0], [10, 120, 200], 2)).to.be.true;
+    });
+
+    it('quantizer path (more colors than colorCount) keeps the gamut tag', function() {
+        const colors = [
+            [255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0],
+            [0, 255, 255], [255, 0, 255], [128, 64, 32], [32, 64, 128],
+        ];
+        const palette = run(colors, 'display-p3', 'display-p3', 4);
+        expect(palette.length).to.be.greaterThan(1);
+        palette.forEach((c) => expect(c.gamut).to.equal('display-p3'));
+    });
+});
+
+describe('validateOptions() gamut', function() {
+    it('defaults gamut to srgb', function() {
+        expect(validateOptions({}).gamut).to.equal('srgb');
+    });
+    it('passes through display-p3 and auto', function() {
+        expect(validateOptions({ gamut: 'display-p3' }).gamut).to.equal('display-p3');
+        expect(validateOptions({ gamut: 'auto' }).gamut).to.equal('auto');
+    });
+});
+
+// ===========================================================================
+// P3 Color object — accessor consistency
+// ===========================================================================
+
+describe('P3 Color object accessors', function() {
+    const p3 = () => createColor(255, 0, 0, 1, 0.5, 'display-p3');
+
+    it("css('rgb') stays sRGB even for a P3 color", function() {
+        expect(p3().css('rgb')).to.match(/^rgb\(/);
+        expect(p3().css('rgb')).to.not.contain('display-p3');
+    });
+
+    it('default rgb(), rgb("srgb") and array() agree (all sRGB)', function() {
+        const c = p3();
+        const def = c.rgb();
+        expect(c.rgb('srgb')).to.deep.equal(def);
+        expect(c.array()).to.deep.equal([def.r, def.g, def.b]);
+    });
+
+    it('toString()/hex() are sRGB for a P3 color', function() {
+        const c = p3();
+        expect(c.toString()).to.equal(c.hex());
+        const [r, g, b] = c.array();
+        const hex = '#' + [r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('');
+        expect(c.hex()).to.equal(hex);
+    });
+
+    it("rgb('display-p3') widens an sRGB color into P3", function() {
+        const srgb = createColor(255, 0, 0, 1, 0.5); // sRGB red
+        const { r, g, b } = srgb.rgb('display-p3');
+        // sRGB red is less saturated than P3 red, so it encodes below the P3 corner.
+        expect(r).to.be.within(200, 250);
+        expect(g).to.be.greaterThan(30);
+        expect(b).to.be.greaterThan(15);
+    });
+
+    it('lazy accessors are cached (return the same object)', function() {
+        const c = p3();
+        expect(c.oklch()).to.equal(c.oklch());
+        expect(c.hsl()).to.equal(c.hsl());
+    });
+
+    it('gamut-aware luminance still yields a usable isDark/contrast', function() {
+        const c = p3();
+        expect(c.isDark).to.be.a('boolean');
+        expect(c.isLight).to.equal(!c.isDark);
+        expect(c.contrast.white).to.be.within(1, 21);
+        expect(c.contrast.black).to.be.within(1, 21);
+    });
+});
+
+// ===========================================================================
+// Existing-gap coverage
+// ===========================================================================
+
+describe('sRGB transfer round-trip', function() {
+    it('linearToSrgb(srgbToLinear(c)) === c for integer channels', function() {
+        for (const c of [0, 1, 15, 64, 128, 200, 254, 255]) {
+            expect(linearToSrgb(srgbToLinear(c))).to.equal(c);
+        }
+    });
+});
+
+describe('oklchToRgb clamping', function() {
+    it('clamps impossible (over-saturated) OKLCH into 0–255', function() {
+        const [r, g, b] = oklchToRgb(0.6, 5, 30); // chroma far beyond any gamut
+        [r, g, b].forEach((v) => {
+            expect(Number.isInteger(v)).to.be.true;
+            expect(v).to.be.within(0, 255);
+        });
+    });
+});
+
+describe('custom Node decoder', function() {
+    it('honors a decoder supplied via createNodeLoader', async function() {
+        const loader = createNodeLoader({
+            decoder: async () => ({
+                data: new Uint8Array([12, 34, 56, 255, 12, 34, 56, 255]),
+                width: 2,
+                height: 1,
+            }),
+        });
+        const color = await getColor('ignored-source', { loader });
+        expect(color.array()).to.deep.equal([12, 34, 56]);
+        expect(color.gamut).to.equal('srgb');
     });
 });

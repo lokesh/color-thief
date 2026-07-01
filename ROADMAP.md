@@ -12,9 +12,11 @@ Features we've deliberately decided not to build, so we don't keep revisiting th
 
 Let callers extract colors from a sub-rectangle of the image rather than the whole thing (crop a rect before extraction). This is the most-requested evergreen feature — issue #176, plus earlier attempts in closed PRs #44 and #90 — and it's self-contained: clip the source to the given bounds before the pixel array is built, leaving the rest of the pipeline untouched.
 
-## Fix: wide-gamut / display-P3 handling
+## Feature: Node wide-gamut (display-P3) output
 
-Extraction of wide-gamut (display-P3) images can produce out-of-range output like `rgb(256, 4, 4)` — a real correctness bug (issue #266) that grows more relevant as P3 content becomes common. Approach: detect tagged wide-gamut images and/or expose a `colorSpace` passthrough to the canvas 2D context so pixels are read in a defined space, then clamp/convert results back to valid sRGB. Medium-to-hard; also future-proofs the pipeline.
+Browser wide-gamut support shipped in the `gamut` option work ([#266](https://github.com/lokesh/color-thief/issues/266)): the browser loader reads through a P3 canvas, quantization runs in gamut-aware OKLCH, and `Color` objects carry `.gamut` with P3-faithful `.css()`/`.oklch()` while `.rgb()`/`.array()`/`.hex()` stay sRGB. Node still returns sRGB only.
+
+What remains is P3 output on the Node path. `sharp` can already surface the embedded ICC tag via `metadata()`, so detection is easy; the work is driving its libvips color-transform pipeline to emit P3-encoded pixels (tagged `display-p3`) so `getColor`/`getPalette` reach parity with the browser. Possible later refinement: per-color rather than per-extraction gamut tagging, if a use case needs a mixed-gamut palette.
 
 ## Big bet: accessible scheme generation
 

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Color Thief - Wide-gamut (Display P3) Tests</title>
+</head>
+<body>
+    <!-- Solid pixels are 255,0,0 tagged with a Display P3 ICC profile, so the
+         red is outside the sRGB gamut when read through a P3 canvas. -->
+    <img id="img-p3-red" src="./img/p3-red.png" crossorigin="anonymous" />
+
+    <script src="/dist/umd/color-thief.global.js"></script>
+    <script>
+        var images = document.querySelectorAll('img');
+        var loaded = 0;
+        var total = images.length;
+
+        function checkAllLoaded() {
+            loaded++;
+            if (loaded === total) {
+                document.body.setAttribute('data-ready', 'true');
+            }
+        }
+
+        images.forEach(function(img) {
+            if (img.complete) {
+                checkAllLoaded();
+            } else {
+                img.addEventListener('load', checkAllLoaded);
+                img.addEventListener('error', checkAllLoaded);
+            }
+        });
+    </script>
+</body>
+</html>
