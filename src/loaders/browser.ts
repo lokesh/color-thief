@@ -1,39 +1,46 @@
-import type { BrowserSource, PixelData, PixelLoader } from '../types.js';
+import type { BrowserSource, Gamut, PixelData, PixelLoader } from '../types.js';
+import { readViaCanvas, readFromContext } from './canvas-utils.js';
 
 /**
  * Browser pixel loader. Extracts RGBA pixel data from DOM image sources
  * using an off-screen canvas.
+ *
+ * The optional `gamut` argument controls the color space pixels are read in:
+ * `'srgb'` (default), `'display-p3'`, or `'auto'`. It falls back to sRGB when
+ * the environment lacks P3 canvas support.
  */
 export class BrowserPixelLoader implements PixelLoader<BrowserSource> {
-    async load(source: BrowserSource): Promise<PixelData> {
+    async load(source: BrowserSource, _signal?: AbortSignal, gamut: Gamut | 'auto' = 'srgb'): Promise<PixelData> {
         if (typeof HTMLImageElement !== 'undefined' && source instanceof HTMLImageElement) {
-            return this.loadFromImage(source);
+            return this.loadFromImage(source, gamut);
         }
         if (typeof HTMLCanvasElement !== 'undefined' && source instanceof HTMLCanvasElement) {
-            return this.loadFromCanvas(source);
+            return this.loadFromCanvas(source, gamut);
         }
         if (typeof ImageData !== 'undefined' && source instanceof ImageData) {
             return {
                 data: source.data,
                 width: source.width,
                 height: source.height,
+                // ImageData carries its own color space — honor it.
+                colorSpace: (source.colorSpace as Gamut) ?? 'srgb',
             };
         }
         if (typeof HTMLVideoElement !== 'undefined' && source instanceof HTMLVideoElement) {
-            return this.loadFromVideo(source);
+            return this.loadFromVideo(source, gamut);
         }
         if (typeof ImageBitmap !== 'undefined' && source instanceof ImageBitmap) {
-            return this.loadFromImageBitmap(source);
+            return this.loadFromImageBitmap(source, gamut);
         }
         if (typeof OffscreenCanvas !== 'undefined' && source instanceof OffscreenCanvas) {
-            return this.loadFromOffscreenCanvas(source);
+            return this.loadFromOffscreenCanvas(source, gamut);
         }
         throw new Error(
             'Unsupported source type. Expected HTMLImageElement, HTMLCanvasElement, HTMLVideoElement, ImageData, ImageBitmap, or OffscreenCanvas.',
         );
     }
 
-    private loadFromImage(img: HTMLImageElement): PixelData {
+    private loadFromImage(img: HTMLImageElement, gamut: Gamut | 'auto'): PixelData {
         if (!img.complete) {
             throw new Error(
                 'Image has not finished loading. Wait for the "load" event before calling getColor/getPalette.',
@@ -44,34 +51,17 @@ export class BrowserPixelLoader implements PixelLoader<BrowserSource> {
                 'Image has no dimensions. It may not have loaded successfully.',
             );
         }
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
-        const width = (canvas.width = img.naturalWidth);
-        const height = (canvas.height = img.naturalHeight);
-        ctx.drawImage(img, 0, 0, width, height);
-        try {
-            const imageData = ctx.getImageData(0, 0, width, height);
-            return { data: imageData.data, width, height };
-        } catch (e: unknown) {
-            if (e instanceof DOMException && e.name === 'SecurityError') {
-                const err = new Error(
-                    'Image is tainted by cross-origin data. Add crossorigin="anonymous" to the <img> tag and ensure the server sends appropriate CORS headers.',
-                );
-                err.cause = e;
-                throw err;
-            }
-            throw e;
-        }
+        return readViaCanvas(img.naturalWidth, img.naturalHeight, gamut, (ctx) =>
+            ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight),
+        );
     }
 
-    private loadFromCanvas(canvas: HTMLCanvasElement): PixelData {
+    private loadFromCanvas(canvas: HTMLCanvasElement, gamut: Gamut | 'auto'): PixelData {
         const ctx = canvas.getContext('2d')!;
-        const { width, height } = canvas;
-        const imageData = ctx.getImageData(0, 0, width, height);
-        return { data: imageData.data, width, height };
+        return readFromContext(ctx, canvas.width, canvas.height, gamut);
     }
 
-    private loadFromVideo(video: HTMLVideoElement): PixelData {
+    private loadFromVideo(video: HTMLVideoElement, gamut: Gamut | 'auto'): PixelData {
         if (video.readyState < 2) {
             throw new Error(
                 'Video is not ready. Wait for the "loadeddata" or "canplay" event before calling getColor/getPalette.',
@@ -84,34 +74,24 @@ export class BrowserPixelLoader implements PixelLoader<BrowserSource> {
                 'Video has no dimensions. It may not have loaded successfully.',
             );
         }
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
-        canvas.width = width;
-        canvas.height = height;
-        ctx.drawImage(video, 0, 0, width, height);
-        const imageData = ctx.getImageData(0, 0, width, height);
-        return { data: imageData.data, width, height };
+        return readViaCanvas(width, height, gamut, (ctx) =>
+            ctx.drawImage(video, 0, 0, width, height),
+        );
     }
 
-    private loadFromOffscreenCanvas(canvas: OffscreenCanvas): PixelData {
+    private loadFromOffscreenCanvas(canvas: OffscreenCanvas, gamut: Gamut | 'auto'): PixelData {
         const ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
         if (!ctx) {
             throw new Error(
                 'Could not get 2D context from OffscreenCanvas.',
             );
         }
-        const { width, height } = canvas;
-        const imageData = ctx.getImageData(0, 0, width, height);
-        return { data: imageData.data, width, height };
+        return readFromContext(ctx, canvas.width, canvas.height, gamut);
     }
 
-    private loadFromImageBitmap(bitmap: ImageBitmap): PixelData {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
-        canvas.width = bitmap.width;
-        canvas.height = bitmap.height;
-        ctx.drawImage(bitmap, 0, 0);
-        const imageData = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
-        return { data: imageData.data, width: bitmap.width, height: bitmap.height };
+    private loadFromImageBitmap(bitmap: ImageBitmap, gamut: Gamut | 'auto'): PixelData {
+        return readViaCanvas(bitmap.width, bitmap.height, gamut, (ctx) =>
+            ctx.drawImage(bitmap, 0, 0),
+        );
     }
 }

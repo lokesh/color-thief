@@ -36,6 +36,7 @@ export type {
     RGB,
     HSL,
     OKLCH,
+    Gamut,
     FilterOptions,
     ColorSpace,
     ExtractionOptions,

@@ -25,6 +25,10 @@ export {
     linearToSrgb,
     pixelsRgbToOklchScaled,
     paletteOklchScaledToRgb,
+    p3ToSrgb,
+    srgbToP3,
+    isOutOfSrgbGamut,
+    relativeLuminance,
 } from './color-space.js';
 
 // Worker manager
@@ -40,10 +44,12 @@ export {
     createPixelArray,
     computeFallbackColor,
     extractPalette,
+    resolveOutputGamut,
 } from './pipeline.js';
 
 // Types not needed by most consumers
 export type {
+    Gamut,
     PixelBuffer,
     PixelData,
     PixelLoader,

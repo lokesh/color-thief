@@ -1,5 +1,5 @@
-import type { RGB, HSL, OKLCH, Color, ContrastInfo, CssColorFormat } from './types.js';
-import { rgbToOklch } from './color-space.js';
+import type { RGB, HSL, OKLCH, Color, ContrastInfo, CssColorFormat, Gamut } from './types.js';
+import { rgbToOklch, p3ToSrgb, srgbToP3, relativeLuminance } from './color-space.js';
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -35,15 +35,6 @@ function rgbToHsl(r: number, g: number, b: number): HSL {
     };
 }
 
-/** WCAG relative luminance from sRGB 0–255. */
-function relativeLuminance(r: number, g: number, b: number): number {
-    const toLinear = (c: number) => {
-        const s = c / 255;
-        return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
-    };
-    return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
-}
-
 /** WCAG contrast ratio between two luminances (always ≥ 1). */
 function contrastRatio(l1: number, l2: number): number {
     const lighter = Math.max(l1, l2);
@@ -56,49 +47,89 @@ function contrastRatio(l1: number, l2: number): number {
 // ---------------------------------------------------------------------------
 
 class ColorImpl implements Color {
+    // Channels are stored in the color's native gamut (_gamut).
     private readonly _r: number;
     private readonly _g: number;
     private readonly _b: number;
+    readonly gamut: Gamut;
     readonly population: number;
     readonly proportion: number;
 
+    private _srgb: [number, number, number] | undefined;
     private _hsl: HSL | undefined;
     private _oklch: OKLCH | undefined;
     private _luminance: number | undefined;
     private _contrast: ContrastInfo | undefined;
 
-    constructor(r: number, g: number, b: number, population: number, proportion: number) {
+    constructor(
+        r: number,
+        g: number,
+        b: number,
+        population: number,
+        proportion: number,
+        gamut: Gamut = 'srgb',
+    ) {
         this._r = r;
         this._g = g;
         this._b = b;
+        this.gamut = gamut;
         this.population = population;
         this.proportion = proportion;
     }
 
-    rgb(): RGB {
-        return { r: this._r, g: this._g, b: this._b };
+    /** Channels gamut-mapped to sRGB (identity when already sRGB). */
+    private get srgb(): [number, number, number] {
+        if (!this._srgb) {
+            this._srgb =
+                this.gamut === 'display-p3'
+                    ? p3ToSrgb(this._r, this._g, this._b)
+                    : [this._r, this._g, this._b];
+        }
+        return this._srgb;
+    }
+
+    rgb(gamut: Gamut = 'srgb'): RGB {
+        if (gamut === this.gamut) {
+            return { r: this._r, g: this._g, b: this._b };
+        }
+        // gamut differs from native: convert.
+        const [r, g, b] =
+            gamut === 'display-p3'
+                ? srgbToP3(this._r, this._g, this._b) // native is sRGB
+                : this.srgb; // native is P3
+        return { r, g, b };
     }
 
     hex(): string {
+        const [r, g, b] = this.srgb;
         const toHex = (n: number) => n.toString(16).padStart(2, '0');
-        return `#${toHex(this._r)}${toHex(this._g)}${toHex(this._b)}`;
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
     }
 
     hsl(): HSL {
         if (!this._hsl) {
-            this._hsl = rgbToHsl(this._r, this._g, this._b);
+            const [r, g, b] = this.srgb;
+            this._hsl = rgbToHsl(r, g, b);
         }
         return this._hsl;
     }
 
     oklch(): OKLCH {
         if (!this._oklch) {
-            this._oklch = rgbToOklch(this._r, this._g, this._b);
+            this._oklch = rgbToOklch(this._r, this._g, this._b, this.gamut);
         }
         return this._oklch;
     }
 
-    css(format: CssColorFormat = 'rgb'): string {
+    css(format?: CssColorFormat): string {
+        // Default format preserves the color's native gamut.
+        if (format === undefined) {
+            if (this.gamut === 'display-p3') {
+                const f = (n: number) => +(n / 255).toFixed(4);
+                return `color(display-p3 ${f(this._r)} ${f(this._g)} ${f(this._b)})`;
+            }
+            format = 'rgb';
+        }
         switch (format) {
             case 'hsl': {
                 const { h, s, l } = this.hsl();
@@ -109,13 +140,15 @@ class ColorImpl implements Color {
                 return `oklch(${l.toFixed(3)} ${c.toFixed(3)} ${h.toFixed(1)})`;
             }
             case 'rgb':
-            default:
-                return `rgb(${this._r}, ${this._g}, ${this._b})`;
+            default: {
+                const [r, g, b] = this.srgb;
+                return `rgb(${r}, ${g}, ${b})`;
+            }
         }
     }
 
     array(): [number, number, number] {
-        return [this._r, this._g, this._b];
+        return [...this.srgb];
     }
 
     toString(): string {
@@ -128,7 +161,7 @@ class ColorImpl implements Color {
 
     private get luminance(): number {
         if (this._luminance === undefined) {
-            this._luminance = relativeLuminance(this._r, this._g, this._b);
+            this._luminance = relativeLuminance(this._r, this._g, this._b, this.gamut);
         }
         return this._luminance;
     }
@@ -163,13 +196,17 @@ class ColorImpl implements Color {
 // Factory
 // ---------------------------------------------------------------------------
 
-/** Create a Color object from RGB components, population count, and proportion. */
+/**
+ * Create a Color object from RGB components, population count, and proportion.
+ * Components are interpreted in `gamut` (default `'srgb'`).
+ */
 export function createColor(
     r: number,
     g: number,
     b: number,
     population: number,
     proportion: number = 0,
+    gamut: Gamut = 'srgb',
 ): Color {
-    return new ColorImpl(r, g, b, population, proportion);
+    return new ColorImpl(r, g, b, population, proportion, gamut);
 }

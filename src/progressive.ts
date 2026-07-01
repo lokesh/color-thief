@@ -1,5 +1,6 @@
 import type {
     Color,
+    Gamut,
     PixelBuffer,
     ProgressiveResult,
     Quantizer,
@@ -29,6 +30,7 @@ export async function* extractProgressive(
     opts: ValidatedOptions,
     quantizer: Quantizer,
     signal?: AbortSignal,
+    pixelColorSpace: Gamut = 'srgb',
 ): AsyncGenerator<ProgressiveResult> {
     for (let i = 0; i < PASSES.length; i++) {
         if (signal?.aborted) {
@@ -41,7 +43,7 @@ export async function* extractProgressive(
             quality: opts.quality * pass.divisor,
         };
 
-        const palette = extractPalette(data, width, height, passOpts, quantizer);
+        const palette = extractPalette(data, width, height, passOpts, quantizer, pixelColorSpace);
         const done = i === PASSES.length - 1;
 
         yield {

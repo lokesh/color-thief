@@ -12,13 +12,15 @@ import type {
     Color,
     FilterOptions,
     ColorSpace,
+    Gamut,
+    PixelData,
     Quantizer,
     SwatchMap,
 } from './types.js';
-import { BrowserPixelLoader } from './loaders/browser.js';
 import { MmcqQuantizer } from './quantizers/mmcq.js';
 import { validateOptions, extractPalette } from './pipeline.js';
 import { classifySwatches } from './swatches.js';
+import { readViaCanvas, readFromContext } from './loaders/canvas-utils.js';
 
 // ---------------------------------------------------------------------------
 // Sync-specific options (subset — no worker, no signal, no loader)
@@ -31,6 +33,11 @@ export interface SyncExtractionOptions extends FilterOptions {
     quality?: number;
     /** Color space for quantization. @default 'rgb' */
     colorSpace?: ColorSpace;
+    /**
+     * Output color gamut: `'srgb'` (default), `'display-p3'`, or `'auto'`.
+     * Falls back to sRGB where P3 canvas support is unavailable.
+     */
+    gamut?: Gamut | 'auto';
     /** Override the quantizer for this call. Must already be init()'d. */
     quantizer?: Quantizer;
 }
@@ -39,7 +46,6 @@ export interface SyncExtractionOptions extends FilterOptions {
 // Shared singletons
 // ---------------------------------------------------------------------------
 
-const loader = new BrowserPixelLoader();
 const defaultQuantizer = new MmcqQuantizer();
 
 // ---------------------------------------------------------------------------
@@ -77,10 +83,9 @@ export function getPaletteSync(
     const opts = validateOptions(options ?? {});
     const quantizer = options?.quantizer ?? defaultQuantizer;
 
-    // BrowserPixelLoader.load is async in signature but synchronous in practice
-    // for HTMLImageElement/Canvas/ImageData/ImageBitmap. We call the internal
-    // methods directly to avoid the Promise wrapper.
-    const pixels = loadPixelsSync(source);
+    // Reads pixels synchronously (no Promise wrapper) via the shared canvas
+    // helpers, so gamut handling matches the async BrowserPixelLoader.
+    const pixels = loadPixelsSync(source, opts.gamut);
 
     return extractPalette(
         pixels.data,
@@ -88,6 +93,7 @@ export function getPaletteSync(
         pixels.height,
         opts,
         quantizer,
+        pixels.colorSpace ?? 'srgb',
     );
 }
 
@@ -111,31 +117,42 @@ export function getSwatchesSync(
 // Internal sync pixel loading
 // ---------------------------------------------------------------------------
 
-function loadPixelsSync(source: BrowserSource) {
+function loadPixelsSync(source: BrowserSource, gamut: Gamut | 'auto'): PixelData {
     if (typeof HTMLImageElement !== 'undefined' && source instanceof HTMLImageElement) {
-        return loadFromImage(source);
+        return loadFromImage(source, gamut);
     }
     if (typeof HTMLCanvasElement !== 'undefined' && source instanceof HTMLCanvasElement) {
-        return loadFromCanvas(source);
+        return readFromContext(source.getContext('2d')!, source.width, source.height, gamut);
     }
     if (typeof ImageData !== 'undefined' && source instanceof ImageData) {
-        return { data: source.data, width: source.width, height: source.height };
+        return {
+            data: source.data,
+            width: source.width,
+            height: source.height,
+            colorSpace: (source.colorSpace as Gamut) ?? 'srgb',
+        };
     }
     if (typeof HTMLVideoElement !== 'undefined' && source instanceof HTMLVideoElement) {
-        return loadFromVideo(source);
+        return loadFromVideo(source, gamut);
     }
     if (typeof ImageBitmap !== 'undefined' && source instanceof ImageBitmap) {
-        return loadFromImageBitmap(source);
+        return readViaCanvas(source.width, source.height, gamut, (ctx) =>
+            ctx.drawImage(source, 0, 0),
+        );
     }
     if (typeof OffscreenCanvas !== 'undefined' && source instanceof OffscreenCanvas) {
-        return loadFromOffscreenCanvas(source);
+        const ctx = source.getContext('2d') as OffscreenCanvasRenderingContext2D;
+        if (!ctx) {
+            throw new Error('Could not get 2D context from OffscreenCanvas.');
+        }
+        return readFromContext(ctx, source.width, source.height, gamut);
     }
     throw new Error(
         'Unsupported source type. Expected HTMLImageElement, HTMLCanvasElement, HTMLVideoElement, ImageData, ImageBitmap, or OffscreenCanvas.',
     );
 }
 
-function loadFromImage(img: HTMLImageElement) {
+function loadFromImage(img: HTMLImageElement, gamut: Gamut | 'auto'): PixelData {
     if (!img.complete) {
         throw new Error(
             'Image has not finished loading. Wait for the "load" event before calling getColorSync/getPaletteSync.',
@@ -146,34 +163,12 @@ function loadFromImage(img: HTMLImageElement) {
             'Image has no dimensions. It may not have loaded successfully.',
         );
     }
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
-    const width = (canvas.width = img.naturalWidth);
-    const height = (canvas.height = img.naturalHeight);
-    ctx.drawImage(img, 0, 0, width, height);
-    try {
-        const imageData = ctx.getImageData(0, 0, width, height);
-        return { data: imageData.data, width, height };
-    } catch (e: unknown) {
-        if (e instanceof DOMException && e.name === 'SecurityError') {
-            const err = new Error(
-                'Image is tainted by cross-origin data. Add crossorigin="anonymous" to the <img> tag and ensure the server sends appropriate CORS headers.',
-            );
-            err.cause = e;
-            throw err;
-        }
-        throw e;
-    }
+    return readViaCanvas(img.naturalWidth, img.naturalHeight, gamut, (ctx) =>
+        ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight),
+    );
 }
 
-function loadFromCanvas(canvas: HTMLCanvasElement) {
-    const ctx = canvas.getContext('2d')!;
-    const { width, height } = canvas;
-    const imageData = ctx.getImageData(0, 0, width, height);
-    return { data: imageData.data, width, height };
-}
-
-function loadFromVideo(video: HTMLVideoElement) {
+function loadFromVideo(video: HTMLVideoElement, gamut: Gamut | 'auto'): PixelData {
     if (video.readyState < 2) {
         throw new Error(
             'Video is not ready. Wait for the "loadeddata" or "canplay" event before calling getColorSync/getPaletteSync.',
@@ -186,33 +181,7 @@ function loadFromVideo(video: HTMLVideoElement) {
             'Video has no dimensions. It may not have loaded successfully.',
         );
     }
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
-    canvas.width = width;
-    canvas.height = height;
-    ctx.drawImage(video, 0, 0, width, height);
-    const imageData = ctx.getImageData(0, 0, width, height);
-    return { data: imageData.data, width, height };
-}
-
-function loadFromOffscreenCanvas(canvas: OffscreenCanvas) {
-    const ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
-    if (!ctx) {
-        throw new Error(
-            'Could not get 2D context from OffscreenCanvas.',
-        );
-    }
-    const { width, height } = canvas;
-    const imageData = ctx.getImageData(0, 0, width, height);
-    return { data: imageData.data, width, height };
-}
-
-function loadFromImageBitmap(bitmap: ImageBitmap) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
-    canvas.width = bitmap.width;
-    canvas.height = bitmap.height;
-    ctx.drawImage(bitmap, 0, 0);
-    const imageData = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
-    return { data: imageData.data, width: bitmap.width, height: bitmap.height };
+    return readViaCanvas(width, height, gamut, (ctx) =>
+        ctx.drawImage(video, 0, 0, width, height),
+    );
 }

@@ -23,6 +23,12 @@ export interface OKLCH {
     h: number;
 }
 
+/**
+ * Output color gamut. `'srgb'` is the classic 8-bit sRGB range; `'display-p3'`
+ * is the wider gamut used by modern displays and P3-tagged images.
+ */
+export type Gamut = 'srgb' | 'display-p3';
+
 // ---------------------------------------------------------------------------
 // Pixel data
 // ---------------------------------------------------------------------------
@@ -35,6 +41,11 @@ export interface PixelData {
     data: PixelBuffer;
     width: number;
     height: number;
+    /**
+     * Color space the pixel values are encoded in. When omitted, `'srgb'` is
+     * assumed. `'display-p3'` means the RGB values cover the wider P3 gamut.
+     */
+    colorSpace?: Gamut;
 }
 
 // ---------------------------------------------------------------------------
@@ -64,6 +75,17 @@ export interface ExtractionOptions extends FilterOptions {
     quality?: number;
     /** Color space for quantization. @default 'oklch' */
     colorSpace?: ColorSpace;
+    /**
+     * Output color gamut for the returned colors (browser only).
+     * - `'srgb'` — classic sRGB output (default, fully backward compatible).
+     * - `'display-p3'` — read the source through a P3 canvas and report P3 colors.
+     * - `'auto'` — read wide, but only report `'display-p3'` if the image
+     *   actually contains colors outside the sRGB gamut; otherwise `'srgb'`.
+     *
+     * Falls back to `'srgb'` when the environment lacks P3 canvas support.
+     * @default 'srgb'
+     */
+    gamut?: Gamut | 'auto';
     /** AbortSignal to cancel extraction. */
     signal?: AbortSignal;
     /** Offload quantization to a Web Worker (browser only). @default false */
@@ -93,18 +115,27 @@ export type CssColorFormat = 'rgb' | 'hsl' | 'oklch';
 
 /** A rich color extracted from an image. */
 export interface Color {
-    /** RGB components. */
-    rgb(): RGB;
-    /** Hex string e.g. '#ff0000'. */
+    /**
+     * RGB components. Defaults to sRGB (gamut-mapped when the color is P3), so
+     * hand-built `rgb(...)` strings are always safe. Pass `'display-p3'` to get
+     * the raw wide-gamut components instead.
+     */
+    rgb(gamut?: Gamut): RGB;
+    /** Hex string e.g. '#ff0000'. Always sRGB (gamut-mapped for P3 colors). */
     hex(): string;
     /** HSL components. */
     hsl(): HSL;
     /** OKLCH components. */
     oklch(): OKLCH;
-    /** CSS color string. @default 'rgb' */
+    /**
+     * CSS color string. For a `'display-p3'` color the default format emits
+     * `color(display-p3 r g b)`, preserving the wide gamut. @default 'rgb'
+     */
     css(format?: CssColorFormat): string;
-    /** RGB tuple [r, g, b]. */
+    /** RGB tuple [r, g, b]. Always sRGB (gamut-mapped for P3 colors). */
     array(): [number, number, number];
+    /** Gamut the color was extracted in — `'srgb'` or `'display-p3'`. */
+    readonly gamut: Gamut;
     /** Hex string. Allows Color to be used directly in template literals and string contexts. */
     toString(): string;
     /** '#ffffff' or '#000000' — the readable text color for this background. */
@@ -150,8 +181,11 @@ export type SwatchMap = Record<SwatchRole, Swatch | null>;
 
 /** Contract for loading pixel data from a platform-specific source. */
 export interface PixelLoader<TSource> {
-    /** Load and decode the source into raw pixel data. */
-    load(source: TSource, signal?: AbortSignal): Promise<PixelData>;
+    /**
+     * Load and decode the source into raw pixel data. `gamut` requests the
+     * color space to read in; implementations may ignore it and return sRGB.
+     */
+    load(source: TSource, signal?: AbortSignal, gamut?: Gamut | 'auto'): Promise<PixelData>;
 }
 
 /** Pluggable quantization algorithm. */
