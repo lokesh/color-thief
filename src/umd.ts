@@ -26,3 +26,5 @@ export {
 export { observe } from './observe.js';
 
 export { createColor } from './color.js';
+
+export { getScheme, synthesizeScheme, pickSeed } from './scheme.js';

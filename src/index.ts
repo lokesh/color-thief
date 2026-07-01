@@ -30,6 +30,19 @@ export type { ObservableSource, ObserveOptions, ObserveController } from './obse
 export { createColor } from './color.js';
 
 // ---------------------------------------------------------------------------
+// Accessible scheme generation
+// ---------------------------------------------------------------------------
+export { getScheme, synthesizeScheme, pickSeed } from './scheme.js';
+export type {
+    Scheme,
+    SchemeRole,
+    SchemeMode,
+    SchemeOptions,
+    SchemeFidelity,
+    ContrastLevel,
+} from './scheme.js';
+
+// ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 export type {

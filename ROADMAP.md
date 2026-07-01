@@ -22,6 +22,27 @@ What remains is P3 output on the Node path. `sharp` can already surface the embe
 
 Move Color Thief from a raw extractor toward a theming toolkit by generating a balanced, accessible N-role color scheme from an image — the space Material Color Utilities (HCT) targets. This is the largest differentiator and the direction the market is heading (dynamic/adaptive theming). We're already partway there: OKLCH quantization, semantic swatches, WCAG contrast, and `textColor` are all in place. The new work is scheme *synthesis* — deriving a harmonious, contrast-safe set of roles rather than just reporting the colors that are present. Hard; scope before committing.
 
+### Progress — `feat/accessible-scheme` branch (2026-07)
+
+A first working cut lives on the `feat/accessible-scheme` branch (not merged to `master` — parked for a future revisit). What's built so far:
+
+- **`src/scheme.ts`** — self-contained scheme synthesizer built natively on OKLCH, with **no** dependency on Material Color Utilities / HCT. Core idea is a *tone ladder*: freeze a color's hue and chroma, slide only lightness (tone 0–100), and assign roles to rungs. Role→tone recipes are adapted from Material 3's baseline; the mechanism is our own.
+- **Public API:** `getScheme(source, options)` (extract a seed from an image, then synthesize), `synthesizeScheme(seed, options)` (pure/sync from a known seed color), and `pickSeed(palette)` (most-dominant sufficiently-colorful entry, grayscale fallback). Wired into `src/index.ts` and `src/umd.ts`.
+- **Roles:** 17 Material-style roles (primary / secondary / surface / error families + `outline`), each emitted for both `light` and `dark` modes. `Scheme.toCss(mode)` produces drop-in CSS custom properties.
+- **Contrast guarantee:** every on-*/background pair is measured with real WCAG math and the foreground tone is nudged toward black/white until it provably passes (`AA` 4.5 / `AAA` 7.0 for text, 3:1 for the outline/surface UI pair) — the ladder is only the starting guess.
+- **Options:** `contrast` (`AA`|`AAA`), `fidelity` (`faithful`|`balanced`|`expressive`, controlling secondary-hue rotation and chroma), and `gamut` (with in-gamut realization via chroma-reduction binary search).
+- **Fixed error palette:** an accessible red (OKLCH hue ~29°), not drawn from the image.
+- **`examples/scheme.html`** — demo page.
+
+### Still open before this could ship
+
+- **Tests** — no node/browser test coverage yet for the scheme module.
+- **Tone recipes** are a direct Material 3 port; they haven't been validated against a spread of real images for harmony/legibility.
+- **Tertiary role / expanded role set** and fixed/`*-fixed` variants not implemented.
+- **Node parity** — `getScheme` rides on `getPalette`, so it works in Node, but the P3 output gap noted above still applies.
+- **Docs / README** — feature is undocumented in the public docs.
+- **Naming/API review** — decide whether we adopt Material's role vocabulary wholesale or define our own before locking the surface.
+
 ## Productize the WASM quantizer
 
 A Rust implementation of the full MMCQ algorithm lives in `src/wasm/`, and the `WasmQuantizer` TypeScript adapter (`src/quantizers/wasm.ts`) is in place. What's missing is a plug-and-play distribution: today the module is **source only** and must be compiled by hand.

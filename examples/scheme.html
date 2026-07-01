@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Color Thief — Accessible Scheme Demo</title>
+<style>
+    :root { font-family: system-ui, -apple-system, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #e9eaec; color: #1a1a1a; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .sub { color: #666; font-size: 13px; margin: 0 0 20px; }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
+        background: #fff; border: 1px solid #d5d7db; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .controls label { font-size: 13px; font-weight: 600; margin-right: 6px; }
+    .samples { display: flex; gap: 8px; }
+    .samples img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px;
+        cursor: pointer; border: 3px solid transparent; }
+    .samples img.active { border-color: #3b82f6; }
+    select, button { font: inherit; padding: 6px 10px; border-radius: 8px; border: 1px solid #cfd2d6; background: #fff; }
+
+    .layout { display: grid; grid-template-columns: 220px 1fr; gap: 20px; }
+    .source img { width: 100%; border-radius: 12px; display: block; border: 1px solid #d5d7db; }
+    .source .seed { margin-top: 8px; font-size: 12px; color: #555; }
+    .seed .chip { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 4px; border: 1px solid rgba(0,0,0,.15); }
+
+    /* Mock app themed entirely by the generated CSS variables */
+    .preview { border-radius: 16px; overflow: hidden; border: 1px solid #d5d7db; background: var(--surface); color: var(--on-surface); }
+    .app { padding: 20px; }
+    .topbar { background: var(--primary); color: var(--on-primary); padding: 14px 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+    .topbar .badge { background: var(--on-primary); color: var(--primary); font-size: 11px; padding: 2px 8px; border-radius: 999px; }
+    .card { background: var(--primary-container); color: var(--on-primary-container); padding: 16px; border-radius: 12px; margin: 16px 0; }
+    .card h3 { margin: 0 0 6px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .btn { border: none; border-radius: 999px; padding: 10px 18px; font-weight: 600; cursor: pointer; }
+    .btn.primary { background: var(--primary); color: var(--on-primary); }
+    .btn.secondary { background: var(--secondary-container); color: var(--on-secondary-container); }
+    .btn.outlined { background: transparent; color: var(--primary); border: 1px solid var(--outline); }
+    .chipset { display: flex; gap: 8px; margin-top: 14px; }
+    .schip { background: var(--secondary-container); color: var(--on-secondary-container); padding: 6px 12px; border-radius: 8px; font-size: 13px; }
+    .variant { background: var(--surface-variant); color: var(--on-surface-variant); padding: 12px 16px; border-radius: 10px; margin-top: 12px; font-size: 14px; }
+    .banner { background: var(--error); color: var(--on-error); padding: 10px 16px; border-radius: 10px; margin-top: 12px; font-weight: 600; }
+
+    /* Raw swatch grid with measured contrast */
+    .swatches { margin-top: 24px; }
+    .swatches h2 { font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+    .sw { border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.5; border: 1px solid rgba(0,0,0,.1); }
+    .sw .name { font-weight: 700; }
+    .sw .ratio { font-size: 11px; opacity: .85; }
+    .sw .ratio.fail { color: #ff0; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Accessible scheme generation</h1>
+    <p class="sub">Extracts a seed color from an image, then <b>synthesizes</b> a full contrast-safe theme. Every text pair below shows its measured WCAG ratio.</p>
+
+    <div class="controls">
+        <div><label>Sample</label>
+            <span class="samples" id="samples">
+                <img src="img/image-1.jpg" data-src="img/image-1.jpg" class="active">
+                <img src="img/image-2.jpg" data-src="img/image-2.jpg">
+                <img src="img/image-3.jpg" data-src="img/image-3.jpg">
+            </span>
+        </div>
+        <div><label>Your image</label><input type="file" id="file" accept="image/*"></div>
+        <div><label>Mode</label>
+            <select id="mode"><option value="light">Light</option><option value="dark">Dark</option></select>
+        </div>
+        <div><label>Contrast</label>
+            <select id="contrast"><option value="AA">AA (4.5)</option><option value="AAA">AAA (7.0)</option></select>
+        </div>
+        <div><label>Fidelity</label>
+            <select id="fidelity"><option>balanced</option><option>faithful</option><option>expressive</option></select>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="source">
+            <img id="srcImg" src="img/image-1.jpg" crossorigin="anonymous">
+            <div class="seed" id="seed"></div>
+        </div>
+
+        <div>
+            <div class="preview" id="preview">
+                <div class="topbar">Music <span class="badge">Now Playing</span></div>
+                <div class="app">
+                    <div class="card">
+                        <h3>Themed from your image</h3>
+                        <div>This entire mock UI is driven by the generated CSS custom properties. Toggle light/dark and contrast above.</div>
+                        <div class="row">
+                            <button class="btn primary">Play</button>
+                            <button class="btn secondary">Shuffle</button>
+                            <button class="btn outlined">Share</button>
+                        </div>
+                        <div class="chipset">
+                            <span class="schip">Rock</span><span class="schip">Indie</span><span class="schip">2020s</span>
+                        </div>
+                    </div>
+                    <div class="variant">Surface variant — used for subtle secondary panels and dividers.</div>
+                    <div class="banner">Error banner — always readable, drawn from a fixed accessible red.</div>
+                </div>
+            </div>
+
+            <div class="swatches">
+                <h2>Roles &amp; measured contrast (independent WCAG check)</h2>
+                <div class="grid" id="grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cache-busted so rebuilds are always picked up while iterating on the demo. -->
+<script>
+    document.write('<scr' + 'ipt src="../dist/umd/color-thief.global.js?t=' + Date.now() + '"><\/scr' + 'ipt>');
+</script>
+<script>
+    const $ = (id) => document.getElementById(id);
+    const srcImg = $('srcImg');
+
+    // Independent WCAG contrast — deliberately NOT the library's own math.
+    const lin = (c) => { const s = c / 255; return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); return 0.2126*lin((n>>16)&255) + 0.7152*lin((n>>8)&255) + 0.0722*lin(n&255); };
+    const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05); };
+
+    const TEXT_PAIRS = [
+        ['onPrimary','primary'],['onPrimaryContainer','primaryContainer'],
+        ['onSecondary','secondary'],['onSecondaryContainer','secondaryContainer'],
+        ['onSurface','surface'],['onSurfaceVariant','surfaceVariant'],
+        ['onError','error'],['onErrorContainer','errorContainer'],
+    ];
+    const bgOf = Object.fromEntries(TEXT_PAIRS.map(([on,bg]) => [on, bg]));
+
+    async function render() {
+        if (!srcImg.complete || srcImg.naturalWidth === 0) return;
+        const mode = $('mode').value;
+        const target = $('contrast').value === 'AAA' ? 7.0 : 4.5;
+        let scheme;
+        try {
+            scheme = await ColorThief.getScheme(srcImg, {
+                contrast: $('contrast').value,
+                fidelity: $('fidelity').value,
+            });
+        } catch (e) { console.error(e); return; }
+        if (!scheme) return;
+        const set = scheme[mode];
+
+        // Show the picked seed
+        const palette = await ColorThief.getPalette(srcImg);
+        const seed = ColorThief.pickSeed(palette);
+        $('seed').innerHTML = `<span class="chip" style="background:${seed.hex()}"></span>seed ${seed.hex()} — one of ${palette.length} extracted`;
+
+        // Apply CSS variables to the preview
+        $('preview').style.cssText = scheme.toCss(mode);
+
+        // Swatch grid with measured contrast for on-* roles
+        const roles = Object.keys(set);
+        $('grid').innerHTML = roles.map((role) => {
+            const hex = set[role].hex();
+            const on = role.startsWith('on') ? role : null;
+            let ratioHtml = '';
+            if (on && bgOf[on]) {
+                const r = contrast(hex, set[bgOf[on]].hex());
+                const cls = r >= target ? '' : 'fail';
+                ratioHtml = `<div class="ratio ${cls}">${r.toFixed(2)}:1 vs ${bgOf[on]} ${r>=target?'✓':'✗'}</div>`;
+            }
+            const textOn = on ? set[bgOf[on]].hex() : (set['on'+role.charAt(0).toUpperCase()+role.slice(1)] ? set['on'+role.charAt(0).toUpperCase()+role.slice(1)].hex() : '#000');
+            return `<div class="sw" style="background:${hex};color:${textOn}">
+                <div class="name">${role}</div><div>${hex}</div>${ratioHtml}</div>`;
+        }).join('');
+    }
+
+    // Sample thumbnails
+    $('samples').addEventListener('click', (e) => {
+        if (e.target.tagName !== 'IMG') return;
+        document.querySelectorAll('#samples img').forEach((i) => i.classList.remove('active'));
+        e.target.classList.add('active');
+        srcImg.src = e.target.dataset.src;
+    });
+    // File upload
+    $('file').addEventListener('change', (e) => {
+        const f = e.target.files[0];
+        if (f) { srcImg.removeAttribute('crossorigin'); srcImg.src = URL.createObjectURL(f); }
+    });
+    ['mode','contrast','fidelity'].forEach((id) => $(id).addEventListener('change', render));
+    srcImg.addEventListener('load', render);
+    if (srcImg.complete) render();
+</script>
+</body>
+</html>
