@@ -1,6 +1,22 @@
 # ROADMAP.md
 
-Forward-looking work for Color Thief. Everything from the original v2 improvement plan and the v3 rewrite has shipped (see the git history and `CLAUDE.md` for the delivered feature set). What remains below is not yet fully productized.
+Forward-looking work for Color Thief. Everything from the original v2 improvement plan and the v3 rewrite has shipped (see the git history and `CLAUDE.md` for the delivered feature set). What remains below is not yet built.
+
+## Feature: transparency detection
+
+Expose whether the source image contains transparency, e.g. a `hasTransparency` result surfaced from extraction. Cheap and self-contained — the pixel pass already inspects alpha to skip transparent pixels, so the flag can be folded into the existing pass with no extra sampling. Long-standing request (issue #213).
+
+## Feature: region / area extraction
+
+Let callers extract colors from a sub-rectangle of the image rather than the whole thing (crop a rect before extraction). This is the most-requested evergreen feature — issue #176, plus earlier attempts in closed PRs #44 and #90 — and it's self-contained: clip the source to the given bounds before the pixel array is built, leaving the rest of the pipeline untouched.
+
+## Fix: wide-gamut / display-P3 handling
+
+Extraction of wide-gamut (display-P3) images can produce out-of-range output like `rgb(256, 4, 4)` — a real correctness bug (issue #266) that grows more relevant as P3 content becomes common. Approach: detect tagged wide-gamut images and/or expose a `colorSpace` passthrough to the canvas 2D context so pixels are read in a defined space, then clamp/convert results back to valid sRGB. Medium-to-hard; also future-proofs the pipeline.
+
+## Big bet: accessible scheme generation
+
+Move Color Thief from a raw extractor toward a theming toolkit by generating a balanced, accessible N-role color scheme from an image — the space Material Color Utilities (HCT) targets. This is the largest differentiator and the direction the market is heading (dynamic/adaptive theming). We're already partway there: OKLCH quantization, semantic swatches, WCAG contrast, and `textColor` are all in place. The new work is scheme *synthesis* — deriving a harmonious, contrast-safe set of roles rather than just reporting the colors that are present. Hard; scope before committing.
 
 ## Productize the WASM quantizer
 
