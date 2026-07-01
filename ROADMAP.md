@@ -2,9 +2,11 @@
 
 Forward-looking work for Color Thief. Everything from the original v2 improvement plan and the v3 rewrite has shipped (see the git history and `CLAUDE.md` for the delivered feature set). What remains below is not yet built.
 
-## Feature: transparency detection
+## Intentionally left out
 
-Expose whether the source image contains transparency, e.g. a `hasTransparency` result surfaced from extraction. Cheap and self-contained — the pixel pass already inspects alpha to skip transparent pixels, so the flag can be folded into the existing pass with no extra sampling. Long-standing request (issue #213).
+Features we've deliberately decided not to build, so we don't keep revisiting them:
+
+- **Transparency detection** (2026-07) — low demand, outside the core palette job, and easily done outside the library against the canvas alpha channel ([#213](https://github.com/lokesh/color-thief/issues/213)).
 
 ## Feature: region / area extraction
 
