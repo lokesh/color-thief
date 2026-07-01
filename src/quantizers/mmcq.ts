@@ -346,29 +346,6 @@ function quantize(
 ): Array<{ color: [number, number, number]; population: number }> {
     if (!pixels.length || maxColors < 2 || maxColors > 256) return [];
 
-    // Short-circuit: if unique colors <= maxColors, return them directly
-    const seenColors = new Set<string>();
-    const uniqueColors: Array<[number, number, number]> = [];
-    for (const color of pixels) {
-        const key = color.join(',');
-        if (!seenColors.has(key)) {
-            seenColors.add(key);
-            uniqueColors.push(color);
-        }
-    }
-    if (uniqueColors.length <= maxColors) {
-        // Count populations for unique colors
-        const countMap = new Map<string, number>();
-        for (const color of pixels) {
-            const key = color.join(',');
-            countMap.set(key, (countMap.get(key) || 0) + 1);
-        }
-        return uniqueColors.map((color) => ({
-            color,
-            population: countMap.get(color.join(','))!,
-        }));
-    }
-
     const histo = getHisto(pixels);
 
     // Get the initial vbox from the pixels

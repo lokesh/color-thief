@@ -188,9 +188,39 @@ export function extractPalette(
         });
     }
 
-    // OKLCH quantization path
     let quantized: Array<{ color: [number, number, number]; population: number }>;
-    if (opts.colorSpace === 'oklch') {
+
+    // Short-circuit check: collect up to opts.colorCount + 1 unique colors
+    const seenColors = new Set<string>();
+    const uniqueColors: Array<[number, number, number]> = [];
+
+    for (const color of pixelArray) {
+        const key = color.join(',');
+        if (!seenColors.has(key)) {
+            seenColors.add(key);
+            uniqueColors.push(color);
+
+            // The image contains more distinct colors than requested,
+            // so we can stop searching for unique colors as we know we will have to use the quantizer.
+            if (uniqueColors.length > opts.colorCount) break;
+        }
+    }
+
+    // If unique colors <= maxColors, return them directly with population counts
+    if (uniqueColors.length <= opts.colorCount) {
+        // Count populations for unique colors
+        const countMap = new Map<string, number>();
+        for (const color of pixelArray) {
+            const key = color.join(',');
+            countMap.set(key, (countMap.get(key) || 0) + 1);
+        }
+        quantized = uniqueColors.map((color) => ({
+            color,
+            population: countMap.get(color.join(','))!,
+        }));
+    }
+    // OKLCH quantization path
+    else if (opts.colorSpace === 'oklch') {
         const scaled = pixelsRgbToOklchScaled(pixelArray);
         quantized = paletteOklchScaledToRgb(
             quantizer.quantize(scaled, opts.colorCount),
