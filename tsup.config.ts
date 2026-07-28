@@ -35,7 +35,7 @@ export default defineConfig([
         splitting: false,
         dts: false,
         sourcemap: true,
-        external: ['sharp'],
+        external: ['sharp', '#color_thief_wasm'],
     },
     // Browser-specific builds (no sharp/Node loader references)
     {
@@ -48,7 +48,7 @@ export default defineConfig([
         splitting: false,
         dts: false,
         sourcemap: true,
-        external: ['sharp'],
+        external: ['sharp', '#color_thief_wasm'],
         esbuildPlugins: [browserLoaderPlugin],
     },
     // UMD/IIFE build for browsers (<script> tag)
@@ -82,14 +82,13 @@ export default defineConfig([
         external: ['sharp'],
         banner: { js: '#!/usr/bin/env node' },
     },
-    // wasm-pack emits browser-native glue plus a .wasm binary into
-    // src/wasm/pkg during prebuild. Treat both as explicit build entries so
-    // only the runtime artifacts—not wasm-pack's generated metadata—reach dist.
+    // Copy only the wasm-pack runtime artifacts into the published package.
     {
-        entry: {
-            color_thief_wasm: 'src/wasm/pkg/color_thief_wasm.js',
-            color_thief_wasm_bg: 'src/wasm/pkg/color_thief_wasm_bg.wasm',
-        },
+        entry: [
+            'src/wasm/pkg/color_thief_wasm.js',
+            'src/wasm/pkg/color_thief_wasm.d.ts',
+            'src/wasm/pkg/color_thief_wasm_bg.wasm',
+        ],
         outDir: 'dist/wasm',
         format: ['esm'],
         bundle: false,
@@ -98,6 +97,7 @@ export default defineConfig([
         sourcemap: false,
         loader: {
             '.js': 'copy',
+            '.d.ts': 'copy',
             '.wasm': 'copy',
         },
     },

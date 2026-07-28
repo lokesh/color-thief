@@ -34,6 +34,12 @@
         "!src/wasm/pkg/",
         "!src/wasm/target/"
     ],
+    "imports": {
+        "#color_thief_wasm": {
+            "types": "./dist/wasm/color_thief_wasm.d.ts",
+            "default": "./dist/wasm/color_thief_wasm.js"
+        }
+    },
     "exports": {
         ".": {
             "browser": {

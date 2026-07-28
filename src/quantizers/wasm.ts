@@ -28,20 +28,7 @@ export class WasmQuantizer implements Quantizer {
         if (this.wasmQuantize) return;
 
         try {
-            // The string assertion keeps tsup from bundling the generated glue.
-            // The emitted import stays relative to dist/internals*.{js,cjs}, so
-            // downstream bundlers can discover the shipped WASM asset.
-            const wasm = await import(
-                './wasm/color_thief_wasm.js' as string
-            ) as {
-                default: (
-                    input?: { module_or_path: string | URL },
-                ) => Promise<unknown>;
-                quantize: (
-                    pixels: Uint8Array,
-                    maxColors: number,
-                ) => Uint8Array;
-            };
+            const wasm = await import('#color_thief_wasm');
             const initInput = this.wasmUrl
                 ? { module_or_path: this.wasmUrl }
                 : undefined;
