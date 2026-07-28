@@ -82,6 +82,25 @@ export default defineConfig([
         external: ['sharp'],
         banner: { js: '#!/usr/bin/env node' },
     },
+    // wasm-pack emits browser-native glue plus a .wasm binary into
+    // src/wasm/pkg during prebuild. Treat both as explicit build entries so
+    // only the runtime artifacts—not wasm-pack's generated metadata—reach dist.
+    {
+        entry: {
+            color_thief_wasm: 'src/wasm/pkg/color_thief_wasm.js',
+            color_thief_wasm_bg: 'src/wasm/pkg/color_thief_wasm_bg.wasm',
+        },
+        outDir: 'dist/wasm',
+        format: ['esm'],
+        bundle: false,
+        splitting: false,
+        dts: false,
+        sourcemap: false,
+        loader: {
+            '.js': 'copy',
+            '.wasm': 'copy',
+        },
+    },
     // Type declarations
     {
         entry: {

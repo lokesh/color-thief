@@ -30,7 +30,9 @@
     },
     "files": [
         "dist/",
-        "src/"
+        "src/",
+        "!src/wasm/pkg/",
+        "!src/wasm/target/"
     ],
     "exports": {
         ".": {
@@ -82,7 +84,11 @@
     "types": "./dist/types/index.d.ts",
     "scripts": {
         "prepublishOnly": "npm run build",
+        "prebuild": "npm run clean && npm run build:wasm",
         "build": "tsup",
+        "build:wasm": "wasm-pack build src/wasm --target web --release --no-pack --out-dir pkg -- --locked",
+        "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+        "prewatch": "npm run build:wasm",
         "watch": "tsup --watch",
         "dev": "http-server",
         "test": "mocha && cypress run --config video=false",
@@ -101,7 +107,8 @@
         "mustache": "^3.0.1",
         "sharp": "^0.34.5",
         "tsup": "^8.0.0",
-        "typescript": "^5.3.0"
+        "typescript": "^5.3.0",
+        "wasm-pack": "0.15.0"
     },
     "peerDependencies": {
         "sharp": ">=0.33.0"
