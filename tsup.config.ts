@@ -2,6 +2,16 @@ import { defineConfig } from 'tsup';
 import type { Plugin } from 'esbuild';
 import path from 'path';
 
+const wasmImportPlugin: Plugin = {
+    name: 'wasm-import-resolve',
+    setup(build) {
+        build.onResolve({ filter: /^#color_thief_wasm$/ }, () => ({
+            path: './wasm/color_thief_wasm.js',
+            external: true,
+        }));
+    },
+};
+
 /**
  * esbuild plugin that redirects resolve-loader.ts → resolve-loader.browser.ts
  * so the browser build never references the Node loader or sharp.
@@ -36,6 +46,7 @@ export default defineConfig([
         dts: false,
         sourcemap: true,
         external: ['sharp'],
+        esbuildPlugins: [wasmImportPlugin],
     },
     // Browser-specific builds (no sharp/Node loader references)
     {
@@ -49,7 +60,7 @@ export default defineConfig([
         dts: false,
         sourcemap: true,
         external: ['sharp'],
-        esbuildPlugins: [browserLoaderPlugin],
+        esbuildPlugins: [browserLoaderPlugin, wasmImportPlugin],
     },
     // UMD/IIFE build for browsers (<script> tag)
     {
@@ -81,6 +92,25 @@ export default defineConfig([
         sourcemap: false,
         external: ['sharp'],
         banner: { js: '#!/usr/bin/env node' },
+    },
+    // Copy only the wasm-pack runtime artifacts into the published package.
+    {
+        entry: [
+            'src/wasm/pkg/color_thief_wasm.js',
+            'src/wasm/pkg/color_thief_wasm.d.ts',
+            'src/wasm/pkg/color_thief_wasm_bg.wasm',
+        ],
+        outDir: 'dist/wasm',
+        format: ['esm'],
+        bundle: false,
+        splitting: false,
+        dts: false,
+        sourcemap: false,
+        loader: {
+            '.js': 'copy',
+            '.d.ts': 'copy',
+            '.wasm': 'copy',
+        },
     },
     // Type declarations
     {

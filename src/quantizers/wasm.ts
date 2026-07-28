@@ -3,12 +3,10 @@ import type { Quantizer } from '../types.js';
 /**
  * WASM-based MMCQ quantizer. Loads the WASM module built from Rust.
  *
- * Build the WASM module first:
- *   cd src/wasm && wasm-pack build --target web --out-dir ../../dist/wasm
- *
  * Usage:
  * ```ts
- * import { configure, WasmQuantizer } from 'colorthief';
+ * import { configure } from 'colorthief';
+ * import { WasmQuantizer } from 'colorthief/internals';
  * const q = new WasmQuantizer();
  * await q.init();
  * configure({ quantizer: q });
@@ -20,7 +18,7 @@ export class WasmQuantizer implements Quantizer {
 
     /**
      * @param wasmUrl - Optional URL to the .wasm file. If not provided,
-     *                  attempts to load from the default dist location.
+     *                  loads the binary shipped with the package.
      */
     constructor(wasmUrl?: string | URL) {
         this.wasmUrl = wasmUrl;
@@ -29,24 +27,12 @@ export class WasmQuantizer implements Quantizer {
     async init(): Promise<void> {
         if (this.wasmQuantize) return;
 
-        // Try to dynamically import the wasm-bindgen generated JS glue
         try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            let wasm: any;
-            if (this.wasmUrl) {
-                // For environments where the wasm file needs explicit loading
-                const response = await fetch(this.wasmUrl);
-                const bytes = await response.arrayBuffer();
-                const module = await WebAssembly.compile(bytes);
-                const instance = await WebAssembly.instantiate(module);
-                wasm = instance.exports;
-            } else {
-                // Default: try importing the wasm-pack output
-                wasm = await import('../../dist/wasm/color_thief_wasm.js' as string);
-                if (wasm.default && typeof wasm.default === 'function') {
-                    await wasm.default();
-                }
-            }
+            const wasm = await import('#color_thief_wasm');
+            const initInput = this.wasmUrl
+                ? { module_or_path: this.wasmUrl }
+                : undefined;
+            await wasm.default(initInput);
             this.wasmQuantize = wasm.quantize;
         } catch (e) {
             throw new Error(

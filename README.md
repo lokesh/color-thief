@@ -53,6 +53,7 @@ swatches.Vibrant?.color.hex();
 - **WCAG contrast** — `color.contrast.white`, `color.contrast.black`, `color.contrast.foreground`
 - **AbortSignal** — cancel in-flight extractions
 - **CLI** — `colorthief photo.jpg` with JSON, CSS, and ANSI output
+- **Optional WASM quantizer** — shipped precompiled and loaded on demand
 - **Zero runtime dependencies**
 
 ## API at a Glance
@@ -150,6 +151,19 @@ controller.stop();
 
 Works with `<video>`, `<canvas>`, and `<img>` elements. For images, it uses a MutationObserver to detect `src` changes. For video and canvas, it polls using requestAnimationFrame with throttle.
 
+### Optional WASM quantizer
+
+The precompiled WASM quantizer is included in the package and loaded only when initialized:
+
+```js
+import { configure } from 'colorthief';
+import { WasmQuantizer } from 'colorthief/internals';
+
+const quantizer = new WasmQuantizer();
+await quantizer.init();
+configure({ quantizer });
+```
+
 ## Node.js
 
 ```js
@@ -232,6 +246,9 @@ results in an object keyed by filename.
 - [npm](https://www.npmjs.com/package/colorthief)
 
 ## Contributing
+
+Building requires a Rust toolchain. The pinned `wasm-pack` executable is installed
+with the npm development dependencies.
 
 ```bash
 npm run build          # Build all dist formats

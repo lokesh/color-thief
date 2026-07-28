@@ -15,6 +15,7 @@ Rakefile
 rsync-exclude
 node_modules
 dist
+/src/wasm/target/
 
 .idea
 CLAUDE.md
