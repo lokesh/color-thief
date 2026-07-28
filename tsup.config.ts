@@ -2,6 +2,16 @@ import { defineConfig } from 'tsup';
 import type { Plugin } from 'esbuild';
 import path from 'path';
 
+const wasmImportPlugin: Plugin = {
+    name: 'wasm-import-resolve',
+    setup(build) {
+        build.onResolve({ filter: /^#color_thief_wasm$/ }, () => ({
+            path: './wasm/color_thief_wasm.js',
+            external: true,
+        }));
+    },
+};
+
 /**
  * esbuild plugin that redirects resolve-loader.ts → resolve-loader.browser.ts
  * so the browser build never references the Node loader or sharp.
@@ -35,7 +45,8 @@ export default defineConfig([
         splitting: false,
         dts: false,
         sourcemap: true,
-        external: ['sharp', '#color_thief_wasm'],
+        external: ['sharp'],
+        esbuildPlugins: [wasmImportPlugin],
     },
     // Browser-specific builds (no sharp/Node loader references)
     {
@@ -48,8 +59,8 @@ export default defineConfig([
         splitting: false,
         dts: false,
         sourcemap: true,
-        external: ['sharp', '#color_thief_wasm'],
-        esbuildPlugins: [browserLoaderPlugin],
+        external: ['sharp'],
+        esbuildPlugins: [browserLoaderPlugin, wasmImportPlugin],
     },
     // UMD/IIFE build for browsers (<script> tag)
     {
