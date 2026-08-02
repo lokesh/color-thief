@@ -15,6 +15,7 @@ import {
     validateOptions,
     MmcqQuantizer,
     createNodeLoader,
+    WasmQuantizer,
 } from '../dist/internals.js';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -714,5 +715,67 @@ describe('custom Node decoder', function() {
         const color = await getColor('ignored-source', { loader });
         expect(color.array()).to.deep.equal([12, 34, 56]);
         expect(color.gamut).to.equal('srgb');
+    });
+});
+
+// ===========================================================================
+// WASM quantizer (issue #283)
+// ===========================================================================
+
+describe('WasmQuantizer', function() {
+    it('throws a build-instruction error when no module is supplied', async function() {
+        const q = new WasmQuantizer();
+        await expect(q.init()).to.be.rejectedWith(/wasm-pack build src\/wasm/);
+    });
+
+    it('initializes from a supplied wasm-bindgen module', async function() {
+        let initArgs = 'not called';
+        const fakeModule = {
+            default: async (arg) => { initArgs = arg; },
+            // 7 bytes per color: r, g, b, population as uint32 little-endian
+            quantize: () => new Uint8Array([10, 20, 30, 4, 0, 0, 0]),
+        };
+        const q = new WasmQuantizer(fakeModule);
+        await q.init();
+        expect(initArgs).to.equal(undefined);
+        expect(q.quantize([[10, 20, 30]], 2)).to.deep.equal([
+            { color: [10, 20, 30], population: 4 },
+        ]);
+    });
+
+    it('forwards an explicit wasmUrl to the module init function', async function() {
+        let initArgs = null;
+        const q = new WasmQuantizer(
+            { default: async (arg) => { initArgs = arg; }, quantize: () => new Uint8Array() },
+            'https://example.com/color_thief_wasm_bg.wasm',
+        );
+        await q.init();
+        expect(initArgs).to.deep.equal({
+            module_or_path: 'https://example.com/color_thief_wasm_bg.wasm',
+        });
+    });
+
+    it('requires init() before quantize()', function() {
+        expect(() => new WasmQuantizer().quantize([[1, 2, 3]], 2)).to.throw(/init\(\)/);
+    });
+});
+
+describe('bundler-visible imports (issue #283)', function() {
+    // The published package has never contained dist/wasm/. Any reference to it
+    // makes bundlers warn about an unresolvable module.
+    const bundles = [
+        'dist/internals.js',
+        'dist/internals.cjs',
+        'dist/internals.browser.js',
+        'dist/internals.browser.cjs',
+        'dist/index.js',
+        'dist/index.browser.js',
+    ];
+
+    bundles.forEach((file) => {
+        it(`${file} contains no reference to the unshipped dist/wasm directory`, function() {
+            const source = readFileSync(resolve(process.cwd(), file), 'utf8');
+            expect(source).to.not.match(/dist\/wasm/);
+        });
     });
 });

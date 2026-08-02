@@ -1,53 +1,72 @@
 import type { Quantizer } from '../types.js';
 
 /**
- * WASM-based MMCQ quantizer. Loads the WASM module built from Rust.
+ * The wasm-bindgen glue module produced by `wasm-pack build --target web`.
+ * `default` is the init function that instantiates the `.wasm` binary.
+ */
+export interface WasmModule {
+    default?: (init?: { module_or_path: string | URL }) => Promise<unknown>;
+    quantize: (pixels: Uint8Array, maxColors: number) => Uint8Array;
+}
+
+/**
+ * WASM-based MMCQ quantizer.
  *
- * Build the WASM module first:
- *   cd src/wasm && wasm-pack build --target web --out-dir ../../dist/wasm
+ * The WASM binary is **not** shipped with the npm package — the Rust source
+ * lives in `src/wasm/` and must be compiled, then handed to this class:
  *
- * Usage:
+ * ```sh
+ * npx wasm-pack build src/wasm --target web
+ * ```
+ *
  * ```ts
- * import { configure, WasmQuantizer } from 'colorthief';
- * const q = new WasmQuantizer();
+ * import { configure } from 'colorthief';
+ * import { WasmQuantizer } from 'colorthief/internals';
+ * import * as wasm from './path/to/src/wasm/pkg/color_thief_wasm.js';
+ *
+ * const q = new WasmQuantizer(wasm);
  * await q.init();
  * configure({ quantizer: q });
  * ```
  */
 export class WasmQuantizer implements Quantizer {
     private wasmQuantize: ((pixels: Uint8Array, maxColors: number) => Uint8Array) | null = null;
+    private module: WasmModule | undefined;
     private wasmUrl: string | URL | undefined;
 
     /**
-     * @param wasmUrl - Optional URL to the .wasm file. If not provided,
-     *                  attempts to load from the default dist location.
+     * @param module - The wasm-bindgen glue module (see class docs). Required
+     *                 before `init()` can succeed.
+     * @param wasmUrl - Optional explicit location of the `.wasm` binary,
+     *                  forwarded to the module's init function. Useful when the
+     *                  binary is served from a path the glue can't infer.
      */
-    constructor(wasmUrl?: string | URL) {
+    constructor(module?: WasmModule, wasmUrl?: string | URL) {
+        this.module = module;
         this.wasmUrl = wasmUrl;
     }
 
     async init(): Promise<void> {
         if (this.wasmQuantize) return;
 
-        // Try to dynamically import the wasm-bindgen generated JS glue
+        if (!this.module) {
+            throw new Error(
+                'WasmQuantizer requires the wasm-bindgen module built from src/wasm. ' +
+                'Build it with `npx wasm-pack build src/wasm --target web`, then pass the ' +
+                'generated glue module: `new WasmQuantizer(await import("./pkg/color_thief_wasm.js"))`.',
+            );
+        }
+
         try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            let wasm: any;
-            if (this.wasmUrl) {
-                // For environments where the wasm file needs explicit loading
-                const response = await fetch(this.wasmUrl);
-                const bytes = await response.arrayBuffer();
-                const module = await WebAssembly.compile(bytes);
-                const instance = await WebAssembly.instantiate(module);
-                wasm = instance.exports;
-            } else {
-                // Default: try importing the wasm-pack output
-                wasm = await import('../../dist/wasm/color_thief_wasm.js' as string);
-                if (wasm.default && typeof wasm.default === 'function') {
-                    await wasm.default();
-                }
+            if (typeof this.module.default === 'function') {
+                await this.module.default(
+                    this.wasmUrl ? { module_or_path: this.wasmUrl } : undefined,
+                );
             }
-            this.wasmQuantize = wasm.quantize;
+            if (typeof this.module.quantize !== 'function') {
+                throw new Error('module does not export a `quantize` function');
+            }
+            this.wasmQuantize = this.module.quantize;
         } catch (e) {
             throw new Error(
                 `Failed to initialize WASM quantizer: ${e instanceof Error ? e.message : String(e)}`,
