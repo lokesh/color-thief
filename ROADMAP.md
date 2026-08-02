@@ -8,15 +8,21 @@ Features we've deliberately decided not to build, so we don't keep revisiting th
 
 - **Transparency detection** (2026-07) — low demand, outside the core palette job, and easily done outside the library against the canvas alpha channel ([#213](https://github.com/lokesh/color-thief/issues/213)).
 
-## Feature: region / area extraction
-
-Let callers extract colors from a sub-rectangle of the image rather than the whole thing (crop a rect before extraction). This is the most-requested evergreen feature — issue #176, plus earlier attempts in closed PRs #44 and #90 — and it's self-contained: clip the source to the given bounds before the pixel array is built, leaving the rest of the pipeline untouched.
-
 ## Feature: Node wide-gamut (display-P3) output
 
 Browser wide-gamut support shipped in the `gamut` option work ([#266](https://github.com/lokesh/color-thief/issues/266)): the browser loader reads through a P3 canvas, quantization runs in gamut-aware OKLCH, and `Color` objects carry `.gamut` with P3-faithful `.css()`/`.oklch()` while `.rgb()`/`.array()`/`.hex()` stay sRGB. Node still returns sRGB only.
 
 What remains is P3 output on the Node path. `sharp` can already surface the embedded ICC tag via `metadata()`, so detection is easy; the work is driving its libvips color-transform pipeline to emit P3-encoded pixels (tagged `display-p3`) so `getColor`/`getPalette` reach parity with the browser. Possible later refinement: per-color rather than per-extraction gamut tagging, if a use case needs a mixed-gamut palette.
+
+## Optimization: loader-level region cropping
+
+Region extraction ([#176](https://github.com/lokesh/color-thief/issues/176)) crops the decoded pixel buffer right after loading, so every loader, quantizer, and progressive path works unchanged — including custom loaders supplied via `configure()`. Cropping earlier, inside the loaders (a `drawImage` source rect in the browser, `sharp.extract()` in Node), would skip decoding the parts of the image that get thrown away. Worth measuring first: it forks the crop logic across two loaders, and a custom loader can't be trusted to honor a region, so the central crop has to stay as the fallback either way.
+
+## v4 breaking change: delete the Web Worker shims
+
+The `worker` option became a no-op in v3.5 and the `isWorkerSupported` / `extractInWorker` / `terminateWorker` exports in `colorthief/internals` became deprecated shims. All of it comes out in v4.
+
+Why it went: the worker only ever offloaded quantization, while decode, pixel sampling, and the structured clone of the pixel array stayed on the main thread — and serializing `Array<[r, g, b]>` cost several times more than the quantization it saved (at 2 MP / quality 10, ~20 ms of clone to avoid ~2.5 ms of quantize; the gap widens with image size). It also carried a hand-inlined copy of MMCQ that drifted from the real one: it quantized in RGB while the main path defaults to OKLCH, and skipped the few-color short-circuit and filter relaxation, so `worker: true` returned different colors than the default. The supported answer is to run Color Thief inside your own worker with an `ImageBitmap` source, which moves the whole pipeline off-thread and transfers pixels without copying.
 
 ## Big bet: accessible scheme generation
 

@@ -5,8 +5,10 @@ import type {
     Gamut,
     PixelBuffer,
     Quantizer,
+    Region,
 } from './types.js';
 import { createColor } from './color.js';
+import { validateRegion } from './region.js';
 import {
     pixelsRgbToOklchScaled,
     paletteOklchScaledToRgb,
@@ -27,6 +29,11 @@ export interface ValidatedOptions {
     minSaturation: number;
     colorSpace: 'rgb' | 'oklch';
     gamut: Gamut | 'auto';
+    /**
+     * Normalized, bounds-clamped region. Consumed by the crop step that runs
+     * right after loading — `extractPalette()` only ever sees cropped pixels.
+     */
+    region?: Region;
 }
 
 export function validateOptions(options: ExtractionOptions): ValidatedOptions {
@@ -63,6 +70,9 @@ export function validateOptions(options: ExtractionOptions): ValidatedOptions {
             : 0;
     const colorSpace = options.colorSpace ?? 'oklch';
     const gamut = options.gamut ?? 'srgb';
+    // Validated up front so a bad region throws before the image is decoded.
+    const region =
+        options.region !== undefined ? validateRegion(options.region) : undefined;
 
     return {
         colorCount,
@@ -73,6 +83,7 @@ export function validateOptions(options: ExtractionOptions): ValidatedOptions {
         minSaturation,
         colorSpace,
         gamut,
+        region,
     };
 }
 

@@ -16,6 +16,12 @@ import {
     MmcqQuantizer,
     createNodeLoader,
     WasmQuantizer,
+    validateRegion,
+    regionToPixelRect,
+    cropPixelData,
+    isWorkerSupported,
+    extractInWorker,
+    terminateWorker,
 } from '../dist/internals.js';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -777,5 +783,492 @@ describe('bundler-visible imports (issue #283)', function() {
             const source = readFileSync(resolve(process.cwd(), file), 'utf8');
             expect(source).to.not.match(/dist\/wasm/);
         });
+    });
+});
+
+// ===========================================================================
+// Region / area extraction (issue #176)
+// ===========================================================================
+
+const RED = [255, 0, 0];
+const BLUE = [0, 0, 255];
+
+/** Build raw RGBA pixel data split into a top half and a bottom half. */
+function bandedImage(width, height, topColor, bottomColor, Buf = Uint8Array) {
+    const data = new Buf(width * height * 4);
+    for (let y = 0; y < height; y++) {
+        const [r, g, b] = y < height / 2 ? topColor : bottomColor;
+        for (let x = 0; x < width; x++) {
+            const o = (y * width + x) * 4;
+            data[o] = r;
+            data[o + 1] = g;
+            data[o + 2] = b;
+            data[o + 3] = 255;
+        }
+    }
+    return { data, width, height };
+}
+
+/** A Node loader that serves fixed pixel data and counts decode calls. */
+function fixtureLoader(image) {
+    const state = { decodes: 0 };
+    const loader = createNodeLoader({
+        decoder: async () => {
+            state.decodes++;
+            return image;
+        },
+    });
+    return { loader, state };
+}
+
+describe('validateRegion()', function() {
+    it('returns a valid region unchanged', function() {
+        expect(validateRegion({ x: 0, y: 0.5, width: 1, height: 0.5 })).to.deep.equal({
+            x: 0, y: 0.5, width: 1, height: 0.5,
+        });
+    });
+
+    it('clamps a region that overflows the right/bottom edge', function() {
+        const region = validateRegion({ x: 0.8, y: 0.75, width: 1, height: 1 });
+        expect(region.x).to.equal(0.8);
+        expect(region.y).to.equal(0.75);
+        expect(region.width).to.be.closeTo(0.2, 1e-9);
+        expect(region.height).to.be.closeTo(0.25, 1e-9);
+    });
+
+    it('rejects coordinates outside 0–1', function() {
+        expect(() => validateRegion({ x: -0.1, y: 0, width: 1, height: 1 })).to.throw(/region\.x/);
+        expect(() => validateRegion({ x: 0, y: 1.5, width: 1, height: 1 })).to.throw(/region\.y/);
+        expect(() => validateRegion({ x: 0, y: 0, width: 2, height: 1 })).to.throw(/region\.width/);
+        expect(() => validateRegion({ x: 0, y: 0, width: 1, height: 3 })).to.throw(/region\.height/);
+    });
+
+    it('explains that coordinates are fractions, not pixels', function() {
+        expect(() => validateRegion({ x: 0, y: 300, width: 100, height: 100 }))
+            .to.throw(/fractions of the image size, not pixels/);
+    });
+
+    it('rejects non-numeric and non-finite values', function() {
+        expect(() => validateRegion({ x: '0', y: 0, width: 1, height: 1 })).to.throw(/region\.x/);
+        expect(() => validateRegion({ x: NaN, y: 0, width: 1, height: 1 })).to.throw(/region\.x/);
+        expect(() => validateRegion({ y: 0, width: 1, height: 1 })).to.throw(/region\.x/);
+    });
+
+    it('rejects zero-sized regions', function() {
+        expect(() => validateRegion({ x: 0, y: 0, width: 0, height: 1 })).to.throw(/greater than 0/);
+        expect(() => validateRegion({ x: 0, y: 0, width: 1, height: 0 })).to.throw(/greater than 0/);
+    });
+
+    it('rejects a region with no area left inside the image', function() {
+        expect(() => validateRegion({ x: 1, y: 0, width: 0.5, height: 1 }))
+            .to.throw(/outside the image/);
+        expect(() => validateRegion({ x: 0, y: 1, width: 1, height: 0.5 }))
+            .to.throw(/outside the image/);
+    });
+
+    it('rejects non-object regions', function() {
+        expect(() => validateRegion(null)).to.throw(/must be an object/);
+        expect(() => validateRegion('0,0,1,1')).to.throw(/must be an object/);
+    });
+});
+
+describe('regionToPixelRect()', function() {
+    it('maps the bottom third of a 400x400 image', function() {
+        expect(regionToPixelRect({ x: 0, y: 0.66, width: 1, height: 0.34 }, 400, 400))
+            .to.deep.equal({ left: 0, top: 264, width: 400, height: 136 });
+    });
+
+    it('maps a centered quarter', function() {
+        expect(regionToPixelRect({ x: 0.25, y: 0.25, width: 0.5, height: 0.5 }, 100, 200))
+            .to.deep.equal({ left: 25, top: 50, width: 50, height: 100 });
+    });
+
+    it('never returns a rect smaller than 1x1', function() {
+        expect(regionToPixelRect({ x: 0, y: 0, width: 0.001, height: 0.001 }, 100, 100))
+            .to.deep.equal({ left: 0, top: 0, width: 1, height: 1 });
+    });
+
+    it('never extends past the image bounds', function() {
+        const rect = regionToPixelRect({ x: 0.99, y: 0.99, width: 1, height: 1 }, 100, 100);
+        expect(rect.left + rect.width).to.be.at.most(100);
+        expect(rect.top + rect.height).to.be.at.most(100);
+    });
+
+    it('covers the full image for a 0,0,1,1 region', function() {
+        expect(regionToPixelRect({ x: 0, y: 0, width: 1, height: 1 }, 37, 91))
+            .to.deep.equal({ left: 0, top: 0, width: 37, height: 91 });
+    });
+});
+
+describe('cropPixelData()', function() {
+    it('returns the input untouched when no region is given', function() {
+        const pixels = bandedImage(4, 4, RED, BLUE);
+        expect(cropPixelData(pixels)).to.equal(pixels);
+    });
+
+    it('returns the input untouched when the region covers the whole image', function() {
+        const pixels = bandedImage(4, 4, RED, BLUE);
+        expect(cropPixelData(pixels, { x: 0, y: 0, width: 1, height: 1 })).to.equal(pixels);
+    });
+
+    it('crops to the bottom half', function() {
+        const cropped = cropPixelData(bandedImage(2, 4, RED, BLUE), {
+            x: 0, y: 0.5, width: 1, height: 0.5,
+        });
+        expect(cropped.width).to.equal(2);
+        expect(cropped.height).to.equal(2);
+        expect(Array.from(cropped.data)).to.deep.equal([
+            0, 0, 255, 255, 0, 0, 255, 255,
+            0, 0, 255, 255, 0, 0, 255, 255,
+        ]);
+    });
+
+    it('crops columns as well as rows', function() {
+        // 2x2 image with a distinct color per pixel.
+        const data = new Uint8Array([
+            1, 1, 1, 255, 2, 2, 2, 255,
+            3, 3, 3, 255, 4, 4, 4, 255,
+        ]);
+        const cropped = cropPixelData({ data, width: 2, height: 2 }, {
+            x: 0.5, y: 0.5, width: 0.5, height: 0.5,
+        });
+        expect(cropped.width).to.equal(1);
+        expect(cropped.height).to.equal(1);
+        expect(Array.from(cropped.data)).to.deep.equal([4, 4, 4, 255]);
+    });
+
+    it('preserves the color space tag', function() {
+        const pixels = { ...bandedImage(4, 4, RED, BLUE), colorSpace: 'display-p3' };
+        const cropped = cropPixelData(pixels, { x: 0, y: 0, width: 1, height: 0.5 });
+        expect(cropped.colorSpace).to.equal('display-p3');
+    });
+
+    it('preserves the buffer type', function() {
+        const clamped = bandedImage(4, 4, RED, BLUE, Uint8ClampedArray);
+        const cropped = cropPixelData(clamped, { x: 0, y: 0, width: 1, height: 0.5 });
+        expect(cropped.data).to.be.an.instanceOf(Uint8ClampedArray);
+
+        const plain = bandedImage(4, 4, RED, BLUE);
+        expect(cropPixelData(plain, { x: 0, y: 0, width: 1, height: 0.5 }).data)
+            .to.be.an.instanceOf(Uint8Array);
+    });
+
+    it('handles a buffer that is a view into a larger ArrayBuffer', function() {
+        // The Node loader hands back exactly this shape (a sharp buffer view).
+        const source = bandedImage(2, 4, RED, BLUE);
+        const backing = new ArrayBuffer(source.data.length + 8);
+        const view = new Uint8Array(backing, 8, source.data.length);
+        view.set(source.data);
+
+        const cropped = cropPixelData({ data: view, width: 2, height: 4 }, {
+            x: 0, y: 0.5, width: 1, height: 0.5,
+        });
+        expect(Array.from(cropped.data)).to.deep.equal([
+            0, 0, 255, 255, 0, 0, 255, 255,
+            0, 0, 255, 255, 0, 0, 255, 255,
+        ]);
+    });
+
+    it('leaves a zero-sized image alone', function() {
+        const empty = { data: new Uint8Array(0), width: 0, height: 0 };
+        expect(cropPixelData(empty, { x: 0, y: 0, width: 1, height: 1 })).to.equal(empty);
+    });
+});
+
+describe('validateOptions() region', function() {
+    it('defaults region to undefined', function() {
+        expect(validateOptions({}).region).to.equal(undefined);
+    });
+
+    it('returns the clamped region', function() {
+        const region = validateOptions({ region: { x: 0.5, y: 0, width: 1, height: 1 } }).region;
+        expect(region.x).to.equal(0.5);
+        expect(region.width).to.be.closeTo(0.5, 1e-9);
+        expect(region.height).to.equal(1);
+    });
+
+    it('throws for an invalid region', function() {
+        expect(() => validateOptions({ region: { x: 0, y: 0, width: -1, height: 1 } }))
+            .to.throw(/region/);
+    });
+});
+
+describe('region extraction (synthetic source)', function() {
+    it('getPalette() limited to the top half returns only the top color', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const palette = await getPalette('fixture', {
+            loader,
+            region: { x: 0, y: 0, width: 1, height: 0.5 },
+        });
+        expect(palette).to.have.lengthOf(1);
+        expect(palette[0].array()).to.deep.equal(RED);
+    });
+
+    it('getPalette() limited to the bottom half returns only the bottom color', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const palette = await getPalette('fixture', {
+            loader,
+            region: { x: 0, y: 0.5, width: 1, height: 0.5 },
+        });
+        expect(palette).to.have.lengthOf(1);
+        expect(palette[0].array()).to.deep.equal(BLUE);
+    });
+
+    it('without a region both colors are present', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const palette = await getPalette('fixture', { loader });
+        const hexes = palette.map(c => c.hex());
+        expect(hexes).to.include('#ff0000');
+        expect(hexes).to.include('#0000ff');
+    });
+
+    it('a full-image region matches the no-region result exactly', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const plain = await getPalette('fixture', { loader });
+        const full = await getPalette('fixture', {
+            loader,
+            region: { x: 0, y: 0, width: 1, height: 1 },
+        });
+        expect(full.map(c => c.hex())).to.deep.equal(plain.map(c => c.hex()));
+        expect(full.map(c => c.population)).to.deep.equal(plain.map(c => c.population));
+    });
+
+    it('proportions are relative to the region, not the whole image', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const palette = await getPalette('fixture', {
+            loader,
+            region: { x: 0, y: 0.5, width: 1, height: 0.5 },
+        });
+        expect(palette[0].proportion).to.equal(1);
+    });
+
+    it('getColor() honors the region', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const color = await getColor('fixture', {
+            loader,
+            region: { x: 0, y: 0.5, width: 1, height: 0.5 },
+        });
+        expect(color.array()).to.deep.equal(BLUE);
+    });
+
+    it('getSwatches() honors the region', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const swatches = await getSwatches('fixture', {
+            loader,
+            region: { x: 0, y: 0, width: 1, height: 0.5 },
+        });
+        const found = Object.values(swatches).filter(Boolean);
+        expect(found.length).to.be.greaterThan(0);
+        found.forEach((s) => expect(s.color.array()).to.deep.equal(RED));
+    });
+
+    it('getPaletteProgressive() honors the region on every pass', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const results = [];
+        for await (const result of getPaletteProgressive('fixture', {
+            loader,
+            region: { x: 0, y: 0.5, width: 1, height: 0.5 },
+        })) {
+            results.push(result);
+        }
+        expect(results).to.have.lengthOf(3);
+        results.forEach((r) => {
+            expect(r.palette).to.have.lengthOf(1);
+            expect(r.palette[0].array()).to.deep.equal(BLUE);
+        });
+    });
+
+    it('a sub-pixel region still samples at least one pixel', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const color = await getColor('fixture', {
+            loader,
+            region: { x: 0, y: 0, width: 0.001, height: 0.001 },
+        });
+        expect(color.array()).to.deep.equal(RED);
+    });
+
+    it('rejects an invalid region before the image is decoded', async function() {
+        const { loader, state } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        await expect(
+            getPalette('fixture', { loader, region: { x: 0, y: 0, width: 5, height: 1 } }),
+        ).to.be.rejectedWith(/region\.width/);
+        expect(state.decodes).to.equal(0);
+    });
+
+    it('rejects an invalid region from getPaletteProgressive() too', async function() {
+        const { loader } = fixtureLoader(bandedImage(40, 40, RED, BLUE));
+        const iterator = getPaletteProgressive('fixture', {
+            loader,
+            region: { x: 0, y: 0, width: 0, height: 1 },
+        });
+        await expect(iterator.next()).to.be.rejectedWith(/greater than 0/);
+    });
+});
+
+describe('region extraction (real images)', function() {
+    // rainbow-horizontal.png sweeps top-to-bottom: warm red/orange at the top,
+    // green through the middle, magenta at the bottom.
+    const horizontal = imgPath('rainbow-horizontal.png');
+    // rainbow-vertical.png sweeps left-to-right: magenta on the left, green in
+    // the middle, warm red/orange on the right.
+    const vertical = imgPath('rainbow-vertical.png');
+
+    it('top strip is warm (red/orange), not the whole-image green', async function() {
+        const color = await getColor(horizontal, {
+            region: { x: 0, y: 0, width: 1, height: 0.1 },
+        });
+        const [r, , b] = color.array();
+        expect(r).to.be.greaterThan(200);
+        expect(b).to.be.lessThan(60);
+    });
+
+    it('bottom strip is magenta', async function() {
+        const color = await getColor(horizontal, {
+            region: { x: 0, y: 0.9, width: 1, height: 0.1 },
+        });
+        const [r, g, b] = color.array();
+        expect(r).to.be.greaterThan(200);
+        expect(b).to.be.greaterThan(150);
+        expect(g).to.be.lessThan(90);
+    });
+
+    it('middle band is green', async function() {
+        const color = await getColor(horizontal, {
+            region: { x: 0, y: 0.45, width: 1, height: 0.1 },
+        });
+        const [r, g] = color.array();
+        expect(g).to.be.greaterThan(150);
+        expect(r).to.be.lessThan(90);
+    });
+
+    it('left strip is magenta', async function() {
+        const color = await getColor(vertical, {
+            region: { x: 0, y: 0, width: 0.1, height: 1 },
+        });
+        const [r, , b] = color.array();
+        expect(r).to.be.greaterThan(150);
+        expect(b).to.be.greaterThan(150);
+    });
+
+    it('right strip is warm (red/orange)', async function() {
+        const color = await getColor(vertical, {
+            region: { x: 0.9, y: 0, width: 0.1, height: 1 },
+        });
+        const [r, , b] = color.array();
+        expect(r).to.be.greaterThan(200);
+        expect(b).to.be.lessThan(60);
+    });
+
+    it('x and y are independent — a corner region differs from a full row', async function() {
+        const corner = await getColor(horizontal, {
+            region: { x: 0, y: 0, width: 0.1, height: 0.1 },
+        });
+        const row = await getColor(horizontal, {
+            region: { x: 0, y: 0.9, width: 0.1, height: 0.1 },
+        });
+        expect(corner.hex()).to.not.equal(row.hex());
+    });
+
+    it('a region produces a different palette than the whole image', async function() {
+        const whole = await getPalette(horizontal, { colorCount: 5 });
+        const strip = await getPalette(horizontal, {
+            colorCount: 5,
+            region: { x: 0, y: 0, width: 1, height: 0.1 },
+        });
+        expect(strip.map(c => c.hex())).to.not.deep.equal(whole.map(c => c.hex()));
+    });
+
+    it('a full-image region matches the no-region result', async function() {
+        const whole = await getPalette(horizontal, { colorCount: 5 });
+        const full = await getPalette(horizontal, {
+            colorCount: 5,
+            region: { x: 0, y: 0, width: 1, height: 1 },
+        });
+        expect(full.map(c => c.hex())).to.deep.equal(whole.map(c => c.hex()));
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Deprecated Web Worker surface
+// ---------------------------------------------------------------------------
+
+describe('deprecated worker option', function() {
+    const rainbow = imgPath('rainbow-horizontal.png');
+
+    async function captureWarnings(fn) {
+        const original = console.warn;
+        const seen = [];
+        console.warn = (...args) => seen.push(args.join(' '));
+        try {
+            await fn();
+        } finally {
+            console.warn = original;
+        }
+        return seen;
+    }
+
+    it('worker:true returns the same palette as the default path', async function() {
+        const [withWorker, withoutWorker] = await Promise.all([
+            getPalette(rainbow, { colorCount: 5, worker: true }),
+            getPalette(rainbow, { colorCount: 5 }),
+        ]);
+        expect(withWorker.map(c => c.hex())).to.deep.equal(withoutWorker.map(c => c.hex()));
+    });
+
+    it('worker:true still honors colorCount and region', async function() {
+        const palette = await getPalette(rainbow, {
+            colorCount: 3,
+            worker: true,
+            region: { x: 0, y: 0, width: 1, height: 0.5 },
+        });
+        expect(palette).to.be.an('array').that.is.not.empty;
+        expect(palette.length).to.be.at.most(3);
+    });
+
+    it('getPaletteProgressive accepts worker:true without breaking', async function() {
+        const results = [];
+        for await (const r of getPaletteProgressive(rainbow, { colorCount: 4, worker: true })) {
+            results.push(r);
+        }
+        expect(results).to.not.be.empty;
+        expect(results[results.length - 1].done).to.equal(true);
+    });
+
+    it('never warns more than once, however many calls', async function() {
+        const warnings = await captureWarnings(async () => {
+            await getPalette(rainbow, { colorCount: 3, worker: true });
+            await getPalette(rainbow, { colorCount: 3, worker: true });
+            await getPalette(rainbow, { colorCount: 3, worker: true });
+        });
+        // The one-time guard is module-level, so an earlier test in this file may
+        // already have spent the warning. Either way, three calls must never
+        // produce more than one.
+        expect(warnings.filter(w => w.includes('`worker` option')).length).to.be.at.most(1);
+    });
+});
+
+describe('deprecated worker internals', function() {
+    it('isWorkerSupported() reports false', function() {
+        expect(isWorkerSupported()).to.equal(false);
+    });
+
+    it('terminateWorker() is a harmless no-op', function() {
+        expect(() => terminateWorker()).to.not.throw();
+    });
+
+    it('extractInWorker() still resolves a palette on the main thread', async function() {
+        const pixels = [];
+        for (let i = 0; i < 200; i++) pixels.push([255, 0, 0]);
+        for (let i = 0; i < 100; i++) pixels.push([0, 0, 255]);
+        const colors = await extractInWorker(pixels, 4);
+        expect(colors).to.be.an('array').that.is.not.empty;
+        expect(colors[0]).to.have.property('population');
+        expect(colors.reduce((s, c) => s + c.proportion, 0)).to.be.closeTo(1, 0.001);
+    });
+
+    it('extractInWorker() rejects an already-aborted signal', async function() {
+        const ctrl = new AbortController();
+        ctrl.abort();
+        await expect(extractInWorker([[1, 2, 3]], 4, ctrl.signal)).to.be.rejected;
     });
 });

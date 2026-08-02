@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Color Thief - Region Extraction Tests</title>
+</head>
+<body>
+    <!-- Sweeps top-to-bottom: warm red/orange at the top, green through the
+         middle, magenta at the bottom. -->
+    <img id="img-rainbow" src="./img/rainbow-horizontal.png" crossorigin="anonymous" />
+
+    <!-- Painted below: top half solid red, bottom half solid blue. -->
+    <canvas id="canvas-halves" width="40" height="40"></canvas>
+
+    <script src="/dist/umd/color-thief.global.js"></script>
+    <script>
+        // Two flat, exactly-known halves so region assertions can be exact.
+        var canvas = document.getElementById('canvas-halves');
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'rgb(255, 0, 0)';
+        ctx.fillRect(0, 0, 40, 20);
+        ctx.fillStyle = 'rgb(0, 0, 255)';
+        ctx.fillRect(0, 20, 40, 20);
+
+        var images = document.querySelectorAll('img');
+        var loaded = 0;
+        var total = images.length;
+
+        function checkAllLoaded() {
+            loaded++;
+            if (loaded === total) {
+                document.body.setAttribute('data-ready', 'true');
+            }
+        }
+
+        images.forEach(function(img) {
+            if (img.complete) {
+                checkAllLoaded();
+            } else {
+                img.addEventListener('load', checkAllLoaded);
+                img.addEventListener('error', checkAllLoaded);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -4,8 +4,8 @@
  * These functions accept only BrowserSource (HTMLImageElement, HTMLCanvasElement,
  * ImageData, ImageBitmap) and run entirely on the main thread with no async overhead.
  *
- * For Node.js sources (file paths, Buffers) or features like Web Workers and
- * AbortSignal, use the async API (getColor, getPalette, getSwatches).
+ * For Node.js sources (file paths, Buffers) or features like AbortSignal and
+ * progressive extraction, use the async API (getColor, getPalette, getSwatches).
  */
 import type {
     BrowserSource,
@@ -15,15 +15,17 @@ import type {
     Gamut,
     PixelData,
     Quantizer,
+    Region,
     SwatchMap,
 } from './types.js';
 import { MmcqQuantizer } from './quantizers/mmcq.js';
 import { validateOptions, extractPalette } from './pipeline.js';
+import { cropPixelData } from './region.js';
 import { classifySwatches } from './swatches.js';
 import { readViaCanvas, readFromContext } from './loaders/canvas-utils.js';
 
 // ---------------------------------------------------------------------------
-// Sync-specific options (subset — no worker, no signal, no loader)
+// Sync-specific options (subset — no signal, no loader)
 // ---------------------------------------------------------------------------
 
 export interface SyncExtractionOptions extends FilterOptions {
@@ -33,6 +35,11 @@ export interface SyncExtractionOptions extends FilterOptions {
     quality?: number;
     /** Color space for quantization. @default 'rgb' */
     colorSpace?: ColorSpace;
+    /**
+     * Sample only a sub-rectangle of the image, in normalized 0–1 coordinates.
+     * Omit to use the whole image. @default undefined
+     */
+    region?: Region;
     /**
      * Output color gamut: `'srgb'` (default), `'display-p3'`, or `'auto'`.
      * Falls back to sRGB where P3 canvas support is unavailable.
@@ -85,7 +92,7 @@ export function getPaletteSync(
 
     // Reads pixels synchronously (no Promise wrapper) via the shared canvas
     // helpers, so gamut handling matches the async BrowserPixelLoader.
-    const pixels = loadPixelsSync(source, opts.gamut);
+    const pixels = cropPixelData(loadPixelsSync(source, opts.gamut), opts.region);
 
     return extractPalette(
         pixels.data,

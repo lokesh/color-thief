@@ -39,6 +39,7 @@ export type {
     Gamut,
     FilterOptions,
     ColorSpace,
+    Region,
     ExtractionOptions,
     ContrastInfo,
     Color,

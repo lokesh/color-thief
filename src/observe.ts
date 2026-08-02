@@ -7,7 +7,7 @@
  *
  * Browser-only — relies on DOM APIs.
  */
-import type { Color, ColorSpace, FilterOptions } from './types.js';
+import type { Color, ColorSpace, FilterOptions, Region } from './types.js';
 import { getPaletteSync } from './sync.js';
 
 // ---------------------------------------------------------------------------
@@ -30,6 +30,11 @@ export interface ObserveOptions extends FilterOptions {
     quality?: number;
     /** Color space for quantization. @default 'oklch' */
     colorSpace?: ColorSpace;
+    /**
+     * Sample only a sub-rectangle of each frame, in normalized 0–1 coordinates.
+     * Omit to use the whole frame. @default undefined
+     */
+    region?: Region;
     /** Called whenever a new palette is extracted. */
     onChange: (palette: Color[]) => void;
 }

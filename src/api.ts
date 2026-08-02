@@ -6,13 +6,16 @@ import type {
     PixelLoader,
     ProgressiveResult,
     Quantizer,
+    Region,
     SwatchMap,
 } from './types.js';
 import { validateOptions, extractPalette } from './pipeline.js';
+import { cropPixelData } from './region.js';
 import { extractProgressive } from './progressive.js';
 import { classifySwatches } from './swatches.js';
 import { MmcqQuantizer } from './quantizers/mmcq.js';
 import { resolveDefaultLoader } from './resolve-loader.js';
+import { deprecate } from './deprecate.js';
 
 // ---------------------------------------------------------------------------
 // Global configuration
@@ -74,13 +77,37 @@ function checkAborted(signal?: AbortSignal): void {
     }
 }
 
+/**
+ * `worker: true` is accepted but ignored. Offloading only ever moved
+ * quantization off-thread while leaving decode, pixel sampling, and the
+ * structured clone of the pixel array on it — and the clone cost several times
+ * more than the quantization it saved. Ignoring the flag also means these calls
+ * now go through the same OKLCH pipeline as everything else, so `worker: true`
+ * and `worker: false` finally agree on the palette.
+ */
+function warnWorkerDeprecated(): void {
+    deprecate(
+        'the `worker` option is ignored as of v3 and will be removed in v4. ' +
+            'Offloading cost more than it saved and returned different colors than the ' +
+            'default path. To move work off the main thread, run Color Thief inside your ' +
+            'own worker — see the README.',
+    );
+}
+
+/**
+ * Load pixels and, when a region is given, crop to it before anything else
+ * touches the buffer — so every downstream path (progressive, custom
+ * quantizers) sees only the requested sub-rectangle.
+ */
 async function loadPixels(
     source: ImageSource,
     options?: ExtractionOptions,
+    region?: Region,
 ): Promise<PixelData> {
     checkAborted(options?.signal);
     const loader = await getLoader(options?.loader);
-    return loader.load(source, options?.signal, options?.gamut ?? 'srgb');
+    const pixels = await loader.load(source, options?.signal, options?.gamut ?? 'srgb');
+    return cropPixelData(pixels, region);
 }
 
 // ---------------------------------------------------------------------------
@@ -122,35 +149,10 @@ export async function getPalette(
 
     checkAborted(options?.signal);
 
-    // Worker path (browser only)
-    if (options?.worker) {
-        const { isWorkerSupported, extractInWorker } = await import(
-            './worker/manager.js'
-        );
-        if (isWorkerSupported()) {
-            const pixels = await loadPixels(source, options);
-            const { createPixelArray, resolveOutputGamut } = await import('./pipeline.js');
-            const pixelArray = createPixelArray(pixels.data, pixels.width * pixels.height, opts.quality, {
-                ignoreWhite: opts.ignoreWhite,
-                whiteThreshold: opts.whiteThreshold,
-                alphaThreshold: opts.alphaThreshold,
-                minSaturation: opts.minSaturation,
-            });
-            const nativeGamut = pixels.colorSpace ?? 'srgb';
-            const outputGamut = resolveOutputGamut(pixelArray, nativeGamut, opts.gamut);
-            return extractInWorker(
-                pixelArray,
-                opts.colorCount,
-                options?.signal,
-                nativeGamut,
-                outputGamut,
-            );
-        }
-        // Fall through to main thread if workers not supported
-    }
+    if (options?.worker) warnWorkerDeprecated();
 
     const [pixels, quantizer] = await Promise.all([
-        loadPixels(source, options),
+        loadPixels(source, options, opts.region),
         getQuantizer(options?.quantizer),
     ]);
 
@@ -201,8 +203,10 @@ export async function* getPaletteProgressive(
 ): AsyncGenerator<ProgressiveResult> {
     const opts = validateOptions(options ?? {});
 
+    if (options?.worker) warnWorkerDeprecated();
+
     const [pixels, quantizer] = await Promise.all([
-        loadPixels(source, options),
+        loadPixels(source, options, opts.region),
         getQuantizer(options?.quantizer),
     ]);
 

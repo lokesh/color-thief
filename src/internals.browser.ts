@@ -25,7 +25,7 @@ export {
     paletteOklchScaledToRgb,
 } from './color-space.js';
 
-// Worker manager
+// Worker manager — deprecated no-op shims, removed in v4. See worker/manager.ts.
 export {
     isWorkerSupported,
     extractInWorker,
@@ -39,6 +39,14 @@ export {
     computeFallbackColor,
     extractPalette,
 } from './pipeline.js';
+
+// Region cropping
+export {
+    validateRegion,
+    regionToPixelRect,
+    cropPixelData,
+} from './region.js';
+export type { PixelRect } from './region.js';
 
 // Types not needed by most consumers
 export type {

@@ -2,7 +2,8 @@ import { parseArgs } from 'node:util';
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 import { getColor, getPalette, getSwatches } from './api.js';
-import type { Color, SwatchMap, SwatchRole } from './types.js';
+import { validateRegion } from './region.js';
+import type { Color, Region, SwatchMap, SwatchRole } from './types.js';
 
 // ---------------------------------------------------------------------------
 // Version
@@ -32,6 +33,8 @@ Options:
   --count <n>         Number of palette colors (2-20, default 10)
   --quality <n>       Sampling quality (1=best, default 10)
   --color-space <s>   Color space: rgb or oklch (default oklch)
+  --region <rect>     Sample a sub-rectangle: x,y,width,height as fractions
+                      of the image size (e.g. 0,0.66,1,0.34 = bottom third)
   -h, --help          Show this help
   -v, --version       Show version
 `.trim();
@@ -50,6 +53,18 @@ interface CliArgs {
     count: number;
     quality: number;
     colorSpace: 'rgb' | 'oklch';
+    region?: Region;
+}
+
+/** Parse `--region x,y,width,height` into a Region. Returns null if malformed. */
+function parseRegion(value: string): Region | null {
+    const parts = value.split(',').map((p) => p.trim());
+    if (parts.length !== 4) return null;
+
+    const [x, y, width, height] = parts.map((p) => (p === '' ? NaN : Number(p)));
+    if (![x, y, width, height].every((n) => Number.isFinite(n))) return null;
+
+    return { x, y, width, height };
 }
 
 function parseCliArgs(argv: string[]): CliArgs {
@@ -61,6 +76,7 @@ function parseCliArgs(argv: string[]): CliArgs {
             count: { type: 'string', default: '10' },
             quality: { type: 'string', default: '10' },
             'color-space': { type: 'string', default: 'oklch' },
+            region: { type: 'string' },
             help: { type: 'boolean', short: 'h', default: false },
             version: { type: 'boolean', short: 'v', default: false },
         },
@@ -120,6 +136,23 @@ function parseCliArgs(argv: string[]): CliArgs {
         process.exit(1);
     }
 
+    let region: Region | undefined;
+    if (values.region !== undefined) {
+        const parsed = parseRegion(values.region as string);
+        if (!parsed) {
+            console.error(
+                'Error: --region must be four comma-separated numbers: x,y,width,height (e.g. 0,0.66,1,0.34).',
+            );
+            process.exit(1);
+        }
+        try {
+            region = validateRegion(parsed);
+        } catch (err) {
+            console.error(`Error: ${(err as Error).message}`);
+            process.exit(1);
+        }
+    }
+
     return {
         command,
         files,
@@ -128,6 +161,7 @@ function parseCliArgs(argv: string[]): CliArgs {
         count,
         quality,
         colorSpace,
+        region,
     };
 }
 
@@ -235,6 +269,7 @@ async function processFile(
         colorCount: args.count,
         quality: args.quality,
         colorSpace: args.colorSpace as 'rgb' | 'oklch',
+        ...(args.region ? { region: args.region } : {}),
     };
 
     switch (args.command) {

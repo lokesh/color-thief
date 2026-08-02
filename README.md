@@ -43,9 +43,9 @@ swatches.Vibrant?.color.hex();
 
 - **TypeScript** — full type definitions included
 - **Browser + Node.js** — same API, both platforms
-- **Sync & async** — synchronous browser API, async for Node.js and Web Workers
+- **Sync & async** — synchronous browser API, async for Node.js
 - **Live extraction** — `observe()` watches video, canvas, or img elements and emits palette updates reactively
-- **Web Workers** — offload quantization off the main thread with `worker: true`
+- **Worker friendly** — runs inside your own Web Worker via `ImageBitmap` or `OffscreenCanvas`
 - **Progressive extraction** — 3-pass refinement for instant rough results
 - **OKLCH quantization** — perceptually uniform palettes via `colorSpace: 'oklch'`
 - **Semantic swatches** — Vibrant, Muted, DarkVibrant, DarkMuted, LightVibrant, LightMuted
@@ -76,8 +76,9 @@ swatches.Vibrant?.color.hex();
 | `colorCount` | `10` | Number of palette colors (2–20) |
 | `quality` | `10` | Sampling rate (1 = every pixel, 10 = every 10th) |
 | `colorSpace` | `'oklch'` | Quantization space: `'rgb'` or `'oklch'` |
+| `region` | — | Sample a sub-rectangle: `{ x, y, width, height }` as 0–1 fractions |
 | `gamut` | `'srgb'` | Output gamut: `'srgb'`, `'display-p3'`, or `'auto'` (browser only) |
-| `worker` | `false` | Offload to Web Worker (browser only) |
+| `worker` | `false` | **Deprecated** — ignored as of v3, removed in v4. See [Web Workers](#web-workers) |
 | `signal` | — | `AbortSignal` to cancel extraction |
 | `ignoreWhite` | `true` | Skip white pixels |
 
@@ -98,6 +99,31 @@ swatches.Vibrant?.color.hex();
 | `.contrast` | `{ white, black, foreground }` — WCAG ratios |
 | `.population` | Raw pixel count |
 | `.proportion` | 0–1 share of total |
+
+## Region extraction
+
+Pass a `region` to sample only part of the image. Coordinates are fractions of
+the image size (0–1) measured from the top-left, so a region is
+resolution-independent — the same values work for a thumbnail and the full-size
+original.
+
+```js
+// Colors from the bottom third — e.g. for a gradient that overlaps the
+// bottom of the image
+const palette = await getPalette(img, {
+    region: { x: 0, y: 0.66, width: 1, height: 0.34 },
+});
+
+// Center crop
+const color = await getColor(img, {
+    region: { x: 0.25, y: 0.25, width: 0.5, height: 0.5 },
+});
+```
+
+Works everywhere an option object does: `getColor`, `getPalette`, `getSwatches`,
+`getPaletteProgressive`, the `*Sync` functions, `observe()`, and the CLI — in
+both browser and Node. A region that runs past the right or bottom edge is
+clamped to the image; out-of-range or zero-sized values throw.
 
 ## Browser
 
@@ -149,6 +175,31 @@ controller.stop();
 ```
 
 Works with `<video>`, `<canvas>`, and `<img>` elements. For images, it uses a MutationObserver to detect `src` changes. For video and canvas, it polls using requestAnimationFrame with throttle.
+
+### Web Workers
+
+To keep extraction off the main thread, run Color Thief *inside* your own worker and hand it an `ImageBitmap`. Bitmaps are transferable, so the pixels move without being copied, and decoding, sampling, and quantization all happen off-thread.
+
+```js
+// main.js
+const bitmap = await createImageBitmap(await (await fetch(url)).blob());
+const worker = new Worker('./palette-worker.js', { type: 'module' });
+worker.postMessage({ bitmap }, [bitmap]); // transferred, not cloned
+worker.onmessage = (e) => render(e.data.palette);
+```
+
+```js
+// palette-worker.js
+import { getPalette } from 'colorthief';
+
+self.onmessage = async ({ data }) => {
+    const palette = await getPalette(data.bitmap, { colorCount: 5 });
+    // Color objects don't survive structured clone — send plain data
+    self.postMessage({ palette: palette.map((c) => c.hex()) });
+};
+```
+
+> **Deprecated:** the `worker: true` option is ignored as of v3 and will be removed in v4, along with the `isWorkerSupported`, `extractInWorker`, and `terminateWorker` exports from `colorthief/internals`. It only moved quantization off-thread while leaving decoding, pixel sampling, and the structured clone of the pixel array on the main thread — and serializing that array cost several times more than the quantization it saved. It also quantized in RGB while the default path uses OKLCH, so `worker: true` returned different colors. Calls that pass it now go through the normal pipeline and log a one-time warning.
 
 ## Node.js
 
@@ -211,7 +262,11 @@ colorthief-cli palette photo.jpg --css
 colorthief-cli palette photo.jpg --count 5        # Number of colors (2-20)
 colorthief-cli photo.jpg --quality 1              # Sampling quality (1=best)
 colorthief-cli photo.jpg --color-space rgb        # Color space (rgb or oklch)
+colorthief-cli photo.jpg --region 0,0.66,1,0.34   # Sample the bottom third
 ```
+
+`--region` takes `x,y,width,height` as fractions of the image size (0–1), the
+same as the `region` option.
 
 Stdin is supported — use `-` or pipe directly:
 

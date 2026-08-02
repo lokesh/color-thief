@@ -92,7 +92,7 @@ describe('Wide-gamut (Display P3)', { testIsolation: false }, function() {
         });
     });
 
-    // --- Async + worker paths --------------------------------------------
+    // --- Async paths ------------------------------------------------------
 
     it('async getColor honors gamut:"display-p3"', function() {
         if (!p3) this.skip();
@@ -115,7 +115,7 @@ describe('Wide-gamut (Display P3)', { testIsolation: false }, function() {
         });
     });
 
-    it('worker path carries the gamut through', function() {
+    it('the deprecated worker option still carries the gamut through', function() {
         if (!p3) this.skip();
         cy.window().then((win) => {
             const img = win.document.getElementById('img-p3-red');

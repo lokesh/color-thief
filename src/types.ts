@@ -67,6 +67,27 @@ export interface FilterOptions {
 /** Color space used for quantization. */
 export type ColorSpace = 'rgb' | 'oklch';
 
+/**
+ * A sub-rectangle of the image to sample, in normalized coordinates measured
+ * from the top-left corner. Values are fractions of the image's width/height
+ * (0–1), so a region is resolution-independent.
+ *
+ * ```ts
+ * // Bottom third of the image
+ * { x: 0, y: 0.66, width: 1, height: 0.34 }
+ * ```
+ */
+export interface Region {
+    /** Left edge, 0–1. */
+    x: number;
+    /** Top edge, 0–1. */
+    y: number;
+    /** Width as a fraction of the image width, >0 and ≤1. */
+    width: number;
+    /** Height as a fraction of the image height, >0 and ≤1. */
+    height: number;
+}
+
 /** Full extraction options. */
 export interface ExtractionOptions extends FilterOptions {
     /** Number of colors in the palette (2–20). @default 10 */
@@ -75,6 +96,11 @@ export interface ExtractionOptions extends FilterOptions {
     quality?: number;
     /** Color space for quantization. @default 'oklch' */
     colorSpace?: ColorSpace;
+    /**
+     * Sample only a sub-rectangle of the image, in normalized 0–1 coordinates.
+     * Omit to use the whole image. @default undefined
+     */
+    region?: Region;
     /**
      * Output color gamut for the returned colors (browser only).
      * - `'srgb'` — classic sRGB output (default, fully backward compatible).
@@ -88,7 +114,15 @@ export interface ExtractionOptions extends FilterOptions {
     gamut?: Gamut | 'auto';
     /** AbortSignal to cancel extraction. */
     signal?: AbortSignal;
-    /** Offload quantization to a Web Worker (browser only). @default false */
+    /**
+     * @deprecated Ignored as of v3, removed in v4. Offloading only moved
+     * quantization off-thread while the pixel array still had to be
+     * structured-cloned on the main thread, which cost several times more than
+     * the quantization it saved — and it returned different colors than the
+     * default path. To move work off the main thread, run Color Thief inside
+     * your own worker with an `ImageBitmap` or `OffscreenCanvas` source.
+     * @default false
+     */
     worker?: boolean;
     /** Override the quantizer for this call only. Takes priority over configure(). */
     quantizer?: Quantizer;

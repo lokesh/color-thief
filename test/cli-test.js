@@ -201,6 +201,85 @@ describe('CLI', function () {
     });
 
     // -----------------------------------------------------------------------
+    // --region
+    // -----------------------------------------------------------------------
+
+    it('--region restricts extraction to the given rectangle', async function () {
+        // rainbow-horizontal.png is warm red/orange at the top, magenta at the
+        // bottom, so the two strips must not agree.
+        const top = await run(img('rainbow-horizontal.png'), '--json', '--region', '0,0,1,0.1');
+        const bottom = await run(img('rainbow-horizontal.png'), '--json', '--region', '0,0.9,1,0.1');
+        const topColor = JSON.parse(top.stdout);
+        const bottomColor = JSON.parse(bottom.stdout);
+
+        expect(topColor.hex).to.not.equal(bottomColor.hex);
+        expect(topColor.rgb.b).to.be.lessThan(60);
+        expect(bottomColor.rgb.b).to.be.greaterThan(150);
+    });
+
+    it('--region tolerates spaces between values', async function () {
+        const { stdout } = await run(img('red.png'), '--json', '--region', '0, 0, 1, 0.5');
+        expect(JSON.parse(stdout).rgb.r).to.be.greaterThan(200);
+    });
+
+    it('--region works with the palette command', async function () {
+        const { stdout } = await run(
+            'palette', img('rainbow-horizontal.png'), '--json', '--count', '3', '--region', '0,0,1,0.2',
+        );
+        const palette = JSON.parse(stdout);
+        expect(palette).to.be.an('array');
+        expect(palette.length).to.be.greaterThan(0);
+    });
+
+    it('--region works with the swatches command', async function () {
+        const { stdout } = await run(
+            'swatches', img('rainbow-horizontal.png'), '--json', '--region', '0,0,1,0.2',
+        );
+        expect(JSON.parse(stdout)).to.have.property('Vibrant');
+    });
+
+    it('a full-image --region matches the default output', async function () {
+        const plain = await run(img('rainbow-horizontal.png'), '--json');
+        const full = await run(img('rainbow-horizontal.png'), '--json', '--region', '0,0,1,1');
+        expect(JSON.parse(full.stdout).hex).to.equal(JSON.parse(plain.stdout).hex);
+    });
+
+    it('--help documents --region', async function () {
+        const { stdout } = await run('--help');
+        expect(stdout).to.include('--region');
+    });
+
+    it('exits with an error for a malformed --region', async function () {
+        try {
+            await run(img('red.png'), '--region', '0,0');
+            expect.fail('should have thrown');
+        } catch (err) {
+            expect(err.code).to.not.equal(0);
+            expect(err.stderr).to.include('x,y,width,height');
+        }
+    });
+
+    it('exits with an error for non-numeric --region values', async function () {
+        try {
+            await run(img('red.png'), '--region', '0,0,half,1');
+            expect.fail('should have thrown');
+        } catch (err) {
+            expect(err.code).to.not.equal(0);
+            expect(err.stderr).to.include('x,y,width,height');
+        }
+    });
+
+    it('exits with an error for out-of-range --region values', async function () {
+        try {
+            await run(img('red.png'), '--region', '0,0,2,1');
+            expect.fail('should have thrown');
+        } catch (err) {
+            expect(err.code).to.not.equal(0);
+            expect(err.stderr).to.include('region.width');
+        }
+    });
+
+    // -----------------------------------------------------------------------
     // error cases
     // -----------------------------------------------------------------------
 

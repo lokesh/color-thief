@@ -1,73 +1,48 @@
+/**
+ * Deprecated Web Worker shims.
+ *
+ * Color Thief used to offload quantization to a Blob-URL worker carrying its
+ * own inlined copy of MMCQ. That path cost more than it saved — the pixel
+ * array (`Array<[r, g, b]>`, one small array per sampled pixel) had to be
+ * structured-cloned to reach the worker, and serializing it on the main thread
+ * took several times longer than simply quantizing there. It also drifted from
+ * the real pipeline: it quantized in RGB while the main path defaults to
+ * OKLCH, and it skipped the few-color short-circuit, filter relaxation, and any
+ * quantizer set via `configure()` — so `worker: true` returned different colors
+ * than the default.
+ *
+ * These exports remain as no-ops through v3 and will be removed in v4. To get
+ * extraction off the main thread, run Color Thief itself inside your own
+ * worker: `ImageBitmap` and `OffscreenCanvas` are supported sources, so decode,
+ * pixel sampling, and quantization all move off-thread, and an `ImageBitmap`
+ * transfers without copying.
+ */
+
 import type { Color, Gamut } from '../types.js';
 import { createColor } from '../color.js';
 import { p3ToSrgb } from '../color-space.js';
-import { WORKER_SOURCE } from './worker-script.js';
+import { MmcqQuantizer } from '../quantizers/mmcq.js';
+import { deprecate } from '../deprecate.js';
 
-let worker: Worker | null = null;
-let blobUrl: string | null = null;
-let nextId = 0;
-const pending = new Map<
-    number,
-    {
-        resolve: (value: Color[]) => void;
-        reject: (reason: unknown) => void;
-        nativeGamut: Gamut;
-        outputGamut: Gamut;
-    }
->();
+const REMOVED =
+    'the Web Worker path was removed in v3 and these shims will be deleted in v4. ' +
+    'Run Color Thief inside your own worker instead — see the README.';
 
-/** Check whether the current environment supports Web Workers. */
+/**
+ * @deprecated Always returns `false`. Worker offloading was removed; callers
+ * that branch on this will fall through to their main-thread path, which is
+ * what the worker path now does anyway.
+ */
 export function isWorkerSupported(): boolean {
-    return typeof Worker !== 'undefined';
-}
-
-function getOrCreateWorker(): Worker {
-    if (worker) return worker;
-    if (!isWorkerSupported()) {
-        throw new Error('Web Workers are not supported in this environment.');
-    }
-    blobUrl = URL.createObjectURL(
-        new Blob([WORKER_SOURCE], { type: 'application/javascript' }),
-    );
-    worker = new Worker(blobUrl);
-    worker.onmessage = (e: MessageEvent) => {
-        const { id, palette, error } = e.data;
-        const entry = pending.get(id);
-        if (!entry) return;
-        pending.delete(id);
-        if (error) {
-            entry.reject(new Error(error));
-        } else {
-            const raw = palette as Array<{ color: [number, number, number]; population: number }>;
-            const { nativeGamut, outputGamut } = entry;
-            const totalPopulation = raw.reduce((sum: number, q: { population: number }) => sum + q.population, 0);
-            const colors = raw.map(({ color, population }) => {
-                const [r, g, b] =
-                    nativeGamut === outputGamut ? color : p3ToSrgb(color[0], color[1], color[2]);
-                return createColor(
-                    r,
-                    g,
-                    b,
-                    population,
-                    totalPopulation > 0 ? population / totalPopulation : 0,
-                    outputGamut,
-                );
-            });
-            entry.resolve(colors);
-        }
-    };
-    worker.onerror = (e) => {
-        // Reject all pending
-        for (const [, entry] of pending) {
-            entry.reject(new Error(e.message));
-        }
-        pending.clear();
-    };
-    return worker;
+    deprecate(`isWorkerSupported() always returns false — ${REMOVED}`);
+    return false;
 }
 
 /**
- * Run quantization in a Web Worker.
+ * @deprecated Runs on the main thread. Kept only so existing callers keep
+ * working through v3; it quantizes with MMCQ in RGB, matching what the worker
+ * used to return.
+ *
  * @param pixels - Sampled pixel array (RGB triplets).
  * @param maxColors - Maximum palette size.
  * @param signal - Optional AbortSignal.
@@ -79,46 +54,40 @@ export function extractInWorker(
     nativeGamut: Gamut = 'srgb',
     outputGamut: Gamut = 'srgb',
 ): Promise<Color[]> {
+    deprecate(`extractInWorker() now runs on the main thread — ${REMOVED}`);
+
     return new Promise<Color[]>((resolve, reject) => {
         if (signal?.aborted) {
             reject(signal.reason ?? new DOMException('Aborted', 'AbortError'));
             return;
         }
 
-        const id = nextId++;
-        pending.set(id, { resolve, reject, nativeGamut, outputGamut });
-
-        const onAbort = () => {
-            pending.delete(id);
-            reject(signal!.reason ?? new DOMException('Aborted', 'AbortError'));
-        };
-
-        signal?.addEventListener('abort', onAbort, { once: true });
-
         try {
-            const w = getOrCreateWorker();
-            w.postMessage({ id, pixels, maxColors });
+            const raw = new MmcqQuantizer().quantize(pixels, maxColors);
+            const totalPopulation = raw.reduce((sum, q) => sum + q.population, 0);
+            resolve(
+                raw.map(({ color, population }) => {
+                    const [r, g, b] =
+                        nativeGamut === outputGamut
+                            ? color
+                            : p3ToSrgb(color[0], color[1], color[2]);
+                    return createColor(
+                        r,
+                        g,
+                        b,
+                        population,
+                        totalPopulation > 0 ? population / totalPopulation : 0,
+                        outputGamut,
+                    );
+                }),
+            );
         } catch (err) {
-            pending.delete(id);
-            signal?.removeEventListener('abort', onAbort);
             reject(err);
         }
     });
 }
 
-/** Terminate the worker and release the Blob URL. */
+/** @deprecated No-op. There is no worker to terminate. */
 export function terminateWorker(): void {
-    if (worker) {
-        worker.terminate();
-        worker = null;
-    }
-    if (blobUrl) {
-        URL.revokeObjectURL(blobUrl);
-        blobUrl = null;
-    }
-    // Reject any outstanding requests
-    for (const [, entry] of pending) {
-        entry.reject(new Error('Worker terminated'));
-    }
-    pending.clear();
+    deprecate(`terminateWorker() is a no-op — ${REMOVED}`);
 }
