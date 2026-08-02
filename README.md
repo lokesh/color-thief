@@ -283,6 +283,8 @@ results in an object keyed by filename.
 ## Links
 
 - [Demo page & live examples](https://lokeshdhakar.com/projects/color-thief/)
+- [Changelog](CHANGELOG.md)
+- [Roadmap](ROADMAP.md)
 - [GitHub](https://github.com/lokesh/color-thief)
 - [npm](https://www.npmjs.com/package/colorthief)
 
@@ -302,15 +304,17 @@ npm run dev            # Start local server on port 8080
 # 1. Make sure you're on master with a clean working tree
 git status
 
-# 2. Run the full test suite
+# 2. Add the new version's entry to CHANGELOG.md and commit it
+
+# 3. Run the full test suite
 npm run build
 npm run test:node
 npm run test:browser   # requires npm run dev in another terminal
 
-# 3. Preview what will be published
+# 4. Preview what will be published
 npm pack --dry-run
 
-# 4. Tag and publish
+# 5. Tag and publish
 npm version <major|minor|patch>   # bumps version, creates git tag
 npm publish                       # builds via prepublishOnly, then publishes
 git push && git push --tags
