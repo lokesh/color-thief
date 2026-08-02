@@ -27,7 +27,8 @@ let globalQuantizer: Quantizer | null = null;
  * ```ts
  * import { configure } from 'colorthief';
  * import { WasmQuantizer } from 'colorthief/internals';
- * const q = new WasmQuantizer();
+ * import * as wasm from './src/wasm/pkg/color_thief_wasm.js'; // built with wasm-pack
+ * const q = new WasmQuantizer(wasm);
  * await q.init();
  * configure({ quantizer: q });
  * ```

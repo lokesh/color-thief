@@ -29,7 +29,7 @@ A Rust implementation of the full MMCQ algorithm lives in `src/wasm/`, and the `
 **Current state (power-user only):**
 1. Install the Rust toolchain and `wasm-pack`.
 2. Run `wasm-pack build --target web` in `src/wasm/`.
-3. Point `WasmQuantizer` at the generated `.wasm` file.
+3. Pass the generated glue module to `WasmQuantizer` — `new WasmQuantizer(await import('./pkg/color_thief_wasm.js'))`.
 
 **Goal — drop-in replacement, no build step:**
 - Pre-compile the `.wasm` and ship it as a published artifact (e.g. a `@colorthief/wasm` package, or a bundled binary loaded on demand) so consumers get it without a Rust toolchain.
