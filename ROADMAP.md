@@ -24,6 +24,20 @@ The `worker` option became a no-op in v3.5 and the `isWorkerSupported` / `extrac
 
 Why it went: the worker only ever offloaded quantization, while decode, pixel sampling, and the structured clone of the pixel array stayed on the main thread — and serializing `Array<[r, g, b]>` cost several times more than the quantization it saved (at 2 MP / quality 10, ~20 ms of clone to avoid ~2.5 ms of quantize; the gap widens with image size). It also carried a hand-inlined copy of MMCQ that drifted from the real one: it quantized in RGB while the main path defaults to OKLCH, and skipped the few-color short-circuit and filter relaxation, so `worker: true` returned different colors than the default. The supported answer is to run Color Thief inside your own worker with an `ImageBitmap` source, which moves the whole pipeline off-thread and transfers pixels without copying.
 
+## v4 breaking change: raise the `sharp` and Node floors
+
+`peerDependencies` currently accepts `sharp: ">=0.33.0"`, but every sharp below 0.35.0 inherits four libvips CVEs ([GHSA-f88m-g3jw-g9cj](https://github.com/advisories/GHSA-f88m-g3jw-g9cj): CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591). Anyone auditing a project that installs Color Thief's Node path can satisfy our range with a vulnerable sharp.
+
+The fix is `sharp: ">=0.35.0"`, and it can't ship in a 3.x minor: sharp 0.35 requires `node >=20.9.0`, so raising the sharp floor drops Node 18. That's a breaking change twice over — for anyone pinned to sharp 0.34 and for anyone still on Node 18.
+
+Bundled into v4:
+- `peerDependencies.sharp` → `">=0.35.0"`.
+- Add the `engines` field the package has never declared: `node >=20.9.0`. Today npm gives consumers no signal at all about supported Node.
+- Move the CI matrix off 18 (EOL April 2025) to 20/22/24, and update `.nvmrc`.
+- Bump the `sharp` devDependency in lockstep so CI stops testing against the vulnerable line.
+
+Until then 3.x keeps the wider range: sharp is an *optional* peer, browser users never install it, and Node users can and should choose 0.35+ themselves.
+
 ## Big bet: accessible scheme generation
 
 Move Color Thief from a raw extractor toward a theming toolkit by generating a balanced, accessible N-role color scheme from an image — the space Material Color Utilities (HCT) targets. This is the largest differentiator and the direction the market is heading (dynamic/adaptive theming). We're already partway there: OKLCH quantization, semantic swatches, WCAG contrast, and `textColor` are all in place. The new work is scheme *synthesis* — deriving a harmonious, contrast-safe set of roles rather than just reporting the colors that are present. Hard; scope before committing.
