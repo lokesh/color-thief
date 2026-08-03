@@ -82,8 +82,9 @@
     "module": "./dist/index.js",
     "types": "./dist/types/index.d.ts",
     "scripts": {
-        "prepublishOnly": "npm run build",
+        "prepublishOnly": "npm run build && npm run check:package",
         "build": "tsup",
+        "check:package": "node scripts/check-package.mjs",
         "watch": "tsup --watch",
         "dev": "http-server",
         "test": "mocha && cypress run --config video=false",
