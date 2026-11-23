@@ -199,12 +199,12 @@ function vboxFromPixels(
         const rval = pixel[0] >> RSHIFT;
         const gval = pixel[1] >> RSHIFT;
         const bval = pixel[2] >> RSHIFT;
-        if (rval < rmin) rmin = rval;
-        else if (rval > rmax) rmax = rval;
-        if (gval < gmin) gmin = gval;
-        else if (gval > gmax) gmax = gval;
-        if (bval < bmin) bmin = bval;
-        else if (bval > bmax) bmax = bval;
+        rmin = Math.min(rmin, rval);
+        rmax = Math.max(rmax, rval);
+        gmin = Math.min(gmin, gval);
+        gmax = Math.max(gmax, gval);
+        bmin = Math.min(bmin, bval);
+        bmax = Math.max(bmax, bval);
     }
 
     return new VBox(rmin, rmax, gmin, gmax, bmin, bmax, histo);
@@ -214,96 +214,56 @@ function vboxFromPixels(
 // Median-cut split
 // ---------------------------------------------------------------------------
 
-function medianCutApply(histo: Uint32Array, vbox: VBox): [VBox, VBox | null] | undefined {
-    if (!vbox.count()) return undefined;
+function medianCutApply(histo: Uint32Array, vbox: VBox): [VBox, VBox] | undefined {
+    const total = vbox.count();
+    if (total <= 1) return undefined;
 
-    // Only one pixel — no split possible
-    if (vbox.count() === 1) return [vbox.copy(), null];
+    const axes = [
+        { min: 'r1', max: 'r2' },
+        { min: 'g1', max: 'g2' },
+        { min: 'b1', max: 'b2' },
+    ] as const;
 
-    const rw = vbox.r2 - vbox.r1 + 1;
-    const gw = vbox.g2 - vbox.g1 + 1;
-    const bw = vbox.b2 - vbox.b1 + 1;
-    const maxw = Math.max(rw, gw, bw);
+    const widestFirst = [...axes].sort((a, b) =>
+        (vbox[b.max] - vbox[b.min]) - (vbox[a.max] - vbox[a.min]),
+    );
 
-    let total = 0;
-    const partialsum: number[] = [];
-    const lookaheadsum: number[] = [];
+    // A wide axis can still have all its pixels in one slice.
+    for (const { min, max } of widestFirst) {
+        const lower = vbox[min];
+        const upper = vbox[max];
+        if (lower === upper) continue;
 
-    if (maxw === rw) {
-        for (let i = vbox.r1; i <= vbox.r2; i++) {
-            let sum = 0;
-            for (let j = vbox.g1; j <= vbox.g2; j++) {
-                for (let k = vbox.b1; k <= vbox.b2; k++) {
-                    sum += histo[getColorIndex(i, j, k)] || 0;
+        const sums = new Array<number>(upper - lower + 1).fill(0);
+        for (let r = vbox.r1; r <= vbox.r2; r++) {
+            for (let g = vbox.g1; g <= vbox.g2; g++) {
+                for (let b = vbox.b1; b <= vbox.b2; b++) {
+                    const slice = min === 'r1' ? r : min === 'g1' ? g : b;
+                    sums[slice - lower] += histo[getColorIndex(r, g, b)];
                 }
             }
-            total += sum;
-            partialsum[i] = total;
         }
-    } else if (maxw === gw) {
-        for (let i = vbox.g1; i <= vbox.g2; i++) {
-            let sum = 0;
-            for (let j = vbox.r1; j <= vbox.r2; j++) {
-                for (let k = vbox.b1; k <= vbox.b2; k++) {
-                    sum += histo[getColorIndex(j, i, k)] || 0;
-                }
-            }
-            total += sum;
-            partialsum[i] = total;
-        }
-    } else {
-        for (let i = vbox.b1; i <= vbox.b2; i++) {
-            let sum = 0;
-            for (let j = vbox.r1; j <= vbox.r2; j++) {
-                for (let k = vbox.g1; k <= vbox.g2; k++) {
-                    sum += histo[getColorIndex(j, k, i)] || 0;
-                }
-            }
-            total += sum;
-            partialsum[i] = total;
-        }
+
+        for (let i = 1; i < sums.length; i++) sums[i] += sums[i - 1];
+        const first = sums.findIndex(sum => sum > 0);
+        const last = sums.findIndex(sum => sum === total);
+        if (first === last) continue;
+
+        const median = sums.findIndex(sum => sum > total / 2) + lower;
+        const left = median - lower;
+        const right = upper - median;
+        const preferred = left <= right
+            ? median + Math.floor(right / 2)
+            : Math.floor(median - 1 - left / 2);
+        const cut = Math.max(first + lower, Math.min(preferred, last + lower - 1));
+
+        const vbox1 = vbox.copy();
+        const vbox2 = vbox.copy();
+        vbox1[max] = cut;
+        vbox2[min] = cut + 1;
+        return [vbox1, vbox2];
     }
-
-    partialsum.forEach((d, i) => {
-        lookaheadsum[i] = total - d;
-    });
-
-    function doCut(color: 'r' | 'g' | 'b'): [VBox, VBox] | undefined {
-        const dim1 = (color + '1') as 'r1' | 'g1' | 'b1';
-        const dim2 = (color + '2') as 'r2' | 'g2' | 'b2';
-
-        for (let i = vbox[dim1]; i <= vbox[dim2]; i++) {
-            if (partialsum[i] > total / 2) {
-                const vbox1 = vbox.copy();
-                const vbox2 = vbox.copy();
-                const left = i - vbox[dim1];
-                const right = vbox[dim2] - i;
-
-                let d2: number;
-                if (left <= right) {
-                    d2 = Math.min(vbox[dim2] - 1, ~~(i + right / 2));
-                } else {
-                    d2 = Math.max(vbox[dim1], ~~(i - 1 - left / 2));
-                }
-
-                // Avoid 0-count boxes
-                while (!partialsum[d2]) d2++;
-                let count2 = lookaheadsum[d2];
-                while (!count2 && partialsum[d2 - 1]) count2 = lookaheadsum[--d2];
-
-                // Set dimensions
-                vbox1[dim2] = d2;
-                vbox2[dim1] = vbox1[dim2] + 1;
-
-                return [vbox1, vbox2];
-            }
-        }
-        return undefined;
-    }
-
-    if (maxw === rw) return doCut('r');
-    if (maxw === gw) return doCut('g');
-    return doCut('b');
+    return undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -311,29 +271,23 @@ function medianCutApply(histo: Uint32Array, vbox: VBox): [VBox, VBox | null] | u
 // ---------------------------------------------------------------------------
 
 function iterate(pq: PQueue<VBox>, target: number, histo: Uint32Array): void {
-    let ncolors = pq.size();
+    const unsplittable: VBox[] = [];
     let niters = 0;
 
-    while (niters < MAX_ITERATIONS) {
-        if (ncolors >= target) return;
+    while (pq.size() && pq.size() + unsplittable.length < target && niters < MAX_ITERATIONS) {
         niters++;
-
         const vbox = pq.pop();
-
-        if (!vbox.count()) {
-            pq.push(vbox);
-            continue;
-        }
-
         const result = medianCutApply(histo, vbox);
-        if (!result || !result[0]) return;
 
-        pq.push(result[0]);
-        if (result[1]) {
+        if (result) {
+            pq.push(result[0]);
             pq.push(result[1]);
-            ncolors++;
+        } else {
+            unsplittable.push(vbox);
         }
     }
+
+    for (const vbox of unsplittable) pq.push(vbox);
 }
 
 // ---------------------------------------------------------------------------
