@@ -134,6 +134,44 @@ describe('getPalette()', function() {
         });
     });
 
+    it('uses only populated colors for palettes and swatches', async function() {
+        const width = 64;
+        const height = 64;
+        const data = new Uint8Array(width * height * 4);
+        for (let i = 0; i < width * height; i++) {
+            const variation = i % 11;
+            const color = i < width * height / 2
+                ? [240 - variation, 140 + variation, 20, 255]
+                : [20 + variation, 30, 100 - variation, 255];
+            data.set(color, i * 4);
+        }
+        const loader = { load: async () => ({ data, width, height, colorSpace: 'srgb' }) };
+
+        for (const colorSpace of ['oklch', 'rgb']) {
+            const options = { loader, colorSpace, quality: 1, colorCount: 20 };
+            const palette = await getPalette('image', options);
+            expect(palette).to.have.lengthOf.at.least(2);
+            expect(palette.reduce((sum, color) => sum + color.population, 0)).to.equal(width * height);
+            palette.forEach(color => expect(color.proportion).to.be.greaterThan(0));
+
+            const swatches = Object.values(await getSwatches('image', options)).filter(Boolean);
+            expect(swatches).to.have.lengthOf.at.least(2);
+            swatches.forEach(swatch => expect(swatch.color.population).to.be.greaterThan(0));
+        }
+    });
+
+    it('preserves the median-cut rounding for odd left spans', async function() {
+        const pixels = [0, 24, ...Array(8).fill(56), 72];
+        const data = new Uint8Array(pixels.flatMap(r => [r, 40, 40, 255]));
+        const loader = { load: async () => ({ data, width: pixels.length, height: 1, colorSpace: 'srgb' }) };
+        const palette = await getPalette('image', { loader, colorSpace: 'rgb', quality: 1, colorCount: 2 });
+
+        expect(palette.map(color => [color.hex(), color.population])).to.deep.equal([
+            ['#3a2c2c', 10],
+            ['#042c2c', 1],
+        ]);
+    });
+
     it('returns 2 colors (boundary min)', async function() {
         const palette = await getPalette(imgPath('rainbow-vertical.png'), { colorCount: 2 });
         expect(palette).to.have.lengthOf(2);
